@@ -40,10 +40,5 @@ public class CustomerMap : BaseMap<Customer>
         builder.HasOne(x => x.Wallet)
             .WithMany(x => x.Customers)
             .HasForeignKey(x => x.WalletId);
-
-        builder.HasMany(x => x.Orders)
-            .WithOne(x => x.Customer)
-            .HasForeignKey(x => x.CustomerId);
-
     }
 }

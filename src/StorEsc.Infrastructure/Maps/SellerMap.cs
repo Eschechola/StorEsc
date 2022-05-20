@@ -40,9 +40,5 @@ public class SellerMap : BaseMap<Seller>
         builder.HasOne(x => x.Wallet)
             .WithMany(x => x.Sellers)
             .HasForeignKey(x => x.WalletId);
-
-        builder.HasMany(x => x.Products)
-            .WithOne(x => x.Seller)
-            .HasForeignKey(x => x.SellerId);
     }
 }

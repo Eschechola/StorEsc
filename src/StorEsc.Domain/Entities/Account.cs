@@ -10,7 +10,7 @@ public abstract class Account : Entity, IAggregateRoot
     public string Email { get; private set; }
     public string Password { get; private set; }
     
-    protected Account(){}
+    protected Account() { }
     
     public Account(
         Guid walletId,

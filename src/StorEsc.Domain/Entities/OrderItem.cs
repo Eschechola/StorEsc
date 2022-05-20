@@ -2,29 +2,38 @@
 
 public class OrderItem : Entity
 {
-    public int Count { get; set; }
+    public Guid OrderId { get; private set; }
+    public Guid ProductId { get; private set; }
+    public int ItemCount { get; set; }
+    
+    // EF
+    public Order Order { get; set; }
     public Product Product { get; private set; }
     
     protected OrderItem() { }
     
     public OrderItem(
-        int count,
-        Product product)
+        int itemCount,
+        Product product,
+        Order order)
     {
-        Count = count;
+        ItemCount = itemCount;
         Product = product;
+        Order = order;
     }
     
     public OrderItem(
         Guid id,
-        int count,
-        Product product)
+        int itemCount,
+        Product product,
+        Order order)
         : base (id)
     {
-        Count = count;
+        ItemCount = itemCount;
         Product = product;
+        Order = order;
     }
 
-    public double CalculateItemValue()
-        => Product.Price * Count;
+    public decimal CalculateItemValue()
+        => Product.Price * ItemCount;
 }

@@ -12,6 +12,28 @@ public class ProductMap : BaseMap<Product>
         
         base.Configure(builder);
         
+        builder.Property(x => x.SellerId)
+            .IsRequired()
+            .HasColumnType("VARCHAR(36)")
+            .HasColumnName("SellerId");
         
+        builder.Property(x => x.Name)
+            .IsRequired()
+            .HasColumnType("VARCHAR(200)")
+            .HasColumnName("Name");
+        
+        builder.Property(x => x.Description)
+            .IsRequired()
+            .HasColumnType("VARCHAR(2000)")
+            .HasColumnName("Description");
+        
+        builder.Property(x => x.Price)
+            .IsRequired()
+            .HasColumnType("DECIMAL(14,9)")
+            .HasColumnName("Price");
+        
+        builder.HasOne(x => x.Seller)
+            .WithMany(x => x.Products)
+            .HasForeignKey(x => x.SellerId);
     }
 }

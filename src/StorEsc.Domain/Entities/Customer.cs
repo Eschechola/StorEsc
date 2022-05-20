@@ -6,9 +6,7 @@ public class Customer : Account
     public List<Order> Orders { get; private set; }
     public Wallet Wallet { get; private set; }
     
-    protected Customer()
-    {
-    }
+    protected Customer() { }
     
     public Customer(
         Guid walletId,

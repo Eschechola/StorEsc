@@ -11,6 +11,12 @@ public class WalletMap : BaseMap<Wallet>
         builder.ToTable("Wallet", "ste");
         
         base.Configure(builder);
-        
+
+        builder.Property(x => x.Amount)
+            .IsRequired()
+            .HasDefaultValue(0)
+            .HasColumnName("Amount")
+            .HasColumnType("DECIMAL(14,9)");
+
     }
 }
