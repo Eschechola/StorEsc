@@ -7,6 +7,9 @@ public class Order : Entity, IAggregateRoot
     public Guid CustomerId { get; private set; }
     public double TotalValue { get { return CalculateOrderPrice(); } }
     public List<OrderItem> Items { get; private set; }
+    
+    //EF
+    public Customer Customer { get; private set; }
 
     protected Order() { }
     
@@ -23,11 +26,13 @@ public class Order : Entity, IAggregateRoot
     public Order(
         Guid id,
         Guid customerId,
-        List<OrderItem> items)
+        List<OrderItem> items,
+        Customer customer = null)
         : base(id)
     {
         CustomerId = customerId;
         Items = items;
+        Customer = customer;
         
         Validate();
     }

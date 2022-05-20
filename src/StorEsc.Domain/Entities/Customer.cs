@@ -4,7 +4,7 @@ public class Customer : Account
 {
     // EF
     public List<Order> Orders { get; private set; }
-    
+    public Wallet Wallet { get; private set; }
     
     protected Customer()
     {
@@ -38,9 +38,11 @@ public class Customer : Account
         string lastName,
         string email,
         string password,
-        List<Order> orders = null) 
+        List<Order> orders = null,
+        Wallet wallet = null) 
         : base(id, walletId, firstName, lastName, email, password)
     {
         Orders = orders;
+        Wallet = wallet;
     }
 }

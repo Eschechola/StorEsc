@@ -6,6 +6,11 @@ public class Wallet : Entity, IAggregateRoot
 {
     public double Amount { get; private set; }
 
+    //EF
+    public IList<Customer> Customers { get; private set; }
+    public IList<Seller> Sellers { get; private set; }
+
+    
     protected Wallet() { }
     
     public Wallet(double amount)
@@ -21,6 +26,20 @@ public class Wallet : Entity, IAggregateRoot
         : base(id)
     {
         Amount = amount;
+        
+        Validate();
+    }
+    
+    public Wallet(
+        Guid id,
+        double amount,
+        IList<Customer> customers = null,
+        IList<Seller> sellers = null) 
+        : base(id)
+    {
+        Amount = amount;
+        Customers = customers;
+        Sellers = sellers;
         
         Validate();
     }
