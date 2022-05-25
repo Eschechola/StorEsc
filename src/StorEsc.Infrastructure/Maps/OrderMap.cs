@@ -32,5 +32,9 @@ public class OrderMap : BaseMap<Order>
             .WithMany(x => x.Orders)
             .HasForeignKey(x => x.CustomerId);
 
+        builder.HasOne(x => x.Voucher)
+            .WithMany(x => x.Orders)
+            .HasForeignKey(x => x.VoucherId);
+
     }
 }
