@@ -5,11 +5,13 @@ namespace StorEsc.Domain.Entities;
 public class Order : Entity, IAggregateRoot
 {
     public Guid CustomerId { get; private set; }
+    public Guid? VoucherId { get; private set; }
     public decimal TotalValue { get; private set;  }
     public bool IsPaid { get; private set; }
 
     //EF
     public Customer Customer { get; private set; }
+    public Voucher Voucher { get; private set; }
     public List<OrderItem> OrderItens { get; private set; }
 
     protected Order() { }
@@ -32,13 +34,15 @@ public class Order : Entity, IAggregateRoot
         Guid customerId,
         bool isPaid,
         List<OrderItem> orderItens = null,
-        Customer customer = null)
+        Customer customer = null,
+        Voucher voucher = null)
         : base(id)
     {
         CustomerId = customerId;
         IsPaid = isPaid;
         OrderItens = orderItens;
         Customer = customer;
+        Voucher = voucher;
         TotalValue = CalculateOrderPrice();
         
         Validate();
@@ -46,6 +50,9 @@ public class Order : Entity, IAggregateRoot
 
     public void PayOrder()
         => IsPaid = true;
+
+    public void SetVoucher(Voucher voucher)
+        => Voucher = voucher;
     
     private decimal CalculateOrderPrice()
     {
@@ -54,7 +61,13 @@ public class Order : Entity, IAggregateRoot
         foreach (var item in OrderItens)
             totalValue += item.CalculateItemValue();
 
-        return totalValue;
+        if (Voucher == null)
+            return totalValue;
+
+        if (Voucher.IsPercentageDiscount)
+           return totalValue - (totalValue * (Voucher.PercentageDiscount.Value / 100));
+        
+        return totalValue = totalValue - Voucher.ValueDiscount.Value;
     }
     
     public void Validate(){}
