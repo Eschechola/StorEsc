@@ -1,6 +1,5 @@
 ﻿namespace StorEsc.Application.DTOs;
 
-public class CustomerDTO
+public class CustomerDTO : AccountDTO
 {
-    
 }

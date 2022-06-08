@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7 - IoC", "7 - IoC", "{6857
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - Core", "6 - Core", "{482D8C5D-DFDF-4BF4-96B6-2AE9EE8AE723}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.Application", "src\StorEsc.Application\StorEsc.Application.csproj", "{B4294A76-A1D8-467C-B851-E1BD7A6FBFDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.ApplicationServices", "src\StorEsc.ApplicationServices\StorEsc.ApplicationServices.csproj", "{B4294A76-A1D8-467C-B851-E1BD7A6FBFDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.Services", "src\StorEsc.Services\StorEsc.Services.csproj", "{5D8DA9C4-0706-430E-9A82-EE3BA3E87AFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.DomainServices", "src\StorEsc.DomainServices\StorEsc.DomainServices.csproj", "{5D8DA9C4-0706-430E-9A82-EE3BA3E87AFF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.Domain", "src\StorEsc.Domain\StorEsc.Domain.csproj", "{B3D81DB0-B927-4DBD-961A-A38C11E50181}"
 EndProject
