@@ -42,6 +42,7 @@ public class StorEscContext : DbContext, IUnitOfWork
         builder.ApplyConfiguration(new SellerMap());
         builder.ApplyConfiguration(new WalletMap());
         builder.ApplyConfiguration(new RechargeMap());
+        builder.ApplyConfiguration(new VoucherMap());
     }
 
     #endregion
