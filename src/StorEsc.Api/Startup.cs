@@ -1,4 +1,7 @@
-﻿namespace StorEsc.Api;
+﻿using StorEsc.IoC.Dependencies.ApplicationServices;
+using StorEsc.IoC.Dependencies.DomainServices;
+
+namespace StorEsc.Api;
 
 public class Startup
 {
@@ -22,6 +25,10 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services
+            .AddDomainServices()
+            .AddApplicationServices();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
