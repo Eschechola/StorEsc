@@ -12,7 +12,7 @@ public class Order : Entity, IAggregateRoot
     //EF
     public Customer Customer { get; private set; }
     public Voucher Voucher { get; private set; }
-    public List<OrderItem> OrderItens { get; private set; }
+    public IList<OrderItem> OrderItens { get; private set; }
 
     protected Order() { }
     

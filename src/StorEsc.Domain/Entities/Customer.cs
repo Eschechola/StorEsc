@@ -3,7 +3,7 @@
 public class Customer : Account
 {
     // EF
-    public List<Order> Orders { get; private set; }
+    public IList<Order> Orders { get; private set; }
     public Wallet Wallet { get; private set; }
     
     protected Customer() { }

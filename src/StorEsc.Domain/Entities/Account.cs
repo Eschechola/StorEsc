@@ -47,4 +47,10 @@ public abstract class Account : Entity, IAggregateRoot
     }
 
     public void Validate(){}
+
+    public void SetPassword(string password)
+        => Password = password;
+
+    public void SetWalletId(Guid walletId)
+        => WalletId = walletId;
 }

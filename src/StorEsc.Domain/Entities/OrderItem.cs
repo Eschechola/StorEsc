@@ -4,10 +4,10 @@ public class OrderItem : Entity
 {
     public Guid OrderId { get; private set; }
     public Guid ProductId { get; private set; }
-    public int ItemCount { get; set; }
+    public int ItemCount { get; private set; }
     
     // EF
-    public Order Order { get; set; }
+    public Order Order { get; private set; }
     public Product Product { get; private set; }
     
     protected OrderItem() { }
