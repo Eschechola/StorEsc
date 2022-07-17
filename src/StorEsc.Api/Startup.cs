@@ -1,5 +1,12 @@
-﻿using StorEsc.IoC.Dependencies.ApplicationServices;
+﻿using MediatR;
+using StorEsc.Api.IoC;
+using StorEsc.IoC.Dependencies.ApplicationServices;
+using StorEsc.IoC.Dependencies.Database;
 using StorEsc.IoC.Dependencies.DomainServices;
+using StorEsc.IoC.Dependencies.Hashers;
+using StorEsc.IoC.Dependencies.Mapper;
+using StorEsc.IoC.Dependencies.Mediator;
+using StorEsc.IoC.Dependencies.Repositories;
 
 namespace StorEsc.Api;
 
@@ -17,6 +24,9 @@ public class Startup
             .AddJsonFile($"appsettings.{_environment.EnvironmentName}.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();
 
+        if(_environment.EnvironmentName == "Local")
+            builder.AddUserSecrets<Startup>();
+
         _configuration = builder.Build();
     }
 
@@ -27,8 +37,16 @@ public class Startup
         services.AddSwaggerGen();
 
         services
+            .AddScoped((_) => _configuration)
+            .AddDatabaseContext(_configuration)
+            .AddRepositories()
             .AddDomainServices()
-            .AddApplicationServices();
+            .AddApplicationServices()
+            .AddArgon2Id(_configuration)
+            .AddMediatR(typeof(Startup))
+            .AddMediator()
+            .AddMapper()
+            .AddTokenAuthentication(_configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -40,8 +58,15 @@ public class Startup
         }
         
         app.UseHttpsRedirection();
+        
         app.UseStaticFiles();
+        
+        app.UseAuthentication();
+            
         app.UseRouting();
+
+        app.UseAuthorization();
+        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
