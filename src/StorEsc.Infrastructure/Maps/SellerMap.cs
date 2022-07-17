@@ -35,7 +35,7 @@ public class SellerMap : BaseMap<Seller>
         builder.Property(x=>x.Password)
             .IsRequired()
             .HasColumnName("Password")
-            .HasColumnType("VARCHAR(80)");
+            .HasColumnType("VARCHAR(120)");
         
         builder.HasOne(x => x.Wallet)
             .WithMany(x => x.Sellers)
