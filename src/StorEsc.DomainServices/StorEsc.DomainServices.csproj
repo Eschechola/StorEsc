@@ -6,4 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\StorEsc.Core\StorEsc.Core.csproj" />
+      <ProjectReference Include="..\StorEsc.Domain\StorEsc.Domain.csproj" />
+      <ProjectReference Include="..\StorEsc.Infrastructure\StorEsc.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="EscNet" Version="6.0.1" />
+    </ItemGroup>
+
 </Project>
