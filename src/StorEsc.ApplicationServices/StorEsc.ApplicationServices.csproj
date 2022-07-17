@@ -7,4 +7,13 @@
         <RootNamespace>StorEsc.Application</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\StorEsc.Core\StorEsc.Core.csproj" />
+      <ProjectReference Include="..\StorEsc.DomainServices\StorEsc.DomainServices.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="11.0.1" />
+    </ItemGroup>
+
 </Project>
