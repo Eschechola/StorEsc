@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StorEsc.Api.Token.Extensions;
 using StorEsc.Api.Token.Interfaces;
 using StorEsc.Api.ViewModels;
 using StorEsc.Application.DTOs;
@@ -38,12 +39,12 @@ public class AuthController : BaseController
         
         return Ok(new
         {
-            Id = user.Claims.ElementAt(0).Value,
-            Email = user.Claims.ElementAt(1).Value,
-            Jti = user.Claims.ElementAt(2).Value,
-            Nbf = user.Claims.ElementAt(3).Value,
-            Iat = user.Claims.ElementAt(4).Value,
-            Roles = user.Claims.ElementAt(5).Value
+            Id = user.GetId(),
+            Email = user.GetEmail(),
+            Roles = user.GetRole(),
+            Jti = user.GeTokenIdentifier(),
+            Nbf = user.GetTokenNotBefore(),
+            Iat = user.GetTokenIssuedAt()
         });
     }
 

@@ -55,8 +55,8 @@ public class TokenService : ITokenService
     {
         var claims = new Collection<Claim>();
 
-        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, uuid));
-        claims.Add(new Claim(JwtRegisteredClaimNames.Email, email));
+        claims.Add(new Claim(ClaimTypes.NameIdentifier, uuid));
+        claims.Add(new Claim(ClaimTypes.Email, email));
         claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, _now.ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Iat, _now.ToString()));

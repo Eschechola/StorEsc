@@ -2,9 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Api", "1 - Api", "{3876D122-8FF9-4B2E-9504-9E869BCA1061}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{ACE4707C-ADDB-4118-B940-34A7CF0F9F14}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - ApplicationServices", "2 - ApplicationServices", "{ACE4707C-ADDB-4118-B940-34A7CF0F9F14}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Services", "3 - Services", "{01861283-20D7-4D8D-9516-BEDAFB26E715}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - DomainServices", "3 - DomainServices", "{01861283-20D7-4D8D-9516-BEDAFB26E715}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Domain", "4 - Domain", "{5565EFF4-099C-4619-BCBA-FA56FEBE83CC}"
 EndProject
@@ -28,6 +28,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.IoC", "src\StorEsc.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.Api", "src\StorEsc.Api\StorEsc.Api.csproj", "{FD838B0C-003A-401D-8210-A4FDBBE7D631}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "8 - Tests", "8 - Tests", "{E08AF9D0-B9AF-454B-9DB8-0302168DED05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.UnitTests", "StorEsc.UnitTests\StorEsc.UnitTests.csproj", "{EC1ABA24-BC2D-418D-A630-E16CBCC6CD65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,7 @@ Global
 		{FAED2C39-57A3-44EB-965D-26AF008E244F} = {482D8C5D-DFDF-4BF4-96B6-2AE9EE8AE723}
 		{418012A6-E42A-45D4-924D-40A28143213C} = {6857F354-2094-4264-95DA-D736C1F4910E}
 		{FD838B0C-003A-401D-8210-A4FDBBE7D631} = {3876D122-8FF9-4B2E-9504-9E869BCA1061}
+		{EC1ABA24-BC2D-418D-A630-E16CBCC6CD65} = {E08AF9D0-B9AF-454B-9DB8-0302168DED05}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B4294A76-A1D8-467C-B851-E1BD7A6FBFDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -71,5 +76,9 @@ Global
 		{FD838B0C-003A-401D-8210-A4FDBBE7D631}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD838B0C-003A-401D-8210-A4FDBBE7D631}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD838B0C-003A-401D-8210-A4FDBBE7D631}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC1ABA24-BC2D-418D-A630-E16CBCC6CD65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC1ABA24-BC2D-418D-A630-E16CBCC6CD65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC1ABA24-BC2D-418D-A630-E16CBCC6CD65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC1ABA24-BC2D-418D-A630-E16CBCC6CD65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
