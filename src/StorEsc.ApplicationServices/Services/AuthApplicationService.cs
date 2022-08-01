@@ -55,14 +55,25 @@ public class AuthApplicationService : IAuthApplicationService
 
     #region Seller
     
-    public async Task<Optional<CustomerDTO>> AuthenticateSellerAsync(string email, string password)
+    public async Task<Optional<SellerDTO>> AuthenticateSellerAsync(string email, string password)
     {
-        throw new NotImplementedException();
+        var seller = await _sellerDomainService.AuthenticateSellerAsync(email, password);
+
+        if (!seller.HasValue)
+            return new Optional<SellerDTO>();
+
+        return _mapper.Map<SellerDTO>(seller.Value);
     }
 
-    public Task<Optional<SellerDTO>> RegisterSellerAsync(SellerDTO sellerDTO)
+    public async Task<Optional<SellerDTO>> RegisterSellerAsync(SellerDTO sellerDTO)
     {
-        throw new NotImplementedException();
+        var seller = _mapper.Map<Seller>(sellerDTO);
+        var sellerRegistred = await _sellerDomainService.RegisterSellerAsync(seller);
+
+        if (!sellerRegistred.HasValue)
+            return new Optional<SellerDTO>();
+
+        return _mapper.Map<SellerDTO>(sellerRegistred.Value);
     }
 
     public Task<bool> ResetSellerPasswordAsync(string email)

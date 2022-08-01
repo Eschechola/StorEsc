@@ -50,35 +50,44 @@ public class CustomerDomainService : ICustomerDomainService
 
     public async Task<Optional<Customer>> RegisterCustomerAsync(Customer customer)
     {
-        var customerExists = await _customerRepository.ExistsAsync(x => x.Email.ToLower() == customer.Email.ToLower());
-
-        if (customerExists)
+        try
         {
-            await _domainNotification.PublishCustomerAlreadyExistsAsync();
+            var customerExists =
+                await _customerRepository.ExistsAsync(x => x.Email.ToLower() == customer.Email.ToLower());
+
+            if (customerExists)
+            {
+                await _domainNotification.PublishCustomerAlreadyExistsAsync();
+                return new Optional<Customer>();
+            }
+
+            customer.Validate();
+
+            if (!customer.IsValid)
+            {
+                await _domainNotification.PublishCustomerDataIsInvalidAsync(customer.ErrorsToString());
+                return new Optional<Customer>();
+            }
+
+            var hashedPassword = _argon2IdHasher.Hash(customer.Password);
+            customer.SetPassword(hashedPassword);
+
+            await _customerRepository.UnitOfWork.BeginTransactionAsync();
+
+            var wallet = await _walletDomainService.CreateNewEmptyWallet();
+            customer.SetWalletId(wallet.Id);
+
+            _customerRepository.Create(customer);
+            await _customerRepository.UnitOfWork.SaveChangesAsync();
+            await _customerRepository.UnitOfWork.CommitAsync();
+
+            return customer;
+        }
+        catch (Exception)
+        {
+            await _customerRepository.UnitOfWork.RollbackAsync();
             return new Optional<Customer>();
         }
-        
-        customer.Validate();
-
-        if (!customer.IsValid)
-        {
-            await _domainNotification.PublishCustomerDataIsInvalidAsync(customer.ErrorsToString());
-            return new Optional<Customer>();
-        }
-
-        var hashedPassword = _argon2IdHasher.Hash(customer.Password);
-        customer.SetPassword(hashedPassword);
-
-        await _customerRepository.UnitOfWork.BeginTransactionAsync();
-
-        var wallet = await _walletDomainService.CreateNewEmptyWallet();
-        customer.SetWalletId(wallet.Id);
-        
-        _customerRepository.Create(customer);
-        await _customerRepository.UnitOfWork.SaveChangesAsync();
-        await _customerRepository.UnitOfWork.CommitAsync();
-
-        return customer;
     }
 
     public Task<bool> ResetCustomerPasswordAsync(string email)

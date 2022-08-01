@@ -99,21 +99,65 @@ public class AuthController : BaseController
     #region Seller
 
     [HttpPost]
-    [Route("seller/register")]
+    [Route("seller/login")]
     [AllowAnonymous]
-    public async Task<IActionResult> RegisterSellerAsync()
+    public async Task<IActionResult> LoginSellerAsync([FromBody]LoginSellerViewModel viewModel)
     {
-        return Ok();
+        var seller = await _authApplicationService.AuthenticateSellerAsync(viewModel.Email, viewModel.Password);
+        
+        if (HasNotifications())
+            return Result();
+        
+        return Ok(new ResultViewModel
+        {
+            Message = "Login successful!",
+            Success = true,
+            Data = new
+            {
+                Id = seller.Value.Id,
+                WalletId = seller.Value.WalletId,
+                FirstName = seller.Value.FirstName,
+                LastName =  seller.Value.LastName,
+                Email = seller.Value.Email,
+                Token = _tokenService.GenerateSellerToken(seller.Value)
+            }
+        });
     }
     
     [HttpPost]
-    [Route("seller/login")]
+    [Route("seller/register")]
     [AllowAnonymous]
-    public async Task<IActionResult> LoginSellerAsync()
+    public async Task<IActionResult> RegisterSellerAsync([FromBody] RegisterSellerViewModel viewModel)
     {
-        return Ok();
+        var sellerDTO = new SellerDTO
+        {
+            FirstName = viewModel.FirstName,
+            LastName = viewModel.LastName,
+            Email = viewModel.Email,
+            Password = viewModel.Password
+        };
+        
+        var sellerCreated = await _authApplicationService.RegisterSellerAsync(sellerDTO);
+        
+        if (HasNotifications())
+            return Result();
+        
+        return Created(new ResultViewModel
+        {
+            Message = "Seller created with success!",
+            Success = true,
+            Data = new
+            {
+                Id = sellerCreated.Value.Id,
+                WalletId = sellerCreated.Value.WalletId,
+                FirstName = sellerCreated.Value.FirstName,
+                LastName =  sellerCreated.Value.LastName,
+                Email = sellerCreated.Value.Email,
+                Token = _tokenService.GenerateSellerToken(sellerCreated.Value)
+            }
+        });
     }
-    
+
     [HttpPost]
     [Route("seller/forgot-password")]
     [AllowAnonymous]
