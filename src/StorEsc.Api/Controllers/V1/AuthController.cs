@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
+using StorEsc.Api.Token;
 using StorEsc.Api.Token.Interfaces;
 using StorEsc.Api.ViewModels;
 using StorEsc.Application.DTOs;
@@ -14,15 +16,40 @@ public class AuthController : BaseController
 {
     private readonly IAuthApplicationService _authApplicationService;
     private readonly ITokenService _tokenService;
+    private readonly IConfiguration _configuration;
 
     public AuthController(
         IAuthApplicationService authApplicationService,
         ITokenService tokenService,
+        IConfiguration configuration,
         INotificationHandler<DomainNotification> domainNotificationHandler) : base(domainNotificationHandler)
     {
         _authApplicationService = authApplicationService;
         _tokenService = tokenService;
+        _configuration = configuration;
     }
+
+    #region Me
+
+    [HttpGet]
+    [Authorize]
+    [Route("me")]
+    public IActionResult Me()
+    {
+        var user = HttpContext.User;
+        
+        return Ok(new
+        {
+            Id = user.Claims.ElementAt(0).Value,
+            Email = user.Claims.ElementAt(1).Value,
+            Jti = user.Claims.ElementAt(2).Value,
+            Nbf = user.Claims.ElementAt(3).Value,
+            Iat = user.Claims.ElementAt(4).Value,
+            Roles = user.Claims.ElementAt(5).Value
+        });
+    }
+
+    #endregion
 
     #region Customer
 
