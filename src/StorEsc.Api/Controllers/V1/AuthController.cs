@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.JsonWebTokens;
-using StorEsc.Api.Token;
 using StorEsc.Api.Token.Interfaces;
 using StorEsc.Api.ViewModels;
 using StorEsc.Application.DTOs;
@@ -78,10 +76,14 @@ public class AuthController : BaseController
             Data = new
             {
                 Id = customerCreated.Value.Id,
-                WalletId = customerCreated.Value.WalletId,
                 FirstName = customerCreated.Value.FirstName,
                 LastName =  customerCreated.Value.LastName,
                 Email = customerCreated.Value.Email,
+                Wallet = new
+                {
+                    Id = customerCreated.Value.Wallet.Id,
+                    Amount = customerCreated.Value.Wallet.Amount
+                },
                 Token = _tokenService.GenerateCustomerToken(customerCreated.Value)
             }
         });
@@ -104,10 +106,14 @@ public class AuthController : BaseController
             Data = new
             {
                 Id = customer.Value.Id,
-                WalletId = customer.Value.WalletId,
                 FirstName = customer.Value.FirstName,
                 LastName =  customer.Value.LastName,
                 Email = customer.Value.Email,
+                Wallet = new
+                {
+                    Id = customer.Value.Wallet.Id,
+                    Amount = customer.Value.Wallet.Amount
+                },
                 Token = _tokenService.GenerateCustomerToken(customer.Value)
             }
         });
@@ -142,10 +148,14 @@ public class AuthController : BaseController
             Data = new
             {
                 Id = seller.Value.Id,
-                WalletId = seller.Value.WalletId,
                 FirstName = seller.Value.FirstName,
                 LastName =  seller.Value.LastName,
                 Email = seller.Value.Email,
+                Wallet = new
+                {
+                    Id = seller.Value.Wallet.Id,
+                    Amount = seller.Value.Wallet.Amount
+                },
                 Token = _tokenService.GenerateSellerToken(seller.Value)
             }
         });
@@ -176,10 +186,14 @@ public class AuthController : BaseController
             Data = new
             {
                 Id = sellerCreated.Value.Id,
-                WalletId = sellerCreated.Value.WalletId,
                 FirstName = sellerCreated.Value.FirstName,
                 LastName =  sellerCreated.Value.LastName,
                 Email = sellerCreated.Value.Email,
+                Wallet = new
+                {
+                    Id = sellerCreated.Value.Wallet.Id,
+                    Amount = sellerCreated.Value.Wallet.Amount
+                },
                 Token = _tokenService.GenerateSellerToken(sellerCreated.Value)
             }
         });

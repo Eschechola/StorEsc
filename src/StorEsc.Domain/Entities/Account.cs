@@ -9,6 +9,7 @@ public abstract class Account : Entity, IAggregateRoot
     public string LastName { get; private set; }
     public string Email { get; private set; }
     public string Password { get; private set; }
+    public Wallet Wallet { get; private set; }
     
     protected Account() { }
     
@@ -34,7 +35,8 @@ public abstract class Account : Entity, IAggregateRoot
         string firstName,
         string lastName,
         string email,
-        string password)
+        string password,
+        Wallet wallet = null)
         : base (id)
     {
         WalletId = walletId;
@@ -42,6 +44,7 @@ public abstract class Account : Entity, IAggregateRoot
         LastName = lastName;
         Email = email;
         Password = password;
+        Wallet = wallet;
         
         Validate();
     }
@@ -51,6 +54,9 @@ public abstract class Account : Entity, IAggregateRoot
     public void SetPassword(string password)
         => Password = password;
 
-    public void SetWalletId(Guid walletId)
-        => WalletId = walletId;
+    public void SetWallet(Wallet wallet)
+    {
+        WalletId = wallet.Id;
+        Wallet = wallet;
+    }
 }

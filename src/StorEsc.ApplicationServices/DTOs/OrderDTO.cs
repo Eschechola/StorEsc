@@ -1,8 +1,7 @@
 ﻿namespace StorEsc.Application.DTOs;
 
-public class OrderDTO
+public class OrderDTO : BaseDTO
 {
-    public Guid Id { get; set; }
     public Guid CustomerId { get; set; }
     public Guid? VoucherId { get; set; }
     public decimal TotalValue { get; set;  }

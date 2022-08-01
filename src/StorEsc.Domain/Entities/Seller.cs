@@ -4,7 +4,6 @@ public class Seller : Account
 {
     // EF
     public IList<Product> Products { get; private set; }
-    public Wallet Wallet { get; private set; }
 
     protected Seller() { }
     
@@ -38,9 +37,8 @@ public class Seller : Account
         string password,
         List<Product> products = null,
         Wallet wallet = null) 
-        : base(id, walletId, firstName, lastName, email, password)
+        : base(id, walletId, firstName, lastName, email, password, wallet)
     {
         Products = products;
-        Wallet = wallet;
     }
 }

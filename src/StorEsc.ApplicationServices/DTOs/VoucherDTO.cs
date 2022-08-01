@@ -1,8 +1,7 @@
 ﻿namespace StorEsc.Application.DTOs;
 
-public class VoucherDTO
+public class VoucherDTO : BaseDTO
 {
-    public Guid Id { get; set; }
     public string Code { get; set; }
     public decimal? ValueDiscount { get; set; }
     public decimal? PercentageDiscount { get; set; }

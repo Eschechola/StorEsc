@@ -36,7 +36,10 @@ public class SellerDomainService : ISellerDomainService
             return new Optional<Seller>();
         }
 
-        var seller = await _sellerRepository.GetAsync(x => x.Email.ToLower() == email.ToLower());
+        var seller = await _sellerRepository.GetAsync(
+            x => x.Email.ToLower() == email.ToLower(),
+            "Wallet");
+        
         var hashedPassword = _argon2IdHasher.Hash(password);
 
         if (seller.Password != hashedPassword)
@@ -75,7 +78,7 @@ public class SellerDomainService : ISellerDomainService
             await _sellerRepository.UnitOfWork.BeginTransactionAsync();
 
             var wallet = await _walletDomainService.CreateNewEmptyWallet();
-            seller.SetWalletId(wallet.Id);
+            seller.SetWallet(wallet);
 
             _sellerRepository.Create(seller);
             await _sellerRepository.UnitOfWork.SaveChangesAsync();

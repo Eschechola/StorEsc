@@ -36,7 +36,10 @@ public class CustomerDomainService : ICustomerDomainService
             return new Optional<Customer>();
         }
 
-        var customer = await _customerRepository.GetAsync(x => x.Email.ToLower() == email.ToLower());
+        var customer = await _customerRepository.GetAsync(
+            x => x.Email.ToLower() == email.ToLower(),
+            "Wallet");
+        
         var hashedPassword = _argon2IdHasher.Hash(password);
 
         if (customer.Password != hashedPassword)
@@ -75,7 +78,7 @@ public class CustomerDomainService : ICustomerDomainService
             await _customerRepository.UnitOfWork.BeginTransactionAsync();
 
             var wallet = await _walletDomainService.CreateNewEmptyWallet();
-            customer.SetWalletId(wallet.Id);
+            customer.SetWallet(wallet);
 
             _customerRepository.Create(customer);
             await _customerRepository.UnitOfWork.SaveChangesAsync();

@@ -1,8 +1,7 @@
 ﻿namespace StorEsc.Application.DTOs;
 
-public class ProductDTO
+public class ProductDTO : BaseDTO
 {
-    public Guid Id { get; set; }
     public Guid SellerId { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
