@@ -73,7 +73,7 @@ public class TokenService : ITokenService
                 => Roles.Customer,
 
             TokenType.Seller
-                => Roles.Admin,
+                => Roles.Seller,
 
             _ => Roles.Customer
         };

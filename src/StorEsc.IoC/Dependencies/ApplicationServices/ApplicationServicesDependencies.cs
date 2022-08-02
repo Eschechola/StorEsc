@@ -9,6 +9,7 @@ public static class ApplicationServicesDependencies
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthApplicationService, AuthApplicationService>();
+        services.AddScoped<IWalletApplicationService, WalletApplicationService>();
 
         return services;
     }
