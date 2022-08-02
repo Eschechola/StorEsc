@@ -26,6 +26,9 @@ public class CustomerDomainService : ICustomerDomainService
         _domainNotification = domainNotification;
     }
 
+    public async Task<Customer> GetCustomer(string id)
+        => await _customerRepository.GetAsync(x => x.Id == Guid.Parse(id));
+
     public async Task<Optional<Customer>> AuthenticateCustomerAsync(string email, string password)
     {
         var customerExists = await _customerRepository.ExistsAsync(x => x.Email.ToLower() == email.ToLower());

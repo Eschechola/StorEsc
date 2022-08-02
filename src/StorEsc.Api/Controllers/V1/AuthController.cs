@@ -21,7 +21,8 @@ public class AuthController : BaseController
         IAuthApplicationService authApplicationService,
         ITokenService tokenService,
         IConfiguration configuration,
-        INotificationHandler<DomainNotification> domainNotificationHandler) : base(domainNotificationHandler)
+        INotificationHandler<DomainNotification> domainNotificationHandler) 
+        : base(domainNotificationHandler)
     {
         _authApplicationService = authApplicationService;
         _tokenService = tokenService;

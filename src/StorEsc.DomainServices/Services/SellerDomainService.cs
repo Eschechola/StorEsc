@@ -25,7 +25,9 @@ public class SellerDomainService : ISellerDomainService
         _argon2IdHasher = argon2IdHasher;
         _walletDomainService = walletDomainService;
     }
-    
+
+    public async Task<Seller> GetSeller(string id)
+        => await _sellerRepository.GetAsync(x => x.Id == Guid.Parse(id));
     public async Task<Optional<Seller>> AuthenticateSellerAsync(string email, string password)
     {
         var sellerExists = await _sellerRepository.ExistsAsync(x => x.Email.ToLower() == email.ToLower());
