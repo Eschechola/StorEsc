@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Validators" />
+      <PackageReference Include="FluentValidation" Version="11.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.0.1" />
+      <ProjectReference Include="..\StorEsc.Core\StorEsc.Core.csproj" />
     </ItemGroup>
 
 </Project>

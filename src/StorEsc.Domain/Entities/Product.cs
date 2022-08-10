@@ -1,4 +1,5 @@
 ﻿using StorEsc.Domain.Interfaces;
+using StorEsc.Domain.Validators;
 
 namespace StorEsc.Domain.Entities;
 
@@ -47,6 +48,7 @@ public class Product : Entity, IAggregateRoot
         
         Validate();
     }
-    
-    public void Validate(){}
+
+    public void Validate()
+        => base.Validate(new ProductValidator(), this);
 }
