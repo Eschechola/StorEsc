@@ -1,4 +1,5 @@
 ﻿using StorEsc.Domain.Interfaces;
+using StorEsc.Domain.Validators;
 
 namespace StorEsc.Domain.Entities;
 
@@ -61,9 +62,8 @@ public class Voucher : Entity, IAggregateRoot
         
         Validate();
     }
-    
-    
+
+
     public void Validate()
-    {
-    }
+        => base.Validate(new VoucherValidator(), this);
 }
