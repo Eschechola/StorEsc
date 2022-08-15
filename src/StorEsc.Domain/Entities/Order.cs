@@ -1,4 +1,5 @@
 ﻿using StorEsc.Domain.Interfaces;
+using StorEsc.Domain.Validators;
 
 namespace StorEsc.Domain.Entities;
 
@@ -67,8 +68,9 @@ public class Order : Entity, IAggregateRoot
         if (Voucher.IsPercentageDiscount)
            return totalValue - (totalValue * (Voucher.PercentageDiscount.Value / 100));
         
-        return totalValue = totalValue - Voucher.ValueDiscount.Value;
+        return totalValue - Voucher.ValueDiscount.Value;
     }
-    
-    public void Validate(){}
+
+    public void Validate()
+        => base.Validate(new OrderValidator(), this);
 }
