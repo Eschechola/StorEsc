@@ -15,5 +15,8 @@ public static class ValidatorMessages
         => $"{propertyName} can have a maximum of {maximumLenght} characters.";
 
     public static string GreaterThanOrEqualTo(string propertyName, double value)
-        => $"{propertyName} can be greater than or equals to ${value}";
+        => $"{propertyName} can be greater than or equals to ${value}.";
+
+    public static string InvalidProperty(string propertyName)
+        => $"{propertyName} is invalid.";
 }

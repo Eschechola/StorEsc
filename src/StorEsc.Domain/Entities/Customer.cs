@@ -41,4 +41,7 @@ public class Customer : Account
     {
         Orders = orders;
     }
+
+    public void Validate()
+        => base.Validate();
 }

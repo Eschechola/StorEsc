@@ -41,4 +41,7 @@ public class Seller : Account
     {
         Products = products;
     }
+    
+    public void Validate()
+        => base.Validate();
 }

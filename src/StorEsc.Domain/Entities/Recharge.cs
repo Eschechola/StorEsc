@@ -1,4 +1,5 @@
 using StorEsc.Domain.Interfaces;
+using StorEsc.Domain.Validators;
 
 namespace StorEsc.Domain.Entities;
 
@@ -34,6 +35,5 @@ public class Recharge : Entity, IAggregateRoot
     }
 
     public void Validate()
-    {
-    }
+        => base.Validate(new RechargeValidator(), this);
 }

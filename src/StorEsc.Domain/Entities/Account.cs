@@ -1,4 +1,5 @@
 ﻿using StorEsc.Domain.Interfaces;
+using StorEsc.Domain.Validators;
 
 namespace StorEsc.Domain.Entities;
 
@@ -49,7 +50,8 @@ public abstract class Account : Entity, IAggregateRoot
         Validate();
     }
 
-    public void Validate(){}
+    public void Validate()
+        => base.Validate(new AccountValidator(), this);
 
     public void SetPassword(string password)
         => Password = password;
