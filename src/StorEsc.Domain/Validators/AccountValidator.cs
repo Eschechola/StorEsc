@@ -8,13 +8,6 @@ public class AccountValidator : AbstractValidator<Account>
 {
     public AccountValidator()
     {
-        RuleFor(x=>x.WalletId)
-            .NotNull()
-            .WithMessage(ValidatorMessages.NotNull("WalletId"))
-
-            .NotEmpty()
-            .WithMessage(ValidatorMessages.NotEmpty("WalletId"));
-        
         RuleFor(x=>x.FirstName)
             .NotNull()
             .WithMessage(ValidatorMessages.NotNull("FirstName"))
