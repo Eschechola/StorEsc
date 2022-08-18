@@ -29,7 +29,7 @@ public class WalletController : BaseController
     {
         var customerId = HttpContext.User.GetId();
 
-        var wallet = await _walletApplicationService.GetCustomerWallet(customerId);
+        var wallet = await _walletApplicationService.GetCustomerWalletAsync(customerId);
         
         if (HasNotifications())
             return Result();
@@ -53,7 +53,7 @@ public class WalletController : BaseController
     {
         var customerId = HttpContext.User.GetId();
 
-        var wallet = await _walletApplicationService.GetSellerWallet(customerId);
+        var wallet = await _walletApplicationService.GetSellerWalletAsync(customerId);
         
         if (HasNotifications())
             return Result();

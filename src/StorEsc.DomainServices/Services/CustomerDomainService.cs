@@ -80,7 +80,7 @@ public class CustomerDomainService : ICustomerDomainService
 
             await _customerRepository.UnitOfWork.BeginTransactionAsync();
 
-            var wallet = await _walletDomainService.CreateNewEmptyWallet();
+            var wallet = await _walletDomainService.CreateNewEmptyWalletAsync();
             customer.SetWallet(wallet);
 
             _customerRepository.Create(customer);

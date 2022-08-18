@@ -5,7 +5,7 @@ namespace StorEsc.DomainServices.Interfaces;
 
 public interface IWalletDomainService
 {
-    Task<Wallet> CreateNewEmptyWallet();
-    Task<Wallet> GetSellerWallet(string sellerId);
-    Task<Wallet> GetCustomerWallet(string customerId);
+    Task<Wallet> CreateNewEmptyWalletAsync();
+    Task<Wallet> GetSellerWalletAsync(string sellerId);
+    Task<Wallet> GetCustomerWalletAsync(string customerId);
 }

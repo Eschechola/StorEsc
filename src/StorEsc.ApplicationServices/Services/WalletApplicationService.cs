@@ -18,15 +18,15 @@ public class WalletApplicationService : IWalletApplicationService
         _mapper = mapper;
     }
 
-    public async Task<WalletDTO> GetSellerWallet(string sellerId)
+    public async Task<WalletDTO> GetSellerWalletAsync(string sellerId)
     {
-        var wallet = await _walletDomainService.GetSellerWallet(sellerId);
+        var wallet = await _walletDomainService.GetSellerWalletAsync(sellerId);
         return _mapper.Map<WalletDTO>(wallet);
     }
 
-    public async Task<WalletDTO> GetCustomerWallet(string customerId)
+    public async Task<WalletDTO> GetCustomerWalletAsync(string customerId)
     {
-        var wallet = await _walletDomainService.GetCustomerWallet(customerId);
+        var wallet = await _walletDomainService.GetCustomerWalletAsync(customerId);
         return _mapper.Map<WalletDTO>(wallet);
     }
 }

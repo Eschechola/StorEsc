@@ -3,6 +3,6 @@ namespace StorEsc.Application.Interfaces;
 
 public interface IWalletApplicationService
 {
-    Task<WalletDTO> GetSellerWallet(string sellerId);
-    Task<WalletDTO> GetCustomerWallet(string customerId);
+    Task<WalletDTO> GetSellerWalletAsync(string sellerId);
+    Task<WalletDTO> GetCustomerWalletAsync(string customerId);
 }

@@ -79,7 +79,7 @@ public class SellerDomainService : ISellerDomainService
 
             await _sellerRepository.UnitOfWork.BeginTransactionAsync();
 
-            var wallet = await _walletDomainService.CreateNewEmptyWallet();
+            var wallet = await _walletDomainService.CreateNewEmptyWalletAsync();
             seller.SetWallet(wallet);
 
             _sellerRepository.Create(seller);
