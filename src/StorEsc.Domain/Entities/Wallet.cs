@@ -1,4 +1,5 @@
 ﻿using StorEsc.Domain.Interfaces;
+using StorEsc.Domain.Validators;
 
 namespace StorEsc.Domain.Entities;
 
@@ -57,6 +58,7 @@ public class Wallet : Entity, IAggregateRoot
 
     public void AddAmount(double amount)
         => Amount += amount;
-    
-    public void Validate(){}
+
+    public void Validate()
+        => base.Validate(new WalletValidator(), this);
 }
