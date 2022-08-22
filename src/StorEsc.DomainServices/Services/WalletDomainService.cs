@@ -21,7 +21,7 @@ public class WalletDomainService : IWalletDomainService
     }
 
 
-    public async Task<Wallet> CreateNewEmptyWallet()
+    public async Task<Wallet> CreateNewEmptyWalletAsync()
     {
         var wallet = new Wallet(amount: 0);
 
@@ -31,7 +31,7 @@ public class WalletDomainService : IWalletDomainService
         return wallet;
     }
 
-    public async Task<Wallet> GetSellerWallet(string sellerId)
+    public async Task<Wallet> GetSellerWalletAsync(string sellerId)
     {
         var seller = await _sellerRepository.GetAsync(x=>x.Id == Guid.Parse(sellerId));
         var wallet = await _walletRepository.GetAsync(x => x.Id == seller.WalletId);
@@ -39,7 +39,7 @@ public class WalletDomainService : IWalletDomainService
         return wallet;
     }
 
-    public async Task<Wallet> GetCustomerWallet(string customerId)
+    public async Task<Wallet> GetCustomerWalletAsync(string customerId)
     {
         var customer = await _customerRepository.GetAsync(x=>x.Id == Guid.Parse(customerId));
         var wallet = await _walletRepository.GetAsync(x => x.Id == customer.WalletId);

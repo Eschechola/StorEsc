@@ -11,6 +11,7 @@ public static class DomainServicesDependencies
         services.AddScoped<ICustomerDomainService, CustomerDomainService>();
         services.AddScoped<ISellerDomainService, SellerDomainService>();
         services.AddScoped<IWalletDomainService, WalletDomainService>();
+        services.AddScoped<IProductDomainService, ProductDomainService>();
 
         return services;
     }
