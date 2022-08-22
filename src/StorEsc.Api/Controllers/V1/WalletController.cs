@@ -25,7 +25,7 @@ public class WalletController : BaseController
     [HttpGet]
     [Authorize(Roles = Roles.Customer)]
     [Route("customer/get-wallet")]
-    public async Task<IActionResult> GetCustomerWallet()
+    public async Task<IActionResult> GetCustomerWalletAsync()
     {
         var customerId = HttpContext.User.GetId();
         var wallet = await _walletApplicationService.GetCustomerWalletAsync(customerId);
@@ -45,7 +45,7 @@ public class WalletController : BaseController
     [HttpGet]
     [Authorize(Roles = Roles.Seller)]
     [Route("seller/get-wallet")]
-    public async Task<IActionResult> GetSellerWallet()
+    public async Task<IActionResult> GetSellerWalletAsync()
     {
         var customerId = HttpContext.User.GetId();
         var wallet = await _walletApplicationService.GetSellerWalletAsync(customerId);
