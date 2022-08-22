@@ -23,7 +23,7 @@ public class ProductController : BaseController
     [HttpGet]
     [Route("get-seller-products/{sellerId}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetSellerProducts([FromRoute] string sellerId)
+    public async Task<IActionResult> GetSellerProductsAsync([FromRoute] string sellerId)
     {
         var products = await _productApplicationService.GetProductsAsync(sellerId);
 
