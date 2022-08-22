@@ -28,12 +28,8 @@ public class WalletController : BaseController
     public async Task<IActionResult> GetCustomerWallet()
     {
         var customerId = HttpContext.User.GetId();
-
         var wallet = await _walletApplicationService.GetCustomerWalletAsync(customerId);
         
-        if (HasNotifications())
-            return Result();
-
         return Ok(new ResultViewModel
         {
             Message = "Wallet found with success!",
@@ -52,11 +48,7 @@ public class WalletController : BaseController
     public async Task<IActionResult> GetSellerWallet()
     {
         var customerId = HttpContext.User.GetId();
-
         var wallet = await _walletApplicationService.GetSellerWalletAsync(customerId);
-        
-        if (HasNotifications())
-            return Result();
 
         return Ok(new ResultViewModel
         {
