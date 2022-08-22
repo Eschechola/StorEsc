@@ -19,17 +19,7 @@ public class ProductDomainService : IProductDomainService
         _domainNotification = domainNotification;
     }
 
-    public async Task<Optional<IList<Product>>> GetProductsAsync(string sellerId)
-    {
-        var products = await _productRepository.GetAllAsync(
+    public async Task<IList<Product>> GetProductsAsync(string sellerId)
+        => await _productRepository.GetAllAsync(
             x => x.SellerId == Guid.Parse(sellerId));
-
-        if (!products.Any())
-        {
-            await _domainNotification.PublishNoProductsFoundAsync();
-            return new Optional<IList<Product>>();
-        }
-
-        return new Optional<IList<Product>>(products);
-    }
 }

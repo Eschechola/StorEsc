@@ -19,13 +19,10 @@ public class ProductApplicationService : IProductApplicationService
         _mapper = mapper;
     }
 
-    public async Task<Optional<IList<ProductDTO>>> GetProductsAsync(string sellerId)
+    public async Task<IList<ProductDTO>> GetProductsAsync(string sellerId)
     {
         var products = await _productDomainService.GetProductsAsync(sellerId);
 
-        if (!products.HasValue)
-            return new List<ProductDTO>();
-
-        return _mapper.Map<Optional<IList<ProductDTO>>>(products.Value);
+        return _mapper.Map<IList<ProductDTO>>(products);
     }
 }

@@ -2,7 +2,7 @@
 using StorEsc.Core.Communication.Mediator.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
-namespace StorEsc.Core.Communication.Mediator.Handlers;
+namespace StorEsc.Core.Communication.Mediator.Facades;
 
 public class DomainNotificationFacade : IDomainNotificationFacade
 {
@@ -12,11 +12,6 @@ public class DomainNotificationFacade : IDomainNotificationFacade
     {
         _mediatorHandler = mediatorHandler;
     }
-
-    public async Task PublishNoProductsFoundAsync()
-        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
-            message: "No products found.",
-            type: DomainNotificationType.NoProductsFound));
 
     public async Task PublishCustomerDataIsInvalidAsync(string errors)
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(

@@ -5,5 +5,5 @@ namespace StorEsc.Application.Interfaces;
 
 public interface IProductApplicationService
 {
-    Task<Optional<IList<ProductDTO>>> GetProductsAsync(string sellerId);
+    Task<IList<ProductDTO>> GetProductsAsync(string sellerId);
 }

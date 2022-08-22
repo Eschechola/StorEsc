@@ -26,6 +26,9 @@ public abstract class BaseController : Controller
     protected ObjectResult Created(dynamic responseObject)
         => StatusCode(201, responseObject);
 
+    protected ObjectResult NoContent(dynamic responseObject)
+        => StatusCode(204, responseObject);
+
     protected ObjectResult InternalServerError()
         => StatusCode(500, new ResultViewModel
         {

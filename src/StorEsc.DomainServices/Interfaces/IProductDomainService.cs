@@ -5,5 +5,5 @@ namespace StorEsc.DomainServices.Interfaces;
 
 public interface IProductDomainService
 {
-    Task<Optional<IList<Product>>> GetProductsAsync(string sellerId);
+    Task<IList<Product>> GetProductsAsync(string sellerId);
 }

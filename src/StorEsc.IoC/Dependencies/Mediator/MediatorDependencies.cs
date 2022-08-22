@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using StorEsc.Core.Communication.Mediator.Facades;
 using StorEsc.Core.Communication.Mediator.Handlers;
 using StorEsc.Core.Communication.Mediator.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;

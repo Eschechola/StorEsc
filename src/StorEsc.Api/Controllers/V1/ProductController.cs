@@ -29,12 +29,20 @@ public class ProductController : BaseController
         
         if (HasNotifications())
             return Result();
+        
+        if(products.Any())
+            return Ok(new ResultViewModel
+            {
+                Message = "Products found with success.",
+                Success = true,
+                Data = products
+            });
 
-        return Ok(new ResultViewModel
+        return NoContent(new ResultViewModel
         {
-            Message = "Products found with success.",
-            Success = true,
-            Data = products.Value
+            Message = "No products found",
+            Success = false,
+            Data = null
         });
     }
 }
