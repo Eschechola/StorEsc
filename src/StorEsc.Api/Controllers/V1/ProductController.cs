@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StorEsc.Api.Token;
 using StorEsc.Api.ViewModels;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
@@ -36,5 +37,13 @@ public class ProductController : BaseController
             Success = true,
             Data = products
         });
+    }
+
+    [HttpPost]
+    [Authorize(Roles = Roles.Seller)]
+    [Route("create-product")]
+    public async Task<IActionResult> CreateProductAsync()
+    {
+        
     }
 }
