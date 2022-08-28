@@ -55,7 +55,8 @@ public class ProductController : BaseController
             SellerId = Guid.Parse(sellerId),
             Name = viewModel.Name,
             Description = viewModel.Description,
-            Price = viewModel.Price
+            Price = viewModel.Price,
+            Stock = viewModel.Stock
         };
         
         var productCreated = await _productApplicationService.CreateProductAsync(productDTO);

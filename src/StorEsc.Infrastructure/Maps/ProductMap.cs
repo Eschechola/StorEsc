@@ -32,6 +32,11 @@ public class ProductMap : BaseMap<Product>
             .HasColumnType("DECIMAL(14,9)")
             .HasColumnName("Price");
         
+        builder.Property(x => x.Stock)
+            .IsRequired()
+            .HasColumnType("INT")
+            .HasColumnName("Stock");
+        
         builder.HasOne(x => x.Seller)
             .WithMany(x => x.Products)
             .HasForeignKey(x => x.SellerId);

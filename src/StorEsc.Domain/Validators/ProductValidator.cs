@@ -41,7 +41,17 @@ public class ProductValidator : AbstractValidator<Product>
             .NotEmpty()
             .WithMessage(ValidatorMessages.NotEmpty("Price"))
 
-            .GreaterThanOrEqualTo(1)
-            .WithMessage(ValidatorMessages.GreaterThanOrEqualTo("Price", 1));
+            .GreaterThanOrEqualTo(5)
+            .WithMessage(ValidatorMessages.GreaterThanOrEqualTo("Price", 5));
+        
+        RuleFor(x=>x.Stock)
+            .NotNull()
+            .WithMessage(ValidatorMessages.NotNull("Stock"))
+            
+            .NotEmpty()
+            .WithMessage(ValidatorMessages.NotEmpty("Stock"))
+            
+            .GreaterThanOrEqualTo(0)
+            .WithMessage(ValidatorMessages.GreaterThanOrEqualTo("Stock", 0));
     }
 }

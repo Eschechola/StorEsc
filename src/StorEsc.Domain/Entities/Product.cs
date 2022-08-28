@@ -9,6 +9,7 @@ public class Product : Entity, IAggregateRoot
     public string Name { get; private set; }
     public string Description { get; private set; }
     public decimal Price { get; private set; }
+    public int Stock { get; private set; }
     
     //EF
     public Seller Seller { get; private set; }
@@ -20,12 +21,14 @@ public class Product : Entity, IAggregateRoot
         Guid sellerId,
         string name,
         string description,
-        decimal price)
+        decimal price,
+        int stock)
     {
         SellerId = sellerId;
         Name = name;
         Description = description;
         Price = price;
+        Stock = stock;
         
         Validate();
     }
@@ -36,6 +39,7 @@ public class Product : Entity, IAggregateRoot
         string name,
         string description,
         decimal price,
+        int stock,
         Seller seller = null,
         List<OrderItem> orderItens = null) : base(id)
     {
@@ -43,6 +47,7 @@ public class Product : Entity, IAggregateRoot
         Name = name;
         Description = description;
         Price = price;
+        Stock = stock;
         Seller = seller;
         OrderItens = orderItens;
         

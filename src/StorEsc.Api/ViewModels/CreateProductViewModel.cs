@@ -17,4 +17,8 @@ public class CreateProductViewModel
     [Required(ErrorMessage = "Price can not be empty.")]
     [Range(5, 1000000, ErrorMessage = "Price can be between 5 and 1.000.000")]
     public decimal Price { get; set; }
+    
+    [Required(ErrorMessage = "Stock can not be empty.")]
+    [Range(0, 1000000, ErrorMessage = "Stock can be between 0 and 1.000.000")]
+    public int Stock { get; set; }
 }
