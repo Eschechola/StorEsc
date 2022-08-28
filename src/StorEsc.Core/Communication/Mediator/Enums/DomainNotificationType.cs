@@ -4,6 +4,9 @@ public enum DomainNotificationType
 {
     CustomerDataIsInvalid,
     CustomerAlreadyExists,
+    SellerDataIsInvalid,
+    SellerAlreadyExists,
+    ProductDataIsInvalid,
     EmailAndOrPasswordMismatch,
-    NoProductsFound,
+    InternalServerError
 }

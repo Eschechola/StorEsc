@@ -76,7 +76,13 @@ public abstract class BaseController : Controller
             
             DomainNotificationType.CustomerAlreadyExists 
                 or DomainNotificationType.CustomerDataIsInvalid
-                => 409,
+                or DomainNotificationType.SellerAlreadyExists
+                or DomainNotificationType.SellerDataIsInvalid
+                or DomainNotificationType.ProductDataIsInvalid
+                => 400,
+            
+            DomainNotificationType.InternalServerError
+                => 500,
 
             (_) => 500,
         };

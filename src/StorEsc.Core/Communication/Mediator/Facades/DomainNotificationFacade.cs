@@ -24,8 +24,30 @@ public class DomainNotificationFacade : IDomainNotificationFacade
             message: "Customer already exists.",
             type: DomainNotificationType.CustomerAlreadyExists));
 
+    public async Task PublishSellerDataIsInvalidAsync(string errors)
+        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
+            message: "Seller data is invalid, please fix it!",
+            data: errors,
+            type: DomainNotificationType.SellerDataIsInvalid));
+
+    public async Task PublishSellerAlreadyExistsAsync()
+        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
+            message: "Seller already exists.",
+            type: DomainNotificationType.SellerAlreadyExists));
+
+    public async Task PublishProductDataIsInvalidAsync(string errors)
+        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
+            message: "Product data is invalid, please fix it!",
+            data: errors,
+            type: DomainNotificationType.ProductDataIsInvalid));
+
     public async Task PublishEmailAndOrPasswordMismatchAsync()
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
             message: "Email and/or password mismatch, please try again.",
             type: DomainNotificationType.EmailAndOrPasswordMismatch));
+
+    public async Task PublishInternalServerErrorAsync()
+        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
+            message: "An internal server error has been ocurred.",
+            type: DomainNotificationType.InternalServerError));
 }
