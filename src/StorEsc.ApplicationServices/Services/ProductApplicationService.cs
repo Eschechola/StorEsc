@@ -2,6 +2,7 @@ using AutoMapper;
 using StorEsc.Application.DTOs;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Data.Structs;
+using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 
 namespace StorEsc.Application.Services;
@@ -24,5 +25,16 @@ public class ProductApplicationService : IProductApplicationService
         var products = await _productDomainService.GetProductsAsync(sellerId);
 
         return _mapper.Map<IList<ProductDTO>>(products);
+    }
+
+    public async Task<Optional<ProductDTO>> CreateProductAsync(ProductDTO productDTO)
+    {
+        var product = _mapper.Map<Product>(productDTO);
+        var productCreated = await _productDomainService.CreateProductAsync(product);
+
+        if (!productCreated.HasValue)
+            return new Optional<ProductDTO>();
+
+        return _mapper.Map<ProductDTO>(productCreated.Value);
     }
 }
