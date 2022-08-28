@@ -2,7 +2,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StorEsc.Api.Token;
+using StorEsc.Api.Token.Extensions;
 using StorEsc.Api.ViewModels;
+using StorEsc.Application.DTOs;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
@@ -42,8 +44,30 @@ public class ProductController : BaseController
     [HttpPost]
     [Authorize(Roles = Roles.Seller)]
     [Route("create-product")]
-    public async Task<IActionResult> CreateProductAsync()
+    public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductViewModel viewModel)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
         
+        var sellerId = HttpContext.User.GetId();
+        var productDTO = new ProductDTO
+        {
+            SellerId = Guid.Parse(sellerId),
+            Name = viewModel.Name,
+            Description = viewModel.Description,
+            Price = viewModel.Price
+        };
+        
+        var productCreated = await _productApplicationService.CreateProductAsync(productDTO);
+        
+        if (HasNotifications())
+            return Result();
+
+        return Ok(new ResultViewModel
+        {
+            Message = "Product registered with success.",
+            Success = true,
+            Data = productCreated
+        });
     }
 }
