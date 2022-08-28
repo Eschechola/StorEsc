@@ -91,6 +91,7 @@ public class CustomerDomainService : ICustomerDomainService
         }
         catch (Exception)
         {
+            await _domainNotification.PublishInternalServerErrorAsync();
             await _customerRepository.UnitOfWork.RollbackAsync();
             return new Optional<Customer>();
         }

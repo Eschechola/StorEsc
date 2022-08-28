@@ -62,7 +62,7 @@ public class SellerDomainService : ISellerDomainService
 
             if (sellerExists)
             {
-                await _domainNotification.PublishCustomerAlreadyExistsAsync();
+                await _domainNotification.PublishSellerAlreadyExistsAsync();
                 return new Optional<Seller>();
             }
 
@@ -70,7 +70,7 @@ public class SellerDomainService : ISellerDomainService
 
             if (!seller.IsValid)
             {
-                await _domainNotification.PublishCustomerDataIsInvalidAsync(seller.ErrorsToString());
+                await _domainNotification.PublishSellerDataIsInvalidAsync(seller.ErrorsToString());
                 return new Optional<Seller>();
             }
 
@@ -90,6 +90,7 @@ public class SellerDomainService : ISellerDomainService
         }
         catch (Exception)
         {
+            await _domainNotification.PublishInternalServerErrorAsync();
             await _sellerRepository.UnitOfWork.RollbackAsync();
             return new Optional<Seller>();
         }
