@@ -15,7 +15,6 @@ public class AuthController : BaseController
 {
     private readonly IAuthApplicationService _authApplicationService;
     private readonly ITokenService _tokenService;
-    private readonly IConfiguration _configuration;
 
     public AuthController(
         IAuthApplicationService authApplicationService,
@@ -26,7 +25,6 @@ public class AuthController : BaseController
     {
         _authApplicationService = authApplicationService;
         _tokenService = tokenService;
-        _configuration = configuration;
     }
 
     #region Me
@@ -58,6 +56,9 @@ public class AuthController : BaseController
     [Route("customer/register")]
     public async Task<IActionResult> RegisterCustomerAsync([FromBody] RegisterCustomerViewModel viewModel)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+        
         var customerDTO = new CustomerDTO
         {
             FirstName = viewModel.FirstName,
@@ -96,6 +97,9 @@ public class AuthController : BaseController
     [Route("customer/login")]
     public async Task<IActionResult> LoginCustomerAsync([FromBody] LoginCustomerViewModel viewModel)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+        
         var customer = await _authApplicationService.AuthenticateCustomerAsync(viewModel.Email, viewModel.Password);
         
         if (HasNotifications())
@@ -138,6 +142,9 @@ public class AuthController : BaseController
     [AllowAnonymous]
     public async Task<IActionResult> LoginSellerAsync([FromBody]LoginSellerViewModel viewModel)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+        
         var seller = await _authApplicationService.AuthenticateSellerAsync(viewModel.Email, viewModel.Password);
         
         if (HasNotifications())
@@ -168,6 +175,9 @@ public class AuthController : BaseController
     [AllowAnonymous]
     public async Task<IActionResult> RegisterSellerAsync([FromBody] RegisterSellerViewModel viewModel)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+        
         var sellerDTO = new SellerDTO
         {
             FirstName = viewModel.FirstName,
