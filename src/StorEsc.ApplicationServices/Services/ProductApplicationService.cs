@@ -20,9 +20,9 @@ public class ProductApplicationService : IProductApplicationService
         _mapper = mapper;
     }
 
-    public async Task<IList<ProductDTO>> GetProductsAsync(string sellerId)
+    public async Task<IList<ProductDTO>> GetSellerProductsAsync(string sellerId)
     {
-        var products = await _productDomainService.GetProductsAsync(sellerId);
+        var products = await _productDomainService.GetSellerProductsAsync(sellerId);
 
         return _mapper.Map<IList<ProductDTO>>(products);
     }
@@ -36,5 +36,12 @@ public class ProductApplicationService : IProductApplicationService
             return new Optional<ProductDTO>();
 
         return _mapper.Map<ProductDTO>(productCreated.Value);
+    }
+
+    public async Task<IList<ProductDTO>> GetLastProductsAsync()
+    {
+        var products = await _productDomainService.GetLastProductsAsync();
+
+        return _mapper.Map<IList<ProductDTO>>(products);
     }
 }

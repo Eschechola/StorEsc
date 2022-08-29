@@ -24,11 +24,26 @@ public class ProductController : BaseController
     }
 
     [HttpGet]
+    [Route("get-last-products")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetLastProducts()
+    {
+        var products = await _productApplicationService.GetLastProductsAsync();
+
+        return Ok(new ResultViewModel
+        {
+            Message = "Products found with success",
+            Success = true,
+            Data = products
+        });
+    }
+    
+    [HttpGet]
     [Route("get-seller-products/{sellerId}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetSellerProductsAsync([FromRoute] string sellerId)
     {
-        var products = await _productApplicationService.GetProductsAsync(sellerId);
+        var products = await _productApplicationService.GetSellerProductsAsync(sellerId);
 
         if (!products.Any())
             return NoContent();

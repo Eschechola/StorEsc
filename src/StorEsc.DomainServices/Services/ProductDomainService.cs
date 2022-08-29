@@ -19,7 +19,13 @@ public class ProductDomainService : IProductDomainService
         _domainNotification = domainNotification;
     }
 
-    public async Task<IList<Product>> GetProductsAsync(string sellerId)
+    public async Task<IList<Product>> GetLastProductsAsync()
+    {
+        Func<IQueryable<Product>, IOrderedQueryable<Product>> orderFilter = o => o.OrderByDescending(p => p.CreatedAt);
+        return await _productRepository.GetAllAsync(orderBy: orderFilter);
+    }
+
+    public async Task<IList<Product>> GetSellerProductsAsync(string sellerId)
         => await _productRepository.GetAllAsync(
             x => x.SellerId == Guid.Parse(sellerId));
 
