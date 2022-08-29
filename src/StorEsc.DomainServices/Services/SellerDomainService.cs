@@ -30,7 +30,8 @@ public class SellerDomainService : ISellerDomainService
         => await _sellerRepository.GetAsync(x => x.Id == Guid.Parse(id));
     public async Task<Optional<Seller>> AuthenticateSellerAsync(string email, string password)
     {
-        var sellerExists = await _sellerRepository.ExistsAsync(x => x.Email.ToLower() == email.ToLower());
+        var sellerExists = await _sellerRepository.ExistsAsync(
+            x => x.Email.ToLower() == email.ToLower());
 
         if (!sellerExists)
         {
@@ -57,8 +58,8 @@ public class SellerDomainService : ISellerDomainService
     {
         try
         {
-            var sellerExists =
-                await _sellerRepository.ExistsAsync(x => x.Email.ToLower() == seller.Email.ToLower());
+            var sellerExists = await _sellerRepository.ExistsAsync(
+                x => x.Email.ToLower() == seller.Email.ToLower());
 
             if (sellerExists)
             {
@@ -77,20 +78,16 @@ public class SellerDomainService : ISellerDomainService
             var hashedPassword = _argon2IdHasher.Hash(seller.Password);
             seller.SetPassword(hashedPassword);
 
-            await _sellerRepository.UnitOfWork.BeginTransactionAsync();
-
             var wallet = await _walletDomainService.CreateNewEmptyWalletAsync();
             seller.SetWallet(wallet);
 
             _sellerRepository.Create(seller);
             await _sellerRepository.UnitOfWork.SaveChangesAsync();
-            await _sellerRepository.UnitOfWork.CommitAsync();
 
             return seller;
         }
         catch (Exception)
         {
-            await _domainNotification.PublishInternalServerErrorAsync();
             await _sellerRepository.UnitOfWork.RollbackAsync();
             return new Optional<Seller>();
         }

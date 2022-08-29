@@ -50,6 +50,7 @@ public class ProductController : BaseController
             return UnprocessableEntity(ModelState);
         
         var sellerId = HttpContext.User.GetId();
+        
         var productDTO = new ProductDTO
         {
             SellerId = Guid.Parse(sellerId),
