@@ -56,6 +56,31 @@ public class ProductController : BaseController
         });
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("search-by-name")]
+    public async Task<IActionResult> SearchByProductName([FromQuery] string name)
+    {
+        if (string.IsNullOrEmpty(name))
+            return Ok(new ResultViewModel
+            {
+                Message = "Name cannot be empty.",
+                Success = false,
+            });
+        
+        var products = await _productApplicationService.SearchProductsByName(name);
+
+        if (!products.Any())
+            return NoContent();
+
+        return Ok(new ResultViewModel
+        {
+            Message = "Products found with success!",
+            Success = true,
+            Data = products
+        });
+    }
+
     [HttpPost]
     [Authorize(Roles = Roles.Seller)]
     [Route("create-product")]
