@@ -9,11 +9,13 @@ namespace StorEsc.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(
-                sql: "CREATE FULLTEXT CATALOG StorEscCatalog AS DEFAULT;",
+                sql: "CREATE FULLTEXT CATALOG StorEscFullTextSearchCatalog AS DEFAULT;",
                 suppressTransaction: true);
 
             migrationBuilder.Sql(
-                sql: "CREATE FULLTEXT INDEX ON [StorEsc].[ste].[Product](Name) KEY INDEX PK_Product;",
+                sql: @"CREATE FULLTEXT INDEX ON [StorEsc].[ste].[Product](Name)
+                       KEY INDEX PK_Product ON StorEscFullTextSearchCatalog
+                       WITH STOPLIST = OFF, CHANGE_TRACKING AUTO;",
                 suppressTransaction: true);
         }
 
@@ -24,7 +26,7 @@ namespace StorEsc.Infrastructure.Migrations
                 suppressTransaction: true);
             
             migrationBuilder.Sql(
-                sql: "DROP FULLTEXT CATALOG StorEscCatalog;",
+                sql: "DROP FULLTEXT CATALOG StorEscFullTextSearchCatalog;",
                 suppressTransaction: true);
         }
     }
