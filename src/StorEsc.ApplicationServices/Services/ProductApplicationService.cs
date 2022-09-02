@@ -44,4 +44,11 @@ public class ProductApplicationService : IProductApplicationService
 
         return _mapper.Map<IList<ProductDTO>>(products);
     }
+
+    public async Task<IList<ProductDTO>> SearchProductsByName(string name)
+    {
+        var products = await _productDomainService.SearchProductsByName(name);
+
+        return _mapper.Map<IList<ProductDTO>>(products);
+    }
 }
