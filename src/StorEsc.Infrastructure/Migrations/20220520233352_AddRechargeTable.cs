@@ -11,6 +11,7 @@ namespace StorEsc.Infrastructure.Migrations
         {
             migrationBuilder.CreateTable(
                 name: "Recharge",
+                schema: "ste",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -34,6 +35,7 @@ namespace StorEsc.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recharge_WalletId",
+                schema: "ste",
                 table: "Recharge",
                 column: "WalletId");
         }

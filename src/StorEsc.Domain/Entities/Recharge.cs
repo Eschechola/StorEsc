@@ -7,6 +7,7 @@ public class Recharge : Entity, IAggregateRoot
 {
     public Guid WalletId { get; private set; }
     public decimal Amount { get; private set; }
+    public string PaymentHash { get; private set; }
     
     //EF
     public Wallet Wallet { get; private set; }
@@ -15,20 +16,24 @@ public class Recharge : Entity, IAggregateRoot
     
     public Recharge(
         Guid walletId,
-        decimal amount)
+        decimal amount,
+        string paymentHash)
     {
         WalletId = walletId;
         Amount = amount;
+        PaymentHash = paymentHash;
     }
 
     public Recharge(
         Guid id,
         Guid walletId,
         decimal amount,
+        string paymentHash,
         Wallet wallet) : base(id)
     {
         WalletId = walletId;
         Amount = amount;
+        PaymentHash = paymentHash;
         Wallet = wallet;
         
         Validate();
