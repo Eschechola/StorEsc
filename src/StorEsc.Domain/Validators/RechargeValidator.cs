@@ -24,13 +24,5 @@ public class RechargeValidator : AbstractValidator<Recharge>
             
             .GreaterThanOrEqualTo(10)
             .WithMessage(ValidatorMessages.GreaterThanOrEqualTo("Amount", 10));
-        
-        
-        RuleFor(x=>x.PaymentHash)
-            .NotNull()
-            .WithMessage(ValidatorMessages.NotNull("PaymentHash"))
-
-            .NotEmpty()
-            .WithMessage(ValidatorMessages.NotEmpty("PaymentHash"));
     }
 }
