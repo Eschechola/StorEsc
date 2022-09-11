@@ -4,8 +4,8 @@ namespace StorEsc.DomainServices.Interfaces;
 
 public interface IRechargeDomainService
 {
-    Task<bool> RechargeCustomerWallet(
+    Task<bool> RechargeCustomerWalletAsync(
         string customerId,
-        decimal amount,
+        double amount,
         CreditCard creditCard);
 }
