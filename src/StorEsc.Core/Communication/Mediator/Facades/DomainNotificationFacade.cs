@@ -50,4 +50,9 @@ public class DomainNotificationFacade : IDomainNotificationFacade
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
             message: "An internal server error has been ocurred.",
             type: DomainNotificationType.InternalServerError));
+
+    public async Task PublishPaymentRefusedAsync()
+        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
+            message: "The payment of recharge has been refused.",
+            type: DomainNotificationType.PaymentRefused));
 }

@@ -9,4 +9,5 @@ public interface IDomainNotificationFacade
     Task PublishProductDataIsInvalidAsync(string errors);
     Task PublishEmailAndOrPasswordMismatchAsync();
     Task PublishInternalServerErrorAsync();
+    Task PublishPaymentRefusedAsync();
 }

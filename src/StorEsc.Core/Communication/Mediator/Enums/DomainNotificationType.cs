@@ -8,5 +8,6 @@ public enum DomainNotificationType
     SellerAlreadyExists,
     ProductDataIsInvalid,
     EmailAndOrPasswordMismatch,
-    InternalServerError
+    InternalServerError,
+    PaymentRefused,
 }
