@@ -12,6 +12,6 @@ public class LoginSellerViewModel
     
     [Required(ErrorMessage = "Password can not be empty.")]
     [MinLength(6, ErrorMessage = "Password must be at least 6 characters.")]
-    [MaxLength(120, ErrorMessage = "Email must have a maximum of 120 characters.")]
+    [MaxLength(120, ErrorMessage = "Password must have a maximum of 120 characters.")]
     public string Password { get; set; }
 }

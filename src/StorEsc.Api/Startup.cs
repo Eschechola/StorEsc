@@ -3,6 +3,7 @@ using StorEsc.Api.IoC;
 using StorEsc.IoC.Dependencies.ApplicationServices;
 using StorEsc.IoC.Dependencies.Database;
 using StorEsc.IoC.Dependencies.DomainServices;
+using StorEsc.IoC.Dependencies.ExternalServices;
 using StorEsc.IoC.Dependencies.Hashers;
 using StorEsc.IoC.Dependencies.Mapper;
 using StorEsc.IoC.Dependencies.Mediator;
@@ -42,6 +43,7 @@ public class Startup
             .AddRepositories()
             .AddDomainServices()
             .AddApplicationServices()
+            .AddExternalServices()
             .AddArgon2Id(_configuration)
             .AddMediatR(typeof(Startup))
             .AddMediator()
