@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StorEsc.Infrastructure.Context;
 
@@ -11,9 +12,10 @@ using StorEsc.Infrastructure.Context;
 namespace StorEsc.Infrastructure.Migrations
 {
     [DbContext(typeof(StorEscContext))]
-    partial class StorEscContextModelSnapshot : ModelSnapshot
+    [Migration("20220911021302_RemovePaymentHashPropertyFromRechargeTable")]
+    partial class RemovePaymentHashPropertyFromRechargeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,37 +152,6 @@ namespace StorEsc.Infrastructure.Migrations
                     b.ToTable("OrderItem", "ste");
                 });
 
-            modelBuilder.Entity("StorEsc.Domain.Entities.Payment", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("VARCHAR(36)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("DATETIME");
-
-                    b.Property<string>("Hash")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(72)")
-                        .HasColumnName("Hash");
-
-                    b.Property<bool>("IsPaid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("BIT")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsPaid");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("DATETIME");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.ToTable("Payment", "ste");
-                });
-
             modelBuilder.Entity("StorEsc.Domain.Entities.Product", b =>
                 {
                     b.Property<string>("Id")
@@ -239,10 +210,6 @@ namespace StorEsc.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("DATETIME");
 
-                    b.Property<string>("PaymentId")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(36)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("DATETIME");
 
@@ -255,8 +222,6 @@ namespace StorEsc.Infrastructure.Migrations
 
                     b.HasIndex("Id")
                         .IsUnique();
-
-                    b.HasIndex("PaymentId");
 
                     b.HasIndex("WalletId");
 
@@ -439,19 +404,11 @@ namespace StorEsc.Infrastructure.Migrations
 
             modelBuilder.Entity("StorEsc.Domain.Entities.Recharge", b =>
                 {
-                    b.HasOne("StorEsc.Domain.Entities.Payment", "Payment")
-                        .WithMany("Recharges")
-                        .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("StorEsc.Domain.Entities.Wallet", "Wallet")
                         .WithMany("Recharges")
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Payment");
 
                     b.Navigation("Wallet");
                 });
@@ -475,11 +432,6 @@ namespace StorEsc.Infrastructure.Migrations
             modelBuilder.Entity("StorEsc.Domain.Entities.Order", b =>
                 {
                     b.Navigation("OrderItens");
-                });
-
-            modelBuilder.Entity("StorEsc.Domain.Entities.Payment", b =>
-                {
-                    b.Navigation("Recharges");
                 });
 
             modelBuilder.Entity("StorEsc.Domain.Entities.Product", b =>

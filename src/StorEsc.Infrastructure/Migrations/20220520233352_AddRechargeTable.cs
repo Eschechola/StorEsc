@@ -18,8 +18,7 @@ namespace StorEsc.Infrastructure.Migrations
                     WalletId = table.Column<string>(type: "VARCHAR(36)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(14,9)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
-                    IsValid = table.Column<bool>(type: "bit", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {

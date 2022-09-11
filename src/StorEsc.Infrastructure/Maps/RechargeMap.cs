@@ -21,14 +21,13 @@ public class RechargeMap : BaseMap<Recharge>
             .IsRequired()
             .HasColumnType("DECIMAL(14,9)")
             .HasColumnName("Amount");
-        
-        builder.Property(x => x.PaymentHash)
-            .IsRequired()
-            .HasColumnType("VARCHAR(36)")
-            .HasColumnName("PaymentHash");
 
         builder.HasOne(x => x.Wallet)
             .WithMany(x => x.Recharges)
             .HasForeignKey(x => x.WalletId);
+
+        builder.HasOne(x => x.Payment)
+            .WithMany(x => x.Recharges)
+            .HasForeignKey(x => x.PaymentId);
     }
 }

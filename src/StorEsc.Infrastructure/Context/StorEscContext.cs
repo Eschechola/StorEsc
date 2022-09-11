@@ -28,6 +28,7 @@ public class StorEscContext : DbContext, IUnitOfWork
     public DbSet<Seller> Sellers { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<Wallet> Recharges { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     #endregion
     
@@ -43,6 +44,7 @@ public class StorEscContext : DbContext, IUnitOfWork
         builder.ApplyConfiguration(new WalletMap());
         builder.ApplyConfiguration(new RechargeMap());
         builder.ApplyConfiguration(new VoucherMap());
+        builder.ApplyConfiguration(new PaymentMap());
     }
 
     #endregion
