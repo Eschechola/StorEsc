@@ -10,6 +10,7 @@ public static class ApplicationServicesDependencies
     {
         services.AddScoped<IAuthApplicationService, AuthApplicationService>();
         services.AddScoped<IWalletApplicationService, WalletApplicationService>();
+        services.AddScoped<IRechargeApplicationService, RechargeApplicationService>();
         services.AddScoped<IProductApplicationService, ProductApplicationService>();
 
         return services;

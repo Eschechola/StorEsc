@@ -14,6 +14,7 @@ public static class AutoMapperDependencies
         services.AddAutoMapper(typeof(ProductProfile));
         services.AddAutoMapper(typeof(VoucherProfile));
         services.AddAutoMapper(typeof(RechargeProfile));
+        services.AddAutoMapper(typeof(CreditCardProfile));
 
         return services;
     }
