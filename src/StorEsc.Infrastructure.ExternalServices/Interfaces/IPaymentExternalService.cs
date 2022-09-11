@@ -5,5 +5,5 @@ namespace StorEsc.Infrastructure.ExternalServices.Interfaces;
 
 public interface IPaymentExternalService
 {
-    Task<PaymentRechargeResponse> PayRecharge(double amount, CreditCard creditCard);
+    Task<PaymentRechargeResponse> PayRechargeAsync(double amount, CreditCard creditCard);
 }

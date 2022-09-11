@@ -18,10 +18,10 @@ public class PaymentDomainService : IPaymentDomainService
         _paymentExternalService = paymentExternalService;
     }
 
-    public async Task<Payment> PayRecharge(double amount, CreditCard creditCard)
+    public async Task<Payment> PayRechargeAsync(double amount, CreditCard creditCard)
     {
         Payment payment;
-        var paymentResponse = await  _paymentExternalService.PayRecharge(amount, creditCard);
+        var paymentResponse = await  _paymentExternalService.PayRechargeAsync(amount, creditCard);
 
         if (!paymentResponse.IsPaid)
             payment = new Payment(isPaid: false);

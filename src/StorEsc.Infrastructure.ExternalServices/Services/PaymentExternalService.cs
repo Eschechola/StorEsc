@@ -6,7 +6,7 @@ namespace StorEsc.Infrastructure.ExternalServices.Services;
 
 public class PaymentExternalService : IPaymentExternalService
 {
-    public async Task<PaymentRechargeResponse> PayRecharge(
+    public async Task<PaymentRechargeResponse> PayRechargeAsync(
         double amount,
         CreditCard creditCard)
     {

@@ -4,5 +4,5 @@ namespace StorEsc.DomainServices.Interfaces;
 
 public interface IPaymentDomainService
 {
-    Task<Payment> PayRecharge(double amount, CreditCard creditCard);
+    Task<Payment> PayRechargeAsync(double amount, CreditCard creditCard);
 }
