@@ -20,7 +20,6 @@ public class WalletDomainService : IWalletDomainService
         _sellerRepository = sellerRepository;
     }
 
-
     public async Task<Wallet> CreateNewEmptyWalletAsync()
     {
         var wallet = new Wallet(amount: 0);
@@ -45,5 +44,21 @@ public class WalletDomainService : IWalletDomainService
         var wallet = await _walletRepository.GetAsync(x => x.Id == customer.WalletId);
         
         return wallet;
+    }
+
+    public async Task<bool> AddAmountToWallet(Guid walletId, double amount)
+    {
+        if (amount < 10)
+            return false;
+
+        var wallet = await _walletRepository.GetAsync(
+            x => x.Id == walletId);
+        
+        wallet.AddAmount(amount);
+        
+        _walletRepository.Update(wallet);
+        await _walletRepository.UnitOfWork.SaveChangesAsync();
+        
+        return true;
     }
 }
