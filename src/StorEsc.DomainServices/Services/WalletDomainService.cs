@@ -46,7 +46,7 @@ public class WalletDomainService : IWalletDomainService
         return wallet;
     }
 
-    public async Task<bool> AddAmountToWallet(Guid walletId, double amount)
+    public async Task<bool> AddAmountToWallet(Guid walletId, decimal amount)
     {
         if (amount < 10)
             return false;

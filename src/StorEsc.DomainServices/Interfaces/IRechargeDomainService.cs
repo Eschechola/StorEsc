@@ -6,6 +6,6 @@ public interface IRechargeDomainService
 {
     Task<bool> RechargeCustomerWalletAsync(
         string customerId,
-        double amount,
+        decimal amount,
         CreditCard creditCard);
 }

@@ -5,7 +5,7 @@ namespace StorEsc.Domain.Entities;
 
 public class Wallet : Entity, IAggregateRoot
 {
-    public double Amount { get; private set; }
+    public decimal Amount { get; private set; }
 
     //EF
     public IList<Customer> Customers { get; private set; }
@@ -15,7 +15,7 @@ public class Wallet : Entity, IAggregateRoot
     
     protected Wallet() { }
     
-    public Wallet(double amount)
+    public Wallet(decimal amount)
     {
         Amount = amount;
         
@@ -24,7 +24,7 @@ public class Wallet : Entity, IAggregateRoot
     
     public Wallet(
         Guid id,
-        double amount) 
+        decimal amount) 
         : base(id)
     {
         Amount = amount;
@@ -34,7 +34,7 @@ public class Wallet : Entity, IAggregateRoot
     
     public Wallet(
         Guid id,
-        double amount,
+        decimal amount,
         IList<Customer> customers = null,
         IList<Seller> sellers = null,
         List<Recharge> recharges = null) 
@@ -51,7 +51,7 @@ public class Wallet : Entity, IAggregateRoot
     public void Validate()
         => base.Validate(new WalletValidator(), this);
 
-    public void DebitAmount(double amount)
+    public void DebitAmount(decimal amount)
     {
         if (Amount < amount)
             throw new Exception("The user doesn't has correct currency");
@@ -59,6 +59,6 @@ public class Wallet : Entity, IAggregateRoot
         Amount -= amount;
     }
 
-    public void AddAmount(double amount)
+    public void AddAmount(decimal amount)
         => Amount += amount;
 }

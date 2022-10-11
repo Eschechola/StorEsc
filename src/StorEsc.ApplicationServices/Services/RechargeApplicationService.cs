@@ -19,7 +19,7 @@ public class RechargeApplicationService : IRechargeApplicationService
 
     public async Task<bool> RechargeCustomerWalletAsync(
         string customerId,
-        double amount,
+        decimal amount,
         CreditCardDTO creditCardDTO)
     {
         var creditCard = _mapper.Map<CreditCard>(creditCardDTO);

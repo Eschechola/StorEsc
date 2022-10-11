@@ -7,7 +7,7 @@ public class RechargeCustomerWalletViewModel
 {
     [Required(ErrorMessage = "Amount can not be empty.")]
     [Range(10, 10000, ErrorMessage = "Amount can be between 10 and 10.000.")]
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
     
     [Required(ErrorMessage = "HoldName can not be empty.")]
     [MinLength(5, ErrorMessage = "HoldName must be at least 5 characters.")]

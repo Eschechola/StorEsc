@@ -6,6 +6,6 @@ public interface IRechargeApplicationService
 {
     Task<bool> RechargeCustomerWalletAsync(
         string customerId,
-        double amount,
+        decimal amount,
         CreditCardDTO creditCardDTO);
 }

@@ -29,7 +29,7 @@ public class RechargeDomainService : IRechargeDomainService
 
     public async Task<bool> RechargeCustomerWalletAsync(
         string customerId,
-        double amount,
+        decimal amount,
         CreditCard creditCard)
     {
         var payment = await _paymentDomainService.PayRechargeAsync(amount, creditCard);

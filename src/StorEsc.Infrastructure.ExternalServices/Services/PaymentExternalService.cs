@@ -7,7 +7,7 @@ namespace StorEsc.Infrastructure.ExternalServices.Services;
 public class PaymentExternalService : IPaymentExternalService
 {
     public async Task<PaymentRechargeResponse> PayRechargeAsync(
-        double amount,
+        decimal amount,
         CreditCard creditCard)
     {
         // Implement payment gateway to made recharge payment

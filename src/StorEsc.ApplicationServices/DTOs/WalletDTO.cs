@@ -2,5 +2,5 @@
 
 public class WalletDTO : BaseDTO
 {
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
 }

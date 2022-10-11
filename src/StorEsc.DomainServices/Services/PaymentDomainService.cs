@@ -18,7 +18,7 @@ public class PaymentDomainService : IPaymentDomainService
         _paymentExternalService = paymentExternalService;
     }
 
-    public async Task<Payment> PayRechargeAsync(double amount, CreditCard creditCard)
+    public async Task<Payment> PayRechargeAsync(decimal amount, CreditCard creditCard)
     {
         Payment payment;
         var paymentResponse = await  _paymentExternalService.PayRechargeAsync(amount, creditCard);
