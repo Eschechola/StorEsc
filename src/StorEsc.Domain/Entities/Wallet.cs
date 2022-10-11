@@ -47,6 +47,9 @@ public class Wallet : Entity, IAggregateRoot
         
         Validate();
     }
+    
+    public void Validate()
+        => base.Validate(new WalletValidator(), this);
 
     public void DebitAmount(double amount)
     {
@@ -58,7 +61,4 @@ public class Wallet : Entity, IAggregateRoot
 
     public void AddAmount(double amount)
         => Amount += amount;
-
-    public void Validate()
-        => base.Validate(new WalletValidator(), this);
 }

@@ -48,6 +48,9 @@ public class Order : Entity, IAggregateRoot
         
         Validate();
     }
+    
+    public void Validate()
+        => base.Validate(new OrderValidator(), this);
 
     public void PayOrder()
         => IsPaid = true;
@@ -70,7 +73,4 @@ public class Order : Entity, IAggregateRoot
         
         return totalValue - Voucher.ValueDiscount.Value;
     }
-
-    public void Validate()
-        => base.Validate(new OrderValidator(), this);
 }

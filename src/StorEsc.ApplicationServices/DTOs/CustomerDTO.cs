@@ -2,6 +2,8 @@
 
 public class CustomerDTO : AccountDTO
 {
+    public Guid WalletId { get; set; }
+    public WalletDTO Wallet { get; set; }
     public IList<OrderDTO> Orders { get; set; }
 
     public CustomerDTO()

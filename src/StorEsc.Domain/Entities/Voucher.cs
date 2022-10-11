@@ -63,7 +63,6 @@ public class Voucher : Entity, IAggregateRoot
         Validate();
     }
 
-
     public void Validate()
         => base.Validate(new VoucherValidator(), this);
 }
