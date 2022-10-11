@@ -29,7 +29,7 @@ public class ProductMap : BaseMap<Product>
         
         builder.Property(x => x.Price)
             .IsRequired()
-            .HasColumnType("DECIMAL(14,9)")
+            .HasColumnType("DECIMAL(19,4)")
             .HasColumnName("Price");
         
         builder.Property(x => x.Stock)

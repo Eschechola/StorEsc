@@ -16,6 +16,6 @@ public class WalletMap : BaseMap<Wallet>
             .IsRequired()
             .HasDefaultValue(0)
             .HasColumnName("Amount")
-            .HasColumnType("DECIMAL(14,9)");
+            .HasColumnType("DECIMAL(19,4)");
     }
 }

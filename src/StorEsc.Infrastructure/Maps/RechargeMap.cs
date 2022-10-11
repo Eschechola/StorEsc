@@ -19,7 +19,7 @@ public class RechargeMap : BaseMap<Recharge>
 
         builder.Property(x => x.Amount)
             .IsRequired()
-            .HasColumnType("DECIMAL(14,9)")
+            .HasColumnType("DECIMAL(19,4)")
             .HasColumnName("Amount");
 
         builder.HasOne(x => x.Wallet)

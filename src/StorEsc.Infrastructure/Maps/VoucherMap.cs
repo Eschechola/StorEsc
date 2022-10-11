@@ -23,7 +23,6 @@ public class VoucherMap : BaseMap<Voucher>
             .HasColumnName("IsPercentageDiscount")
             .HasColumnType("BIT");
         
-        
         builder.Property(x => x.ValueDiscount)
             .HasColumnName("ValueDiscount")
             .HasColumnType("DECIMAL(14,9)");
