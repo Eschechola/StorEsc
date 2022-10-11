@@ -52,7 +52,7 @@ public class Seller : Account
         Validate();
     }
     
-    public override void SetWallet(Wallet wallet)
+    public void SetWallet(Wallet wallet)
     {
         WalletId = wallet.Id;
         Wallet = wallet;

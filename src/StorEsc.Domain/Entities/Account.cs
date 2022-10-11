@@ -41,8 +41,6 @@ public abstract class Account : Entity, IAggregateRoot
 
         Validate();
     }
-    
-    public abstract void SetWallet(Wallet wallet);
 
     public void Validate()
         => base.Validate(new AccountValidator(), this);

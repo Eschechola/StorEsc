@@ -58,7 +58,7 @@ public class Customer : Account
     public void Validate()
         => base.Validate();
     
-    public override void SetWallet(Wallet wallet)
+    public void SetWallet(Wallet wallet)
     {
         WalletId = wallet.Id;
         Wallet = wallet;
