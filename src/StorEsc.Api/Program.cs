@@ -1,4 +1,4 @@
-namespace StorEsc.Api;
+namespace StorEsc.API;
 
 public class Program
 {

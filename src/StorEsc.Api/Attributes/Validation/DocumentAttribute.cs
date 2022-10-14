@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StorEsc.Api.Attributes.Validation;
+namespace StorEsc.API.Attributes.Validation;
 
 public class DocumentAttribute: ValidationAttribute
 {

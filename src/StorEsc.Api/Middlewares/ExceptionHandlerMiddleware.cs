@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using StorEsc.Api.ViewModels;
+using StorEsc.API.ViewModels;
 
-namespace StorEsc.Api.Middlewares;
+namespace StorEsc.API.Middlewares;
 
 public static class ExceptionHandlerMiddleware
 {

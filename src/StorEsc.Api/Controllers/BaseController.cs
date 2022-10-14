@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StorEsc.Api.ViewModels;
+using StorEsc.API.ViewModels;
 using StorEsc.Core.Communication.Mediator.Enums;
 using StorEsc.Core.Communication.Mediator.Handlers;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
-namespace StorEsc.Api.Controllers;
+namespace StorEsc.API.Controllers;
 
 public abstract class BaseController : Controller
 {

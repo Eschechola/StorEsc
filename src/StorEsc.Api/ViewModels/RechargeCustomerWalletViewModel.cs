@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using StorEsc.Api.Attributes.Validation;
+using StorEsc.API.Attributes.Validation;
 
-namespace StorEsc.Api.ViewModels;
+namespace StorEsc.API.ViewModels;
 
 public class RechargeCustomerWalletViewModel
 {

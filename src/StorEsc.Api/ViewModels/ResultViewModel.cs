@@ -1,4 +1,4 @@
-﻿namespace StorEsc.Api.ViewModels;
+﻿namespace StorEsc.API.ViewModels;
 
 public class ResultViewModel
 {

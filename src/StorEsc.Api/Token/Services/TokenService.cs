@@ -3,10 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using StorEsc.Api.Token.Interfaces;
+using StorEsc.API.Token.Interfaces;
 using StorEsc.Application.DTOs;
 
-namespace StorEsc.Api.Token.Services;
+namespace StorEsc.API.Token.Services;
 
 public class TokenService : ITokenService
 {

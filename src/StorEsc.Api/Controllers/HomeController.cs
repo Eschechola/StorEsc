@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace StorEsc.Api.Controllers;
+namespace StorEsc.API.Controllers;
 
 public class HomeController : Controller
 {

@@ -1,4 +1,4 @@
-﻿namespace StorEsc.Api.Token;
+﻿namespace StorEsc.API.Token;
 
 public enum TokenType
 {

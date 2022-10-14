@@ -1,6 +1,6 @@
 ﻿using StorEsc.Application.DTOs;
 
-namespace StorEsc.Api.Token.Interfaces;
+namespace StorEsc.API.Token.Interfaces;
 
 public interface ITokenService
 {

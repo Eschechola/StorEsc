@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using StorEsc.Api.Token.Interfaces;
-using StorEsc.Api.Token.Services;
+using StorEsc.API.Token.Interfaces;
+using StorEsc.API.Token.Services;
 
-namespace StorEsc.Api.IoC;
+namespace StorEsc.API.IoC;
 
 public static class TokenDependencies
 {

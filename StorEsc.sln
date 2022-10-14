@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Api", "1 - Api", "{3876D122-8FF9-4B2E-9504-9E869BCA1061}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - API", "1 - API", "{3876D122-8FF9-4B2E-9504-9E869BCA1061}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - ApplicationServices", "2 - ApplicationServices", "{ACE4707C-ADDB-4118-B940-34A7CF0F9F14}"
 EndProject
@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.Core", "src\StorEsc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.IoC", "src\StorEsc.IoC\StorEsc.IoC.csproj", "{418012A6-E42A-45D4-924D-40A28143213C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.Api", "src\StorEsc.Api\StorEsc.Api.csproj", "{FD838B0C-003A-401D-8210-A4FDBBE7D631}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorEsc.API", "src\StorEsc.API\StorEsc.API.csproj", "{FD838B0C-003A-401D-8210-A4FDBBE7D631}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "8 - Tests", "8 - Tests", "{E08AF9D0-B9AF-454B-9DB8-0302168DED05}"
 EndProject

@@ -1,14 +1,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StorEsc.Api.Token;
-using StorEsc.Api.Token.Extensions;
-using StorEsc.Api.ViewModels;
+using StorEsc.API.Token;
+using StorEsc.API.Token.Extensions;
+using StorEsc.API.ViewModels;
 using StorEsc.Application.DTOs;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
-namespace StorEsc.Api.Controllers;
+namespace StorEsc.API.Controllers;
 
 [Route("api/v1/[controller]")]
 public class ProductController : BaseController

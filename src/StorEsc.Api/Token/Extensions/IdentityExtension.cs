@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace StorEsc.Api.Token.Extensions;
+namespace StorEsc.API.Token.Extensions;
 
 public static class IdentityExtension
 {

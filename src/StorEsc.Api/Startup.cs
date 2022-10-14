@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using StorEsc.Api.IoC;
+using StorEsc.API.IoC;
 using StorEsc.IoC.Dependencies.ApplicationServices;
 using StorEsc.IoC.Dependencies.Database;
 using StorEsc.IoC.Dependencies.DomainServices;
@@ -9,7 +9,7 @@ using StorEsc.IoC.Dependencies.Mapper;
 using StorEsc.IoC.Dependencies.Mediator;
 using StorEsc.IoC.Dependencies.Repositories;
 
-namespace StorEsc.Api;
+namespace StorEsc.API;
 
 public class Startup
 {
