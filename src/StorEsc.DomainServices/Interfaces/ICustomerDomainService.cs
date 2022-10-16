@@ -5,7 +5,7 @@ namespace StorEsc.DomainServices.Interfaces;
 
 public interface ICustomerDomainService
 {
-    Task<Customer> GetCustomer(string id);
+    Task<Customer> GetCustomerAsync(string id);
     Task<Optional<Customer>> AuthenticateCustomerAsync(string email, string password);
     Task<Optional<Customer>> RegisterCustomerAsync(Customer customer);
     Task<bool> ResetCustomerPasswordAsync(string email);
