@@ -4,6 +4,7 @@ using EscNet.Hashers.Interfaces.Algorithms;
 using FluentAssertions;
 using Moq;
 using StorEsc.Core.Communication.Mediator.Interfaces;
+using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 using StorEsc.DomainServices.Services;
 using StorEsc.Infrastructure.Interfaces.Repositories;
@@ -24,6 +25,7 @@ public class CustomerDomainServiceTests
     private readonly Mock<IDomainNotificationFacade> _domainNotificationMock;
 
     private readonly CustomerFaker _customerFaker;
+    private readonly WalletFaker _walletFaker;
     
     private readonly Person _personFaker;
     private readonly Internet _internetFaker;
@@ -38,6 +40,7 @@ public class CustomerDomainServiceTests
         _internetFaker = new Internet();
         
         _customerFaker = new CustomerFaker();
+        _walletFaker = new WalletFaker();
 
         _customerRepositoryMock = new Mock<ICustomerRepository>();
         _argon2IdHasherMock = new Mock<IArgon2IdHasher>();
@@ -63,7 +66,7 @@ public class CustomerDomainServiceTests
         var customer = _customerFaker.GetValid();
         var customerId = customer.Id.ToString();
 
-        _customerRepositoryMock.Setup(expression => expression.GetAsync(
+        _customerRepositoryMock.Setup(setup => setup.GetAsync(
                 entity => entity.Id == Guid.Parse(customerId),
                 string.Empty,
                 true))
@@ -73,7 +76,7 @@ public class CustomerDomainServiceTests
         var result = await _sut.GetCustomerAsync(customerId);
 
         // Assert
-        _customerRepositoryMock.Verify(expression => expression.GetAsync(
+        _customerRepositoryMock.Verify(setup => setup.GetAsync(
                 entity => entity.Id == Guid.Parse(customerId),
                 string.Empty,
                 true), 
@@ -92,7 +95,7 @@ public class CustomerDomainServiceTests
         // Arrange
         var customerId = Guid.NewGuid().ToString();
 
-        _customerRepositoryMock.Setup(expression => expression.GetAsync(
+        _customerRepositoryMock.Setup(setup => setup.GetAsync(
                 entity => entity.Id == Guid.Parse(customerId),
                 string.Empty,
                 true))
@@ -102,7 +105,7 @@ public class CustomerDomainServiceTests
         var result = await _sut.GetCustomerAsync(customerId);
 
         // Assert
-        _customerRepositoryMock.Verify(expression => expression.GetAsync(
+        _customerRepositoryMock.Verify(setup => setup.GetAsync(
                 entity => entity.Id == Guid.Parse(customerId),
                 string.Empty,
                 true), 
@@ -124,22 +127,22 @@ public class CustomerDomainServiceTests
         var email = _personFaker.Email;
         var password = _internetFaker.Password();
 
-        _customerRepositoryMock.Setup(expression => expression.ExistsAsync(
+        _customerRepositoryMock.Setup(setup => setup.ExistsAsync(
                 entity => entity.Email.ToLower() == email.ToLower()))
             .ReturnsAsync(false);
         
-        _domainNotificationMock.Setup(expression => expression.PublishEmailAndOrPasswordMismatchAsync())
+        _domainNotificationMock.Setup(setup => setup.PublishEmailAndOrPasswordMismatchAsync())
             .Verifiable();
 
         // Act
         var result = await _sut.AuthenticateCustomerAsync(email, password);
 
         // Assert
-        _customerRepositoryMock.Verify(expression => expression.ExistsAsync(
+        _customerRepositoryMock.Verify(setup => setup.ExistsAsync(
                 entity => entity.Email.ToLower() == email.ToLower()),
             Times.Once);
         
-        _domainNotificationMock.Verify(expression => expression.PublishEmailAndOrPasswordMismatchAsync(),
+        _domainNotificationMock.Verify(setup => setup.PublishEmailAndOrPasswordMismatchAsync(),
             Times.Once);
         
         result.Should()
@@ -160,40 +163,40 @@ public class CustomerDomainServiceTests
         var password = _internetFaker.Password();
         var hashedPassword =_internetFaker.Password(); 
 
-        _customerRepositoryMock.Setup(expression => expression.ExistsAsync(
+        _customerRepositoryMock.Setup(setup => setup.ExistsAsync(
                 entity => entity.Email.ToLower() == email.ToLower()))
             .ReturnsAsync(true);
         
-        _customerRepositoryMock.Setup(expression => expression.GetAsync(
+        _customerRepositoryMock.Setup(setup => setup.GetAsync(
                 entity => entity.Email.ToLower() == email.ToLower(),
                 "Wallet",
                 true))
             .ReturnsAsync(customer);
 
-        _argon2IdHasherMock.Setup(expression => expression.Hash(password))
+        _argon2IdHasherMock.Setup(setup => setup.Hash(password))
             .Returns(hashedPassword);
         
-        _domainNotificationMock.Setup(expression => expression.PublishEmailAndOrPasswordMismatchAsync())
+        _domainNotificationMock.Setup(setup => setup.PublishEmailAndOrPasswordMismatchAsync())
             .Verifiable();
 
         // Act
         var result = await _sut.AuthenticateCustomerAsync(email, password);
 
         // Assert
-        _customerRepositoryMock.Verify(expression => expression.ExistsAsync(
+        _customerRepositoryMock.Verify(setup => setup.ExistsAsync(
                 entity => entity.Email.ToLower() == email.ToLower()),
             Times.Once);
 
-        _customerRepositoryMock.Verify(expression => expression.GetAsync(
+        _customerRepositoryMock.Verify(setup => setup.GetAsync(
                 entity => entity.Email.ToLower() == email.ToLower(),
                 "Wallet",
                 true),
             Times.Once);
 
-        _argon2IdHasherMock.Verify(expression => expression.Hash(password),
+        _argon2IdHasherMock.Verify(setup => setup.Hash(password),
             Times.Once);
 
-        _domainNotificationMock.Verify(expression => expression.PublishEmailAndOrPasswordMismatchAsync(),
+        _domainNotificationMock.Verify(setup => setup.PublishEmailAndOrPasswordMismatchAsync(),
             Times.Once);
         
         result.Should()
@@ -213,34 +216,34 @@ public class CustomerDomainServiceTests
         var password = customer.Password;
         var hashedPassword = customer.Password;
         
-        _customerRepositoryMock.Setup(expression => expression.ExistsAsync(
+        _customerRepositoryMock.Setup(setup => setup.ExistsAsync(
                 entity => entity.Email.ToLower() == email.ToLower()))
             .ReturnsAsync(true);
         
-        _customerRepositoryMock.Setup(expression => expression.GetAsync(
+        _customerRepositoryMock.Setup(setup => setup.GetAsync(
                 entity => entity.Email.ToLower() == email.ToLower(),
                 "Wallet",
                 true))
             .ReturnsAsync(customer);
 
-        _argon2IdHasherMock.Setup(expression => expression.Hash(password))
+        _argon2IdHasherMock.Setup(setup => setup.Hash(password))
             .Returns(hashedPassword);
 
         // Act
         var result = await _sut.AuthenticateCustomerAsync(email, password);
 
         // Assert
-        _customerRepositoryMock.Verify(expression => expression.ExistsAsync(
+        _customerRepositoryMock.Verify(setup => setup.ExistsAsync(
                 entity => entity.Email.ToLower() == email.ToLower()),
             Times.Once);
 
-        _customerRepositoryMock.Verify(expression => expression.GetAsync(
+        _customerRepositoryMock.Verify(setup => setup.GetAsync(
                 entity => entity.Email.ToLower() == email.ToLower(),
                 "Wallet",
                 true),
             Times.Once);
 
-        _argon2IdHasherMock.Verify(expression => expression.Hash(password),
+        _argon2IdHasherMock.Verify(setup => setup.Hash(password),
             Times.Once);
 
         result.Should()
@@ -252,6 +255,212 @@ public class CustomerDomainServiceTests
         result.Value.Should()
             .BeEquivalentTo(customer);
     }
+
+    #endregion
+
+    #region RegisterCustomerAsync
+
+    [Fact(DisplayName="RegisterCustomerAsync when customer already exists throw customer already exists notification and returns empty optional")]
+    [Trait("CustomerDomainService", "RegisterCustomerAsync")]
+    public async Task RegisterCustomerAsync_WhenCustomerAlreadyExists_ThrowCustomerAlreadyExistsNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var customer = _customerFaker.GetValid();
+        
+        _customerRepositoryMock.Setup(setup => setup.ExistsAsync(
+                entity => entity.Email.ToLower() == customer.Email.ToLower()))
+            .ReturnsAsync(true);
+        
+        _domainNotificationMock.Setup(setup => setup.PublishCustomerAlreadyExistsAsync())
+            .Verifiable();
+        
+        // Act
+        var result = await _sut.RegisterCustomerAsync(customer);
+
+        // Assert
+        _customerRepositoryMock.Verify(setup => setup.ExistsAsync(
+                entity => entity.Email.ToLower() == customer.Email.ToLower()),
+            Times.Once);
+        
+        _domainNotificationMock.Verify(setup => setup.PublishCustomerAlreadyExistsAsync(),
+            Times.Once);
+        
+        result.Should()
+            .NotBeNull();
+
+        result.HasValue.Should()
+            .BeFalse();
+    }
+    
+    [Fact(DisplayName="RegisterCustomerAsync when customer data is invalid throw customer data is invalid notification and returns empty optional")]
+    [Trait("CustomerDomainService", "RegisterCustomerAsync")]
+    public async Task RegisterCustomerAsync_WhenCustomerDataIsInvalid_ThrowCustomerDataIsInvalidNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var customer = _customerFaker.GetInvalid();
+        
+        _customerRepositoryMock.Setup(setup => setup.ExistsAsync(
+                entity => entity.Email.ToLower() == customer.Email.ToLower()))
+            .ReturnsAsync(false);
+        
+        _domainNotificationMock.Setup(setup => setup.PublishCustomerDataIsInvalidAsync(It.IsAny<string>()))
+            .Verifiable();
+        
+        // Act
+        var result = await _sut.RegisterCustomerAsync(customer);
+
+        // Assert
+        _customerRepositoryMock.Verify(setup => setup.ExistsAsync(
+                entity => entity.Email.ToLower() == customer.Email.ToLower()),
+            Times.Once);
+        
+        _domainNotificationMock.Verify(setup => setup.PublishCustomerDataIsInvalidAsync(It.IsAny<string>()),
+            Times.Once);
+        
+        result.Should()
+            .NotBeNull();
+
+        result.HasValue.Should()
+            .BeFalse();
+    }
+    
+    [Fact(DisplayName="RegisterCustomerAsync when some exception has throw made rollback, throw internal server error notification and returns empty optional")]
+    [Trait("CustomerDomainService", "RegisterCustomerAsync")]
+    public async Task RegisterCustomerAsync_WhenSomeExceptionHasThrow_MadeRollbackThrowInternalServerErrorNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var wallet = _walletFaker.GetValid();
+        var customer = _customerFaker.GetValid();
+        var hashedPassword = _internetFaker.Password();
+        
+        _customerRepositoryMock.Setup(setup => setup.ExistsAsync(
+                entity => entity.Email.ToLower() == customer.Email.ToLower()))
+            .ReturnsAsync(false);
+        
+        _argon2IdHasherMock.Setup(setup => setup.Hash(customer.Password))
+            .Returns(hashedPassword);
+
+        _walletDomainServiceMock.Setup(setup => setup.CreateNewEmptyWalletAsync())
+            .ReturnsAsync(wallet);
+
+        _customerRepositoryMock.Setup(setup => setup.UnitOfWork.BeginTransactionAsync())
+            .Verifiable();
+        
+        _customerRepositoryMock.Setup(setup => setup.Create(It.IsAny<Customer>()))
+            .Throws(new NullReferenceException());
+        
+        _customerRepositoryMock.Setup(setup => setup.UnitOfWork.RollbackAsync())
+            .Verifiable();
+        
+        _domainNotificationMock.Setup(setup => setup.PublishInternalServerErrorAsync())
+            .Verifiable();
+        
+        // Act
+        var result = await _sut.RegisterCustomerAsync(customer);
+
+        // Assert
+        _customerRepositoryMock.Verify(setup => setup.ExistsAsync(
+                entity => entity.Email.ToLower() == customer.Email.ToLower()),
+            Times.Once);
+
+        _argon2IdHasherMock.Verify(setup => setup.Hash(It.IsAny<string>()),
+            Times.Once);
+
+        _walletDomainServiceMock.Verify(setup => setup.CreateNewEmptyWalletAsync(),
+            Times.Once);
+
+        _customerRepositoryMock.Verify(setup => setup.UnitOfWork.BeginTransactionAsync(),
+            Times.Once);
+        
+        _customerRepositoryMock.Verify(setup => setup.Create(It.IsAny<Customer>()),
+            Times.Once);
+        
+        _customerRepositoryMock.Verify(setup => setup.UnitOfWork.RollbackAsync(),
+            Times.Once);
+        
+        _domainNotificationMock.Verify(setup => setup.PublishInternalServerErrorAsync(),
+            Times.Once);
+        
+        result.Should()
+            .NotBeNull();
+
+        result.HasValue.Should()
+            .BeFalse();
+    }
+
+    [Fact(DisplayName = "RegisterCustomerAsync when customer is valid returns registered customer")]
+    [Trait("CustomerDomainService", "RegisterCustomerAsync")]
+    public async Task RegisterCustomerAsync_WhenCustomerIsValid_ReturnsRegisteredCustomer()
+    {
+        // Arrange
+        var wallet = _walletFaker.GetValid();
+        var customer = _customerFaker.GetValid();
+        var hashedPassword = _internetFaker.Password();
+
+        var expectedCustomer = customer;
+        expectedCustomer.SetPassword(hashedPassword);
+        
+        _customerRepositoryMock.Setup(setup => setup.ExistsAsync(
+                entity => entity.Email.ToLower() == customer.Email.ToLower()))
+            .ReturnsAsync(false);
+        
+        _argon2IdHasherMock.Setup(setup => setup.Hash(customer.Password))
+            .Returns(hashedPassword);
+
+        _walletDomainServiceMock.Setup(setup => setup.CreateNewEmptyWalletAsync())
+            .ReturnsAsync(wallet);
+
+        _customerRepositoryMock.Setup(setup => setup.UnitOfWork.BeginTransactionAsync())
+            .Verifiable();
+        
+        _customerRepositoryMock.Setup(setup => setup.Create(It.IsAny<Customer>()))
+            .Verifiable();
+        
+        _customerRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+        
+        _customerRepositoryMock.Setup(setup => setup.UnitOfWork.CommitAsync())
+            .Verifiable();
+
+        // Act
+        var result = await _sut.RegisterCustomerAsync(customer);
+
+        // Assert
+        _customerRepositoryMock.Verify(setup => setup.ExistsAsync(
+                entity => entity.Email.ToLower() == customer.Email.ToLower()),
+            Times.Once);
+
+        _argon2IdHasherMock.Verify(setup => setup.Hash(It.IsAny<string>()),
+            Times.Once);
+
+        _walletDomainServiceMock.Verify(setup => setup.CreateNewEmptyWalletAsync(),
+            Times.Once);
+
+        _customerRepositoryMock.Verify(setup => setup.UnitOfWork.BeginTransactionAsync(),
+            Times.Once);
+        
+        _customerRepositoryMock.Verify(setup => setup.Create(It.IsAny<Customer>()),
+            Times.Once);
+        
+        _customerRepositoryMock.Verify(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+        
+        _customerRepositoryMock.Verify(setup => setup.UnitOfWork.CommitAsync(),
+            Times.Once);
+        
+        result.Should()
+            .NotBeNull();
+
+        result.HasValue.Should()
+            .BeTrue();
+
+        result.Value.Should()
+            .BeEquivalentTo(expectedCustomer);
+    }
+    
+    #endregion
+
+    #region ResetCustomerPasswordAsync
 
     #endregion
 }

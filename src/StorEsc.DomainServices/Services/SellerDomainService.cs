@@ -28,6 +28,7 @@ public class SellerDomainService : ISellerDomainService
 
     public async Task<Seller> GetSeller(string id)
         => await _sellerRepository.GetAsync(entity => entity.Id == Guid.Parse(id));
+    
     public async Task<Optional<Seller>> AuthenticateSellerAsync(string email, string password)
     {
         var sellerExists = await _sellerRepository.ExistsAsync(
