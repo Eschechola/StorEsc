@@ -8,21 +8,21 @@ public class BaseMap<T> : IEntityTypeConfiguration<T> where T : Entity
 {
     public virtual void Configure(EntityTypeBuilder<T> builder)
     {
-        builder.Property(x => x.Id)
+        builder.Property(entity => entity.Id)
             .IsRequired()
             .HasColumnType("VARCHAR(36)");
 
-        builder.HasIndex(x => x.Id)
+        builder.HasIndex(entity => entity.Id)
             .IsUnique();
 
-        builder.Ignore(x => x.Errors);
-        builder.Ignore(x => x.IsValid);
+        builder.Ignore(entity => entity.Errors);
+        builder.Ignore(entity => entity.IsValid);
 
-        builder.Property(x => x.CreatedAt)
+        builder.Property(entity => entity.CreatedAt)
             .IsRequired()
             .HasColumnType("DATETIME");
 
-        builder.Property(x => x.UpdatedAt)
+        builder.Property(entity => entity.UpdatedAt)
             .IsRequired()
             .HasColumnType("DATETIME");
     }

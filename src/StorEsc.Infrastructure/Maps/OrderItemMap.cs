@@ -12,28 +12,27 @@ public class OrderItemMap : BaseMap<OrderItem>
         
         base.Configure(builder);
 
-        builder.Property(x => x.ItemCount)
+        builder.Property(orderItem => orderItem.ItemCount)
             .IsRequired()
             .HasColumnName("Count")
             .HasColumnType("INT");
         
-        builder.Property(x=>x.ProductId)
+        builder.Property(orderItem => orderItem.ProductId)
             .IsRequired()
             .HasColumnName("ProductId")
             .HasColumnType("VARCHAR(36)");
         
-        builder.Property(x=>x.OrderId)
+        builder.Property(orderItem=> orderItem.OrderId)
             .IsRequired()
             .HasColumnName("OrderId")
             .HasColumnType("VARCHAR(36)");
 
-        builder.HasOne(x => x.Order)
-            .WithMany(x => x.OrderItens)
-            .HasForeignKey(x => x.OrderId);
+        builder.HasOne(orderItem => orderItem.Order)
+            .WithMany(order => order.OrderItens)
+            .HasForeignKey(orderItem => orderItem.OrderId);
         
-        builder.HasOne(x => x.Product)
-            .WithMany(x => x.OrderItens)
-            .HasForeignKey(x => x.ProductId);
-
+        builder.HasOne(orderItem => orderItem.Product)
+            .WithMany(product => product.OrderItens)
+            .HasForeignKey(orderItem => orderItem.ProductId);
     }
 }

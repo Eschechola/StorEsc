@@ -12,22 +12,22 @@ public class AdministratorMap : BaseMap<Administrator>
 
         base.Configure(builder);
         
-        builder.Property(x=>x.FirstName)
+        builder.Property(administrator => administrator.FirstName)
             .IsRequired()
             .HasColumnName("FirstName")
             .HasColumnType("VARCHAR(100)");
         
-        builder.Property(x=>x.LastName)
+        builder.Property(administrator => administrator.LastName)
             .IsRequired()
             .HasColumnName("LastName")
             .HasColumnType("VARCHAR(100)");
         
-        builder.Property(x=>x.Email)
+        builder.Property(administrator => administrator.Email)
             .IsRequired()
             .HasColumnName("Email")
             .HasColumnType("VARCHAR(200)");
         
-        builder.Property(x=>x.Password)
+        builder.Property(administrator => administrator.Password)
             .IsRequired()
             .HasColumnName("Password")
             .HasColumnType("VARCHAR(120)");

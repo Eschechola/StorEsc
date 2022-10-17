@@ -12,11 +12,11 @@ public class PaymentMap : BaseMap<Payment>
         
         base.Configure(builder);
 
-        builder.Property(x => x.Hash)
+        builder.Property(payment => payment.Hash)
             .HasColumnType("VARCHAR(72)")
             .HasColumnName("Hash");
         
-        builder.Property(x => x.IsPaid)
+        builder.Property(payment => payment.IsPaid)
             .IsRequired()
             .HasColumnType("BIT")
             .HasDefaultValue(0)

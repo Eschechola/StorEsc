@@ -12,33 +12,33 @@ public class CustomerMap : BaseMap<Customer>
         
         base.Configure(builder);
         
-        builder.Property(x=>x.WalletId)
+        builder.Property(customer => customer.WalletId)
             .IsRequired()
             .HasColumnName("WalletId")
             .HasColumnType("VARCHAR(36)");
 
-        builder.Property(x=>x.FirstName)
+        builder.Property(customer => customer.FirstName)
             .IsRequired()
             .HasColumnName("FirstName")
             .HasColumnType("VARCHAR(100)");
         
-        builder.Property(x=>x.LastName)
+        builder.Property(customer => customer.LastName)
             .IsRequired()
             .HasColumnName("LastName")
             .HasColumnType("VARCHAR(100)");
         
-        builder.Property(x=>x.Email)
+        builder.Property(customer => customer.Email)
             .IsRequired()
             .HasColumnName("Email")
             .HasColumnType("VARCHAR(200)");
         
-        builder.Property(x=>x.Password)
+        builder.Property(customer => customer.Password)
             .IsRequired()
             .HasColumnName("Password")
             .HasColumnType("VARCHAR(120)");
 
-        builder.HasOne(x => x.Wallet)
-            .WithMany(x => x.Customers)
-            .HasForeignKey(x => x.WalletId);
+        builder.HasOne(customer => customer.Wallet)
+            .WithMany(wallet => wallet.Customers)
+            .HasForeignKey(customer => customer.WalletId);
     }
 }

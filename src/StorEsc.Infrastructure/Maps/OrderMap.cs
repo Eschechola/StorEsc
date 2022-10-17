@@ -12,29 +12,28 @@ public class OrderMap : BaseMap<Order>
         
         base.Configure(builder);
 
-        builder.Property(x => x.CustomerId)
+        builder.Property(order => order.CustomerId)
             .IsRequired()
             .HasColumnType("VARCHAR(36)")
             .HasColumnName("CustomerId");
         
-        builder.Property(x => x.TotalValue)
+        builder.Property(order => order.TotalValue)
             .IsRequired()
             .HasColumnType("DECIMAL(19,4)")
             .HasColumnName("TotalValue");
         
-        builder.Property(x => x.IsPaid)
+        builder.Property(order => order.IsPaid)
             .IsRequired()
             .HasDefaultValue(0)
             .HasColumnType("BIT")
             .HasColumnName("IsPaid");
 
-        builder.HasOne(x => x.Customer)
-            .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.CustomerId);
+        builder.HasOne(order => order.Customer)
+            .WithMany(customer => customer.Orders)
+            .HasForeignKey(order => order.CustomerId);
 
-        builder.HasOne(x => x.Voucher)
-            .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.VoucherId);
-
+        builder.HasOne(order => order.Voucher)
+            .WithMany(voucher => voucher.Orders)
+            .HasForeignKey(order => order.VoucherId);
     }
 }

@@ -12,7 +12,7 @@ public class WalletMap : BaseMap<Wallet>
         
         base.Configure(builder);
 
-        builder.Property(x => x.Amount)
+        builder.Property(wallet => wallet.Amount)
             .IsRequired()
             .HasDefaultValue(0)
             .HasColumnName("Amount")
