@@ -12,22 +12,22 @@ public class VoucherMap : BaseMap<Voucher>
         
         base.Configure(builder);
 
-        builder.Property(x => x.Code)
+        builder.Property(voucher => voucher.Code)
             .IsRequired()
             .HasColumnName("Code")
             .HasColumnType("VARCHAR(80)");
         
-        builder.Property(x => x.IsPercentageDiscount)
+        builder.Property(voucher => voucher.IsPercentageDiscount)
             .IsRequired()
             .HasDefaultValue(0)
             .HasColumnName("IsPercentageDiscount")
             .HasColumnType("BIT");
         
-        builder.Property(x => x.ValueDiscount)
+        builder.Property(voucher => voucher.ValueDiscount)
             .HasColumnName("ValueDiscount")
             .HasColumnType("DECIMAL(14,9)");
         
-        builder.Property(x => x.PercentageDiscount)
+        builder.Property(voucher => voucher.PercentageDiscount)
             .HasColumnName("ValueDiscount")
             .HasColumnType("DECIMAL(14,9)");
     }

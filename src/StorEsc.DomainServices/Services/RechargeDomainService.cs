@@ -40,8 +40,8 @@ public class RechargeDomainService : IRechargeDomainService
             return false;
         }
         
-        var customer = await _customerRepository.GetAsync(x => 
-            x.Id == Guid.Parse(customerId));
+        var customer = await _customerRepository.GetAsync(
+            entity => entity.Id == Guid.Parse(customerId));
 
         var recharge = new Recharge(
             walletId: customer.WalletId,

@@ -12,22 +12,22 @@ public class RechargeMap : BaseMap<Recharge>
         
         base.Configure(builder);
         
-        builder.Property(x => x.WalletId)
+        builder.Property(recharge => recharge.WalletId)
             .IsRequired()
             .HasColumnType("VARCHAR(36)")
             .HasColumnName("WalletId");
 
-        builder.Property(x => x.Amount)
+        builder.Property(recharge => recharge.Amount)
             .IsRequired()
             .HasColumnType("DECIMAL(19,4)")
             .HasColumnName("Amount");
 
-        builder.HasOne(x => x.Wallet)
-            .WithMany(x => x.Recharges)
-            .HasForeignKey(x => x.WalletId);
+        builder.HasOne(recharge => recharge.Wallet)
+            .WithMany(wallet => wallet.Recharges)
+            .HasForeignKey(recharge => recharge.WalletId);
 
-        builder.HasOne(x => x.Payment)
-            .WithMany(x => x.Recharges)
-            .HasForeignKey(x => x.PaymentId);
+        builder.HasOne(recharge => recharge.Payment)
+            .WithMany(wallet => wallet.Recharges)
+            .HasForeignKey(recharge => recharge.PaymentId);
     }
 }

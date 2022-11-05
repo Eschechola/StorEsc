@@ -32,16 +32,16 @@ public class WalletDomainService : IWalletDomainService
 
     public async Task<Wallet> GetSellerWalletAsync(string sellerId)
     {
-        var seller = await _sellerRepository.GetAsync(x=>x.Id == Guid.Parse(sellerId));
-        var wallet = await _walletRepository.GetAsync(x => x.Id == seller.WalletId);
+        var seller = await _sellerRepository.GetAsync(entity => entity.Id == Guid.Parse(sellerId));
+        var wallet = await _walletRepository.GetAsync(entity => entity.Id == seller.WalletId);
         
         return wallet;
     }
 
     public async Task<Wallet> GetCustomerWalletAsync(string customerId)
     {
-        var customer = await _customerRepository.GetAsync(x=>x.Id == Guid.Parse(customerId));
-        var wallet = await _walletRepository.GetAsync(x => x.Id == customer.WalletId);
+        var customer = await _customerRepository.GetAsync(entity => entity.Id == Guid.Parse(customerId));
+        var wallet = await _walletRepository.GetAsync(entity => entity.Id == customer.WalletId);
         
         return wallet;
     }
@@ -52,7 +52,7 @@ public class WalletDomainService : IWalletDomainService
             return false;
 
         var wallet = await _walletRepository.GetAsync(
-            x => x.Id == walletId);
+            entity => entity.Id == walletId);
         
         wallet.AddAmount(amount);
         
