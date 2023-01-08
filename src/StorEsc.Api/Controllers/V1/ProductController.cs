@@ -109,7 +109,7 @@ public class ProductController : BaseController
         {
             Message = "Product registered with success.",
             Success = true,
-            Data = productCreated
+            Data = productCreated.Value
         });
     }
 }
