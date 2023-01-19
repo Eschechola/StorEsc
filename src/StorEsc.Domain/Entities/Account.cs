@@ -12,7 +12,7 @@ public abstract class Account : Entity, IAggregateRoot
 
     protected Account() { }
     
-    public Account(
+    protected Account(
         string firstName,
         string lastName,
         string email,
@@ -23,22 +23,6 @@ public abstract class Account : Entity, IAggregateRoot
         Email = email;
         Password = password;
         
-        Validate();
-    }
-    
-    public Account(
-        Guid id,
-        string firstName,
-        string lastName,
-        string email,
-        string password)
-        : base (id)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Password = password;
-
         Validate();
     }
 

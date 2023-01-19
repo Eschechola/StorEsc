@@ -16,42 +16,11 @@ public class Seller : Account
         string lastName,
         string email,
         string password) 
-        : base(walletId, firstName, lastName, email, password)
-    {
-    }
-    
-    public Seller(
-        Guid id,
-        Guid walletId,
-        string firstName,
-        string lastName,
-        string email,
-        string password) 
-        : base(id, firstName, lastName, email, password)
+        : base(firstName, lastName, email, password)
     {
         WalletId = walletId;
-        
-        Validate();
     }
 
-    public Seller(
-        Guid id,
-        Guid walletId,
-        string firstName,
-        string lastName,
-        string email,
-        string password,
-        List<Product> products = null,
-        Wallet wallet = null) 
-        : base(id, firstName, lastName, email, password)
-    {
-        WalletId = walletId;
-        Wallet = wallet;
-        Products = products;
-        
-        Validate();
-    }
-    
     public void SetWallet(Wallet wallet)
     {
         WalletId = wallet.Id;
@@ -59,7 +28,4 @@ public class Seller : Account
         
         Validate();
     }
-    
-    public void Validate()
-        => base.Validate();
 }

@@ -17,7 +17,6 @@ public class CustomerFaker : BaseFaker<Customer>
     
     public override Customer GetValid()
         => new Customer(
-            id: Guid.NewGuid(),
             walletId: Guid.NewGuid(),
             firstName: _personFaker.FirstName,
             lastName: _personFaker.LastName,
@@ -26,7 +25,6 @@ public class CustomerFaker : BaseFaker<Customer>
 
     public override Customer GetInvalid()
         => new Customer(
-            id: Guid.Empty,
             walletId: Guid.Empty,
             firstName: "",
             lastName: "",
