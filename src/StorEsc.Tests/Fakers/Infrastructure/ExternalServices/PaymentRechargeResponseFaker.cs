@@ -2,14 +2,14 @@ using StorEsc.Infrastructure.ExternalServices.Responses;
 
 namespace StorEsc.Tests.Fakers.Infrastructure.ExternalServices;
 
-public class PaymentRechargeResponseFaker : IFaker<PaymentRechargeResponse>
+public class PaymentRechargeResponseFaker : BaseFaker<PaymentRechargeResponse>
 {
-    public PaymentRechargeResponse GetValid()
+    public override PaymentRechargeResponse GetValid()
         => new PaymentRechargeResponse(
             isPaid: true,
             hash: Guid.NewGuid().ToString());
 
-    public PaymentRechargeResponse GetInvalid()
+    public override PaymentRechargeResponse GetInvalid()
         => new PaymentRechargeResponse(
             isPaid: false,
             hash: "");

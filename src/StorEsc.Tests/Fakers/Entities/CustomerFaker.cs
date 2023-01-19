@@ -4,7 +4,7 @@ using StorEsc.Domain.Entities;
 
 namespace StorEsc.Tests.Fakers.Entities;
 
-public class CustomerFaker : IFaker<Customer>
+public class CustomerFaker : BaseFaker<Customer>
 {
     private readonly Person _personFaker;
     private readonly Internet _internetFaker;
@@ -15,7 +15,7 @@ public class CustomerFaker : IFaker<Customer>
         _internetFaker = new Internet();
     }
     
-    public Customer GetValid()
+    public override Customer GetValid()
         => new Customer(
             id: Guid.NewGuid(),
             walletId: Guid.NewGuid(),
@@ -24,7 +24,7 @@ public class CustomerFaker : IFaker<Customer>
             email: _personFaker.Email,
             password: _internetFaker.Password());
 
-    public Customer GetInvalid()
+    public override Customer GetInvalid()
         => new Customer(
             id: Guid.Empty,
             walletId: Guid.Empty,

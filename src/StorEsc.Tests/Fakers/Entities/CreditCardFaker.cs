@@ -4,7 +4,7 @@ using StorEsc.Domain.Entities;
 
 namespace StorEsc.Tests.Fakers.Entities;
 
-public class CreditCardFaker : IFaker<CreditCard>
+public class CreditCardFaker : BaseFaker<CreditCard>
 {
     private readonly Person _person;
     private readonly Finance _finance;
@@ -15,7 +15,7 @@ public class CreditCardFaker : IFaker<CreditCard>
         _finance = new Finance();
     }
 
-    public CreditCard GetValid()
+    public override CreditCard GetValid()
         => new CreditCard(
             holdName: _person.FullName,
             number: _finance.CreditCardNumber(),
@@ -23,7 +23,7 @@ public class CreditCardFaker : IFaker<CreditCard>
             cvv: int.Parse(_finance.CreditCardCvv()),
             document: "00000000000");
 
-    public CreditCard GetInvalid()
+    public override CreditCard GetInvalid()
         => new CreditCard(
             holdName: "",
             number: "",

@@ -11,14 +11,14 @@ namespace StorEsc.DomainServices.Services;
 public class ProductDomainService : IProductDomainService
 {
     private readonly IProductRepository _productRepository;
-    private readonly IDomainNotificationFacade _domainNotification;
+    private readonly IDomainNotificationFacade _domainNotificationFacade;
 
     public ProductDomainService(
         IProductRepository productRepository,
-        IDomainNotificationFacade domainNotification)
+        IDomainNotificationFacade domainNotificationFacade)
     {
         _productRepository = productRepository;
-        _domainNotification = domainNotification;
+        _domainNotificationFacade = domainNotificationFacade;
     }
 
     public async Task<IList<Product>> SearchProductsByName(string name)
@@ -42,7 +42,7 @@ public class ProductDomainService : IProductDomainService
 
             if (!product.IsValid)
             {
-                await _domainNotification.PublishProductDataIsInvalidAsync(product.ErrorsToString());
+                await _domainNotificationFacade.PublishProductDataIsInvalidAsync(product.ErrorsToString());
                 return new Optional<Product>();
             }
 
@@ -53,7 +53,7 @@ public class ProductDomainService : IProductDomainService
         }
         catch (Exception)
         {
-            await _domainNotification.PublishInternalServerErrorAsync();
+            await _domainNotificationFacade.PublishInternalServerErrorAsync();
             return new Optional<Product>();
         }
     }
