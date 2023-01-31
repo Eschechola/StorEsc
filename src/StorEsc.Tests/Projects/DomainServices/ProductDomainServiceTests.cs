@@ -276,16 +276,79 @@ public class ProductDomainServiceTests
 
     [Fact(DisplayName = "CreateProductAsync when product is not valid throw notification and returns empty optional")]
     [Trait("ProductDomainService", "CreateProductAsync")]
-    public async Task CreateProductAsync_WhenProductIsNotValid_ThrowNotificationAndReturnsEmptyOptional(){}
-    
-    [Fact(DisplayName = "CreateProductAsync when any exception has throw throw notification and returns empty optional")]
+    public async Task CreateProductAsync_WhenProductIsNotValid_ThrowNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var product = _productFaker.GetInvalid();
+
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync(
+                It.IsAny<string>()))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.CreateProductAsync(product);
+
+        // Assert
+        _domainNotificationFacadeMock.Verify(setup => setup.PublishProductDataIsInvalidAsync(
+                It.IsAny<string>()),
+            Times.Once);
+
+        result.HasValue.Should()
+            .BeFalse();
+    }
+
+    [Fact(DisplayName =
+        "CreateProductAsync when any exception has throw throw notification and returns empty optional")]
     [Trait("ProductDomainService", "CreateProductAsync")]
-    public async Task CreateProductAsync_WhenAnyExceptionHasThrow_ThrowNotificationAndReturnsEmptyOptional(){}
+    public async Task CreateProductAsync_WhenAnyExceptionHasThrow_ThrowNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+
+        _productRepositoryMock.Setup(setup => setup.Create(product))
+            .Throws(new Exception("Some exception!"));
+
+        // Act
+        var result = await _sut.CreateProductAsync(product);
+
+        // Assert
+        _domainNotificationFacadeMock.Verify(setup=> setup.PublishInternalServerErrorAsync(),
+            Times.Once);
+        
+        result.HasValue.Should()
+            .BeFalse();
+    }
 
     [Fact(DisplayName = "CreateProductAsync when product is valid create and returns product created")]
     [Trait("ProductDomainService", "CreateProductAsync")]
-    public async Task CreateProductAsync_WhenProductValid_CreateAndReturnsProductCreated(){}
+    public async Task CreateProductAsync_WhenProductValid_CreateAndReturnsProductCreated()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        
+        _productRepositoryMock.Setup(setup => setup.Create(product))
+            .Verifiable();
+        
+        _productRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+        
+        // Act
+        var result = await _sut.CreateProductAsync(product);
 
+        // Assert
+
+        _productRepositoryMock.Verify(setup => setup.Create(product),
+            Times.Once);
+
+        _productRepositoryMock.Verify(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once());
+        
+        result.HasValue.Should()
+            .BeTrue();
+
+        result.Value.Should()
+            .BeEquivalentTo(product);
+    }
     
     #endregion
 }
