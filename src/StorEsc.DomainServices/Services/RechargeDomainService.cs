@@ -11,20 +11,20 @@ public class RechargeDomainService : IRechargeDomainService
     private readonly ICustomerRepository _customerRepository;
     private readonly IPaymentDomainService _paymentDomainService;
     private readonly IWalletDomainService _walletDomainService;
-    private readonly IDomainNotificationFacade _domainNotification;
+    private readonly IDomainNotificationFacade _domainNotificationFacade;
     
     public RechargeDomainService(
         IRechargeRepository rechargeRepository,
         ICustomerRepository customerRepository,
         IPaymentDomainService paymentDomainService,
         IWalletDomainService walletDomainService,
-        IDomainNotificationFacade domainNotification)
+        IDomainNotificationFacade domainNotificationFacade)
     {
         _rechargeRepository = rechargeRepository;
         _customerRepository = customerRepository;
         _paymentDomainService = paymentDomainService;
         _walletDomainService = walletDomainService;
-        _domainNotification = domainNotification;
+        _domainNotificationFacade = domainNotificationFacade;
     }
 
     public async Task<bool> RechargeCustomerWalletAsync(
@@ -36,7 +36,7 @@ public class RechargeDomainService : IRechargeDomainService
 
         if (!payment.IsPaid)
         {
-            await _domainNotification.PublishPaymentRefusedAsync();
+            await _domainNotificationFacade.PublishPaymentRefusedAsync();
             return false;
         }
         

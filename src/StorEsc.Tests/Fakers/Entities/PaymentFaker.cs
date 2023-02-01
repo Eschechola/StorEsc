@@ -9,6 +9,11 @@ public class PaymentFaker : BaseFaker<Payment>
             isPaid: true,
             hash: Guid.NewGuid().ToString());
 
+    public Payment GetValid(bool isPaid)
+        => new Payment(
+            isPaid: isPaid,
+            hash: Guid.NewGuid().ToString());
+
     public override Payment GetInvalid()
         => new Payment(
             isPaid: false,
