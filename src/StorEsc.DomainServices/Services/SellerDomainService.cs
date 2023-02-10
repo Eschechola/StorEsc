@@ -26,7 +26,7 @@ public class SellerDomainService : ISellerDomainService
         _walletDomainService = walletDomainService;
     }
 
-    public async Task<Seller> GetSeller(string id)
+    public async Task<Seller> GetSellerAsync(string id)
         => await _sellerRepository.GetAsync(entity => entity.Id == Guid.Parse(id));
     
     public async Task<Optional<Seller>> AuthenticateSellerAsync(string email, string password)
@@ -79,17 +79,22 @@ public class SellerDomainService : ISellerDomainService
             var hashedPassword = _argon2IdHasher.Hash(seller.Password);
             seller.SetPassword(hashedPassword);
 
+            await _sellerRepository.UnitOfWork.BeginTransactionAsync();
+            
             var wallet = await _walletDomainService.CreateNewEmptyWalletAsync();
             seller.SetWallet(wallet);
 
             _sellerRepository.Create(seller);
             await _sellerRepository.UnitOfWork.SaveChangesAsync();
 
+            await _sellerRepository.UnitOfWork.CommitAsync();
+            
             return seller;
         }
         catch (Exception)
         {
             await _sellerRepository.UnitOfWork.RollbackAsync();
+            await _domainNotification.PublishInternalServerErrorAsync();
             return new Optional<Seller>();
         }
     }
