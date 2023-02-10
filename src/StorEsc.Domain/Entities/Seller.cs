@@ -19,6 +19,8 @@ public class Seller : Account
         : base(firstName, lastName, email, password)
     {
         WalletId = walletId;
+
+        Validate();
     }
 
     public void SetWallet(Wallet wallet)
