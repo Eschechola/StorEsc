@@ -119,7 +119,7 @@ public class RechargeDomainServiceTests
         _rechargeRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .Verifiable();
         
-        _walletDomainServiceMock.Setup(setup => setup.AddAmountToWallet(customer.WalletId, amount))
+        _walletDomainServiceMock.Setup(setup => setup.AddAmountToWalletAsync(customer.WalletId, amount))
             .Verifiable();
 
         // Act
@@ -138,7 +138,7 @@ public class RechargeDomainServiceTests
         _rechargeRepositoryMock.Verify(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
             Times.Once());
 
-        _walletDomainServiceMock.Verify(setup => setup.AddAmountToWallet(customer.WalletId, amount),
+        _walletDomainServiceMock.Verify(setup => setup.AddAmountToWalletAsync(customer.WalletId, amount),
             Times.Once);
 
         result.Should()
