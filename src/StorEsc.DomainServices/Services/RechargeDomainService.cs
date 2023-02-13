@@ -51,7 +51,7 @@ public class RechargeDomainService : IRechargeDomainService
         _rechargeRepository.Create(recharge);
         await _rechargeRepository.UnitOfWork.SaveChangesAsync();
 
-        await _walletDomainService.AddAmountToWallet(customer.WalletId, amount);
+        await _walletDomainService.AddAmountToWalletAsync(customer.WalletId, amount);
         
         return true;
     }

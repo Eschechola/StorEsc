@@ -8,5 +8,5 @@ public interface IWalletDomainService
     Task<Wallet> CreateNewEmptyWalletAsync();
     Task<Wallet> GetSellerWalletAsync(string sellerId);
     Task<Wallet> GetCustomerWalletAsync(string customerId);
-    Task<bool> AddAmountToWallet(Guid walletId, decimal amount);
+    Task<bool> AddAmountToWalletAsync(Guid walletId, decimal amount);
 }
