@@ -12,6 +12,7 @@ public static class ApplicationServicesDependencies
         services.AddScoped<IWalletApplicationService, WalletApplicationService>();
         services.AddScoped<IRechargeApplicationService, RechargeApplicationService>();
         services.AddScoped<IProductApplicationService, ProductApplicationService>();
+        services.AddScoped<IAdministratorApplicationService, AdministratorApplicationService>();
 
         return services;
     }

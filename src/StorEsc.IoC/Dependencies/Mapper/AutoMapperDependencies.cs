@@ -7,6 +7,7 @@ public static class AutoMapperDependencies
 {
     public static IServiceCollection AddMapper(this IServiceCollection services)
     {
+        services.AddAutoMapper(typeof(AdministratorProfile));
         services.AddAutoMapper(typeof(CustomerProfile));
         services.AddAutoMapper(typeof(SellerProfile));
         services.AddAutoMapper(typeof(WalletProfile));

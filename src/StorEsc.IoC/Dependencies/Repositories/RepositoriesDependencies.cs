@@ -8,6 +8,7 @@ public static class RepositoriesDependencies
 {
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        services.AddScoped<IAdministratorRepository, AdministratorRepository>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<ISellerRepository, SellerRepository>();
         services.AddScoped<IWalletRepository, WalletRepository>();
