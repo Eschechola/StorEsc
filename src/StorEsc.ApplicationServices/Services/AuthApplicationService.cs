@@ -11,15 +11,18 @@ public class AuthApplicationService : IAuthApplicationService
 {
     private readonly ICustomerDomainService _customerDomainService;
     private readonly ISellerDomainService _sellerDomainService;
+    private readonly IAdministratorDomainService _administratorDomainService;
     private readonly IMapper _mapper;
     
     public AuthApplicationService(
         ICustomerDomainService customerDomainService,
         ISellerDomainService sellerDomainService,
+        IAdministratorDomainService administratorDomainService,
         IMapper mapper)
     {
         _customerDomainService = customerDomainService;
         _sellerDomainService = sellerDomainService;
+        _administratorDomainService = administratorDomainService;
         _mapper = mapper;
     }
 
@@ -35,6 +38,16 @@ public class AuthApplicationService : IAuthApplicationService
         return _mapper.Map<CustomerDTO>(customer.Value);
     }
 
+    public async Task<Optional<AdministratorDTO>> AuthenticateAdministratorAsync(string email, string password)
+    {
+        var administrator = await _administratorDomainService.AuthenticateAdministratorAsync(email, password);
+
+        if (!administrator.HasValue)
+            return new Optional<AdministratorDTO>();
+
+        return _mapper.Map<AdministratorDTO>(administrator.Value);
+    }
+
     public async Task<Optional<CustomerDTO>> RegisterCustomerAsync(CustomerDTO customerDTO)
     {
         var customer = _mapper.Map<Customer>(customerDTO);
@@ -45,7 +58,12 @@ public class AuthApplicationService : IAuthApplicationService
 
         return _mapper.Map<CustomerDTO>(customerRegistred.Value);
     }
-    
+
+    public Task<Optional<AdministratorDTO>> RegisterAdministratorAsync(AdministratorDTO administratorDTO)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<bool> ResetCustomerPasswordAsync(string email)
     {
         throw new NotImplementedException();
@@ -80,6 +98,11 @@ public class AuthApplicationService : IAuthApplicationService
     {
         throw new NotImplementedException();
     }
-    
+
+    public Task<bool> ResetAdministratorPasswordAsync(string email)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 }
