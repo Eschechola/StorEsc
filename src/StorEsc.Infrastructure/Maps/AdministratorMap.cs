@@ -12,6 +12,17 @@ public class AdministratorMap : BaseMap<Administrator>
 
         base.Configure(builder);
         
+        builder.Property(administrator => administrator.IsEnabled)
+            .IsRequired()
+            .HasDefaultValue(0)
+            .HasColumnName("IsEnabled")
+            .HasColumnType("BIT");
+        
+        builder.Property(administrator => administrator.CreatedBy)
+            .IsRequired()
+            .HasColumnName("CreatedBy")
+            .HasColumnType("VARCHAR(36)");
+        
         builder.Property(administrator => administrator.FirstName)
             .IsRequired()
             .HasColumnName("FirstName")

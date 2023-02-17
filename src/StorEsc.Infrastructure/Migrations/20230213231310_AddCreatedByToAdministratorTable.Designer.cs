@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StorEsc.Infrastructure.Context;
 
@@ -11,9 +12,10 @@ using StorEsc.Infrastructure.Context;
 namespace StorEsc.Infrastructure.Migrations
 {
     [DbContext(typeof(StorEscContext))]
-    partial class StorEscContextModelSnapshot : ModelSnapshot
+    [Migration("20230213231310_AddCreatedByToAdministratorTable")]
+    partial class AddCreatedByToAdministratorTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,12 +47,6 @@ namespace StorEsc.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("FirstName");
-
-                    b.Property<bool>("IsEnabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("BIT")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsEnabled");
 
                     b.Property<string>("LastName")
                         .IsRequired()
