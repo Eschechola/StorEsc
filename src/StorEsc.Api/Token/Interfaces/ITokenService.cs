@@ -6,4 +6,5 @@ public interface ITokenService
 {
     Token GenerateCustomerToken(CustomerDTO customerDTO);
     Token GenerateSellerToken(SellerDTO sellerDTO);
+    Token GenerateAdministratorToken(AdministratorDTO administratorDTO);
 }

@@ -50,7 +50,21 @@ public class TokenService : ITokenService
             issuedAt: _now,
             hoursToExpire: _hoursToExpire);
     }
-    
+
+    public Token GenerateAdministratorToken(AdministratorDTO administratorDTO)
+    {
+        var claims = CreateIdentityClaims(
+            uuid: administratorDTO.Id.ToString(),
+            email: administratorDTO.Email,
+            tokenType: TokenType.Administrator);
+        
+        return new Token(
+            value: CreateToken(claims),
+            issuer: _issuer,
+            issuedAt: _now,
+            hoursToExpire: _hoursToExpire);
+    }
+
     private Collection<Claim> CreateIdentityClaims(string uuid, string email, TokenType tokenType)
     {
         var claims = new Collection<Claim>();
@@ -74,6 +88,9 @@ public class TokenService : ITokenService
 
             TokenType.Seller
                 => Roles.Seller,
+            
+            TokenType.Administrator
+                => Roles.Administrator,
 
             _ => Roles.Customer
         };

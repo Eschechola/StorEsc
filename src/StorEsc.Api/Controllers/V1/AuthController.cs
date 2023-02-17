@@ -220,4 +220,35 @@ public class AuthController : BaseController
     }
 
     #endregion
+
+    #region Admin
+
+    [HttpPost]
+    [AllowAnonymous]
+    [Route("administrator/login")]
+    public async Task<IActionResult> LoginAdministratorAsync([FromBody] LoginAdminViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+        
+        var administrator = await _authApplicationService.AuthenticateAdministratorAsync(viewModel.Email, viewModel.Password);
+
+        if (HasNotifications())
+            return Result();
+        
+        return Ok(new ResultViewModel
+        {
+            Message = "Login successful!",
+            Success = true,
+            Data = new
+            {
+                Id = administrator.Value.Id,
+                FirstName = administrator.Value.FirstName,
+                LastName =  administrator.Value.LastName,
+                Email = administrator.Value.Email,
+                Token = _tokenService.GenerateAdministratorToken(administrator.Value)
+            }
+        });
+    }
+    #endregion
 }
