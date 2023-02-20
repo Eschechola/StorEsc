@@ -1,5 +1,4 @@
-﻿using EscNet.Hashers.Interfaces.Algorithms;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
