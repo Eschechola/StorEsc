@@ -32,7 +32,7 @@ public class ProductApplicationService : IProductApplicationService
         var product = _mapper.Map<Product>(productDTO);
         var productCreated = await _productDomainService.CreateProductAsync(product);
 
-        if (!productCreated.HasValue)
+        if (productCreated.IsEmpty)
             return new Optional<ProductDTO>();
 
         return _mapper.Map<ProductDTO>(productCreated.Value);

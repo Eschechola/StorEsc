@@ -40,7 +40,7 @@ public class VoucherValidator : AbstractValidator<Voucher>
         RuleFor(x => x.PercentageDiscount)
             .Must((rootObject, property) =>
             {
-                if (!rootObject.IsPercentageDiscount)
+                if (rootObject.IsPercentageDiscount is false)
                     property = 0;
                 
                 return true;

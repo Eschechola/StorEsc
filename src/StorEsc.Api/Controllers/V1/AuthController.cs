@@ -56,7 +56,7 @@ public class AuthController : BaseController
     [Route("customer/register")]
     public async Task<IActionResult> RegisterCustomerAsync([FromBody] RegisterCustomerViewModel viewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
         var customerDTO = new CustomerDTO
@@ -97,7 +97,7 @@ public class AuthController : BaseController
     [Route("customer/login")]
     public async Task<IActionResult> LoginCustomerAsync([FromBody] LoginCustomerViewModel viewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
         var customer = await _authApplicationService.AuthenticateCustomerAsync(viewModel.Email, viewModel.Password);
@@ -142,7 +142,7 @@ public class AuthController : BaseController
     [AllowAnonymous]
     public async Task<IActionResult> LoginSellerAsync([FromBody]LoginSellerViewModel viewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
         var seller = await _authApplicationService.AuthenticateSellerAsync(viewModel.Email, viewModel.Password);
@@ -175,7 +175,7 @@ public class AuthController : BaseController
     [AllowAnonymous]
     public async Task<IActionResult> RegisterSellerAsync([FromBody] RegisterSellerViewModel viewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
         var sellerDTO = new SellerDTO
@@ -228,7 +228,7 @@ public class AuthController : BaseController
     [Route("administrator/login")]
     public async Task<IActionResult> LoginAdministratorAsync([FromBody] LoginAdminViewModel viewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
         var administrator = await _authApplicationService.AuthenticateAdministratorAsync(viewModel.Email, viewModel.Password);

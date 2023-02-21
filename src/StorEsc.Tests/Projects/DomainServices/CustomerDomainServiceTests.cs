@@ -148,8 +148,8 @@ public class CustomerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName = "AuthenticateCustomerAsync when email exists but password is wrong throw password mismatch notification and returns empty optional")]
@@ -202,8 +202,8 @@ public class CustomerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName = "AuthenticateCustomerAsync when email exists and password is correct returns customer authenticated")]
@@ -249,8 +249,8 @@ public class CustomerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeTrue();
+        result.IsEmpty.Should()
+            .BeFalse();
 
         result.Value.Should()
             .BeEquivalentTo(customer);
@@ -288,8 +288,8 @@ public class CustomerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName="RegisterCustomerAsync when customer data is invalid throw customer data is invalid notification and returns empty optional")]
@@ -320,8 +320,8 @@ public class CustomerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName="RegisterCustomerAsync when some exception has throw made rollback, throw internal server error notification and returns empty optional")]
@@ -384,8 +384,8 @@ public class CustomerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
 
     [Fact(DisplayName = "RegisterCustomerAsync when customer is valid returns registered customer")]
@@ -451,8 +451,8 @@ public class CustomerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeTrue();
+        result.IsEmpty.Should()
+            .BeFalse();
 
         result.Value.Should()
             .BeEquivalentTo(expectedCustomer);

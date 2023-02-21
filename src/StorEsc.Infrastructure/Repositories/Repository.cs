@@ -82,7 +82,7 @@ public abstract class Repository<T> : IRepository<T> where T : Entity
 
     private IQueryable<T> ApplyQueryIncludedProperties(IQueryable<T> query, string includeProperties)
     {
-        if (!string.IsNullOrEmpty(includeProperties))
+        if (string.IsNullOrEmpty(includeProperties) is false)
             foreach (var property in includeProperties.Split(',', StringSplitOptions.RemoveEmptyEntries))
                 query = query.Include(property);
 

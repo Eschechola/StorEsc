@@ -23,7 +23,7 @@ public class PaymentDomainService : IPaymentDomainService
         Payment payment;
         var paymentResponse = await  _paymentExternalService.PayRechargeAsync(amount, creditCard);
 
-        if (!paymentResponse.IsPaid)
+        if (paymentResponse.IsPaid is false)
             payment = new Payment(isPaid: false);
         else
             payment = new Payment(

@@ -148,8 +148,8 @@ public class SellerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName = "AuthenticateSellerAsync when email exists but password is wrong throw password mismatch notification and returns empty optional")]
@@ -202,8 +202,8 @@ public class SellerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName = "AuthenticateSellerAsync when email exists and password is correct returns seller authenticated")]
@@ -249,8 +249,8 @@ public class SellerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeTrue();
+        result.IsEmpty.Should()
+            .BeFalse();
 
         result.Value.Should()
             .BeEquivalentTo(seller);
@@ -288,8 +288,8 @@ public class SellerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName="RegisterSellerAsync when seller data is invalid throw seller data is invalid notification and returns empty optional")]
@@ -320,8 +320,8 @@ public class SellerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName="RegisterSellerAsync when some exception has throw made rollback, throw internal server error notification and returns empty optional")]
@@ -384,8 +384,8 @@ public class SellerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
 
     [Fact(DisplayName = "RegisterSellerAsync when seller is valid returns registered seller")]
@@ -451,8 +451,8 @@ public class SellerDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeTrue();
+        result.IsEmpty.Should()
+            .BeFalse();
 
         result.Value.Should()
             .BeEquivalentTo(expectedCustomer);

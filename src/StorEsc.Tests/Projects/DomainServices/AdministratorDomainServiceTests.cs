@@ -90,8 +90,8 @@ public class AdministratorDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName = "AuthenticateAdministratorAsync when email exists but password is wrong throw password mismatch notification and returns empty optional")]
@@ -136,8 +136,8 @@ public class AdministratorDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
     
     [Fact(DisplayName = "AuthenticateAdministratorAsync when email exists and password is correct returns administrator authenticated")]
@@ -175,8 +175,8 @@ public class AdministratorDomainServiceTests
         result.Should()
             .NotBeNull();
 
-        result.HasValue.Should()
-            .BeTrue();
+        result.IsEmpty.Should()
+            .BeFalse();
 
         result.Value.Should()
             .BeEquivalentTo(administrator);

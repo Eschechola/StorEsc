@@ -28,7 +28,7 @@ public class RechargeController : BaseController
     [Route("recharge-customer-wallet")]
     public async Task<IActionResult> RechargeCustomerWalletAsync([FromBody] RechargeCustomerWalletViewModel viewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
         var customerId = HttpContext.User.GetId();

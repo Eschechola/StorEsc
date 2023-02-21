@@ -31,10 +31,10 @@ public class CustomerDomainService : ICustomerDomainService
 
     public async Task<Optional<Customer>> AuthenticateCustomerAsync(string email, string password)
     {
-        var customerExists = await _customerRepository.ExistsAsync(
+        var exists = await _customerRepository.ExistsAsync(
             entity => entity.Email.ToLower() == email.ToLower());
 
-        if (!customerExists)
+        if (exists is false)
         {
             await _domainNotification.PublishEmailAndOrPasswordMismatchAsync();
             return new Optional<Customer>();
@@ -59,10 +59,10 @@ public class CustomerDomainService : ICustomerDomainService
     {
         try
         {
-            var customerExists = await _customerRepository.ExistsAsync(
+            var exists = await _customerRepository.ExistsAsync(
                 entity => entity.Email.ToLower() == customer.Email.ToLower());
 
-            if (customerExists)
+            if (exists)
             {
                 await _domainNotification.PublishCustomerAlreadyExistsAsync();
                 return new Optional<Customer>();

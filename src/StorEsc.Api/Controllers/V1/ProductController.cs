@@ -45,7 +45,7 @@ public class ProductController : BaseController
     {
         var products = await _productApplicationService.GetSellerProductsAsync(sellerId);
 
-        if (!products.Any())
+        if (products.Any() is false)
             return NoContent();
 
         return Ok(new ResultViewModel
@@ -70,7 +70,7 @@ public class ProductController : BaseController
         
         var products = await _productApplicationService.SearchProductsByName(name);
 
-        if (!products.Any())
+        if (products.Any() is false)
             return NoContent();
 
         return Ok(new ResultViewModel
@@ -86,7 +86,7 @@ public class ProductController : BaseController
     [Route("create-product")]
     public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductViewModel viewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
         var sellerId = HttpContext.User.GetId();

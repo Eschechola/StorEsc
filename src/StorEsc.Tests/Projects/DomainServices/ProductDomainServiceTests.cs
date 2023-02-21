@@ -293,8 +293,8 @@ public class ProductDomainServiceTests
                 It.IsAny<string>()),
             Times.Once);
 
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
 
     [Fact(DisplayName =
@@ -315,8 +315,8 @@ public class ProductDomainServiceTests
         _domainNotificationFacadeMock.Verify(setup=> setup.PublishInternalServerErrorAsync(),
             Times.Once);
         
-        result.HasValue.Should()
-            .BeFalse();
+        result.IsEmpty.Should()
+            .BeTrue();
     }
 
     [Fact(DisplayName = "CreateProductAsync when product is valid create and returns product created")]
@@ -343,8 +343,8 @@ public class ProductDomainServiceTests
         _productRepositoryMock.Verify(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
             Times.Once());
         
-        result.HasValue.Should()
-            .BeTrue();
+        result.IsEmpty.Should()
+            .BeFalse();
 
         result.Value.Should()
             .BeEquivalentTo(product);

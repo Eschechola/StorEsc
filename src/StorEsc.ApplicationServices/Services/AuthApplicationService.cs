@@ -32,7 +32,7 @@ public class AuthApplicationService : IAuthApplicationService
     {
         var customer = await _customerDomainService.AuthenticateCustomerAsync(email, password);
 
-        if (!customer.HasValue)
+        if (customer.IsEmpty)
             return new Optional<CustomerDTO>();
 
         return _mapper.Map<CustomerDTO>(customer.Value);
@@ -42,7 +42,7 @@ public class AuthApplicationService : IAuthApplicationService
     {
         var administrator = await _administratorDomainService.AuthenticateAdministratorAsync(email, password);
 
-        if (!administrator.HasValue)
+        if (administrator.IsEmpty)
             return new Optional<AdministratorDTO>();
 
         return _mapper.Map<AdministratorDTO>(administrator.Value);
@@ -53,7 +53,7 @@ public class AuthApplicationService : IAuthApplicationService
         var customer = _mapper.Map<Customer>(customerDTO);
         var customerRegistred = await _customerDomainService.RegisterCustomerAsync(customer);
 
-        if (!customerRegistred.HasValue)
+        if (customerRegistred.IsEmpty)
             return new Optional<CustomerDTO>();
 
         return _mapper.Map<CustomerDTO>(customerRegistred.Value);
@@ -77,7 +77,7 @@ public class AuthApplicationService : IAuthApplicationService
     {
         var seller = await _sellerDomainService.AuthenticateSellerAsync(email, password);
 
-        if (!seller.HasValue)
+        if (seller.IsEmpty)
             return new Optional<SellerDTO>();
 
         return _mapper.Map<SellerDTO>(seller.Value);
@@ -88,7 +88,7 @@ public class AuthApplicationService : IAuthApplicationService
         var seller = _mapper.Map<Seller>(sellerDTO);
         var sellerRegistred = await _sellerDomainService.RegisterSellerAsync(seller);
 
-        if (!sellerRegistred.HasValue)
+        if (sellerRegistred.IsEmpty)
             return new Optional<SellerDTO>();
 
         return _mapper.Map<SellerDTO>(sellerRegistred.Value);

@@ -2,7 +2,16 @@
 
 public struct Optional<T>
 {
-    public bool HasValue { get; private set; }
+    public bool IsEmpty
+    {
+        get => _value == null;
+        private set { }
+    }
+    private bool HasValue
+    { 
+        get => _value != null;
+        set { }
+    }
 
     private T _value;
 
@@ -10,7 +19,7 @@ public struct Optional<T>
     {
         get
         {
-            if(!HasValue)
+            if(IsEmpty)
                 throw new InvalidOperationException();
 
             return _value;
@@ -20,7 +29,6 @@ public struct Optional<T>
     public Optional(T value)
     {
         _value = value;
-        HasValue = true;
     }
 
     public static explicit operator T(Optional<T> optional)
@@ -48,5 +56,5 @@ public struct Optional<T>
         => left.Equals(right);
 
     public static bool operator !=(Optional<T> left, Optional<T> right)
-        => !(left == right);
+        => (left == right) is false;
 }

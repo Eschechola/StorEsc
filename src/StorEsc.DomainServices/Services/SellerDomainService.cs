@@ -31,10 +31,10 @@ public class SellerDomainService : ISellerDomainService
     
     public async Task<Optional<Seller>> AuthenticateSellerAsync(string email, string password)
     {
-        var sellerExists = await _sellerRepository.ExistsAsync(
+        var exists = await _sellerRepository.ExistsAsync(
             entity => entity.Email.ToLower() == email.ToLower());
 
-        if (!sellerExists)
+        if (exists is false)
         {
             await _domainNotification.PublishEmailAndOrPasswordMismatchAsync();
             return new Optional<Seller>();
@@ -59,10 +59,10 @@ public class SellerDomainService : ISellerDomainService
     {
         try
         {
-            var sellerExists = await _sellerRepository.ExistsAsync(
+            var exists = await _sellerRepository.ExistsAsync(
                 entity => entity.Email.ToLower() == seller.Email.ToLower());
 
-            if (sellerExists)
+            if (exists)
             {
                 await _domainNotification.PublishSellerAlreadyExistsAsync();
                 return new Optional<Seller>();

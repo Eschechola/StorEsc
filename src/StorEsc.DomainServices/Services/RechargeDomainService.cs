@@ -34,7 +34,7 @@ public class RechargeDomainService : IRechargeDomainService
     {
         var payment = await _paymentDomainService.PayRechargeAsync(amount, creditCard);
 
-        if (!payment.IsPaid)
+        if (payment.IsPaid is false)
         {
             await _domainNotificationFacade.PublishPaymentRefusedAsync();
             return false;
