@@ -40,7 +40,7 @@ public class ProductDomainService : IProductDomainService
         {
             product.Validate();
 
-            if (!product.IsValid)
+            if (product.IsInvalid())
             {
                 await _domainNotificationFacade.PublishProductDataIsInvalidAsync(product.ErrorsToString());
                 return new Optional<Product>();

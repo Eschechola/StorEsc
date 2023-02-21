@@ -9,7 +9,7 @@ public abstract class Entity
     public DateTime CreatedAt { get; protected set; }
     public DateTime UpdatedAt { get; protected set; }
     private List<string> _errors { get; set;  }
-    public bool IsValid { get => _errors.Count == 0; private set { }  }
+    
     public IReadOnlyCollection<string> Errors => _errors;
 
     public Entity()
@@ -43,6 +43,12 @@ public abstract class Entity
 
         return errors;
     }
+
+    public bool IsValid()
+        => _errors.Count == 0;
+
+    public bool IsInvalid()
+        => _errors.Count > 0;
     
     public void CreatedAtNow()
         => CreatedAt = DateTime.UtcNow;

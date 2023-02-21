@@ -70,7 +70,7 @@ public class SellerDomainService : ISellerDomainService
 
             seller.Validate();
 
-            if (!seller.IsValid)
+            if (seller.IsInvalid())
             {
                 await _domainNotification.PublishSellerDataIsInvalidAsync(seller.ErrorsToString());
                 return new Optional<Seller>();

@@ -70,7 +70,7 @@ public class CustomerDomainService : ICustomerDomainService
 
             customer.Validate();
 
-            if (!customer.IsValid)
+            if (customer.IsInvalid())
             {
                 await _domainNotification.PublishCustomerDataIsInvalidAsync(customer.ErrorsToString());
                 return new Optional<Customer>();
