@@ -72,9 +72,8 @@ Or send an email to <a href="mailto:lucas.eschechola@outlook.com">lucas.eschecho
 
 <br><br>
 
-<br><br>
 
-Util Commands - Create Local Migration
+6. Util Commands - Create Local Migration
 	<br>
 	<br>
 	```bash
@@ -83,9 +82,8 @@ Util Commands - Create Local Migration
 
 <br><br>
 
-<br><br>
 
-Util Commands - Apply Local Migration 
+7. Util Commands - Apply Local Migration 
 	<br>
 	<br>
 	```bash
