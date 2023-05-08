@@ -15,10 +15,7 @@ public class CustomerRepository : Repository<Customer>, ICustomerRepository
     }
 
     public override IUnitOfWork UnitOfWork => _context;
-
-    public async Task<Customer> GetByIdAsync(string id)
-        => await GetAsync(entity => entity.Id.ToString() == id);
-
+    
     public async Task<Customer> GetByEmailAsync(string email, string includeProperties = "")
         => await GetAsync(
             entity => entity.Email.ToLower() == email.ToLower(),

@@ -27,11 +27,7 @@ public abstract class Repository<T> : IRepository<T> where T : Entity
         => _context.Entry(entity).State = EntityState.Modified;
 
     public async void Remove(Guid id)
-        => _dbSet.Remove(await FindByIdAsync(id));
-
-    public async Task<T> FindByIdAsync(Guid id)
-        => await _dbSet.Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
+        => _dbSet.Remove(await GetByIdAsync(id));
 
     public async Task<bool> ExistsAsync(Expression<Func<T, bool>> query)
         => await _dbSet.AnyAsync(query);
@@ -40,6 +36,12 @@ public abstract class Repository<T> : IRepository<T> where T : Entity
         => query == null
             ? await _dbSet.CountAsync()
             : await _dbSet.CountAsync(query);
+
+    public async Task<T> GetByIdAsync(string id)
+        => await GetAsync(entity => entity.Id.ToString() == id);
+    
+    public async Task<T> GetByIdAsync(Guid id)
+        => await GetAsync(entity => entity.Id == id);
 
     public async Task<T> GetAsync(
         Expression<Func<T, bool>> query = null,
