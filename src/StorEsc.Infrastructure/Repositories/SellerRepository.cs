@@ -15,4 +15,12 @@ public class SellerRepository : Repository<Seller>, ISellerRepository
     }
 
     public override IUnitOfWork UnitOfWork => _context;
+
+    public async Task<bool> ExistsByEmailAsync(string email)
+        => await ExistsAsync(entity => entity.Email.ToLower() == email.ToLower());
+
+    public async Task<Seller> GetByEmailAsync(string email, string includeProperties = "")
+        => await GetAsync(entity => 
+            entity.Email.ToLower() == email.ToLower(),
+            includeProperties);
 }

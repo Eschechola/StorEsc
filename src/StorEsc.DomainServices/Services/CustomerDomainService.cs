@@ -27,12 +27,11 @@ public class CustomerDomainService : ICustomerDomainService
     }
 
     public async Task<Customer> GetCustomerAsync(string id)
-        => await _customerRepository.GetAsync(entity => entity.Id == Guid.Parse(id));
+        => await _customerRepository.GetByIdAsync(id);
 
     public async Task<Optional<Customer>> AuthenticateCustomerAsync(string email, string password)
     {
-        var exists = await _customerRepository.ExistsAsync(
-            entity => entity.Email.ToLower() == email.ToLower());
+        var exists = await _customerRepository.ExistsByEmailAsync(email);
 
         if (exists is false)
         {
@@ -40,9 +39,7 @@ public class CustomerDomainService : ICustomerDomainService
             return new Optional<Customer>();
         }
 
-        var customer = await _customerRepository.GetAsync(
-            entity => entity.Email.ToLower() == email.ToLower(),
-            "Wallet");
+        var customer = await _customerRepository.GetByEmailAsync(email, "Wallet");
         
         var hashedPassword = _argon2IdHasher.Hash(password);
 
@@ -59,8 +56,7 @@ public class CustomerDomainService : ICustomerDomainService
     {
         try
         {
-            var exists = await _customerRepository.ExistsAsync(
-                entity => entity.Email.ToLower() == customer.Email.ToLower());
+            var exists = await _customerRepository.ExistsByEmailAsync(customer.Email);
 
             if (exists)
             {
