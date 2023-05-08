@@ -44,9 +44,6 @@ public abstract class Entity
         return errors;
     }
 
-    public bool IsValid()
-        => _errors.Count == 0;
-
     public bool IsInvalid()
         => _errors.Count > 0;
     

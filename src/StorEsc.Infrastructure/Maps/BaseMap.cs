@@ -16,7 +16,6 @@ public class BaseMap<T> : IEntityTypeConfiguration<T> where T : Entity
             .IsUnique();
 
         builder.Ignore(entity => entity.Errors);
-        builder.Ignore(entity => entity.IsValid);
 
         builder.Property(entity => entity.CreatedAt)
             .IsRequired()

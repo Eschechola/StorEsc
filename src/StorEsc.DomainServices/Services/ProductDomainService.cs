@@ -26,10 +26,8 @@ public class ProductDomainService : IProductDomainService
     
     public async Task<IList<Product>> GetLastProductsAsync()
     {
-        IOrderedQueryable<Product> OrderFilter(IQueryable<Product> order) 
-            => order.OrderByDescending(property => property.CreatedAt);
-        
-        return await _productRepository.GetAllAsync(orderBy: OrderFilter);
+        Func<IQueryable<Product>, IOrderedQueryable<Product>> orderFilter = order => order.OrderByDescending(property => property.CreatedAt);
+        return await _productRepository.GetAllAsync(orderBy: orderFilter);
     }
 
     public async Task<IList<Product>> GetSellerProductsAsync(string sellerId)
