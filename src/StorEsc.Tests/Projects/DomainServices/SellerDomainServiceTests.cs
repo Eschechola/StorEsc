@@ -66,20 +66,14 @@ public class SellerDomainServiceTests
         var seller = _sellerFaker.GetValid();
         var sellerId = seller.Id.ToString();
 
-        _sellerRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Id == Guid.Parse(sellerId),
-                string.Empty,
-                true))
+        _sellerRepositoryMock.Setup(setup => setup.GetByIdAsync(sellerId))
             .ReturnsAsync(seller);
 
         // Act 
         var result = await _sut.GetSellerAsync(sellerId);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Id == Guid.Parse(sellerId),
-                string.Empty,
-                true),
+        _sellerRepositoryMock.Verify(setup => setup.GetByIdAsync(sellerId),
             Times.Once);
 
         result.Should()
@@ -95,20 +89,14 @@ public class SellerDomainServiceTests
         // Arrange
         var sellerId = Guid.NewGuid().ToString();
 
-        _sellerRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Id == Guid.Parse(sellerId),
-                string.Empty,
-                true))
+        _sellerRepositoryMock.Setup(setup => setup.GetByIdAsync(sellerId))
             .ReturnsAsync(() => null);
 
         // Act 
         var result = await _sut.GetSellerAsync(sellerId);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Id == Guid.Parse(sellerId),
-                string.Empty,
-                true),
+        _sellerRepositoryMock.Verify(setup => setup.GetByIdAsync(sellerId),
             Times.Once);
 
         result.Should()
@@ -127,8 +115,7 @@ public class SellerDomainServiceTests
         var email = _personFaker.Email;
         var password = _internetFaker.Password();
 
-        _sellerRepositoryMock.Setup(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == email.ToLower()))
+        _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(email))
             .ReturnsAsync(false);
         
         _domainNotificationMock.Setup(setup => setup.PublishEmailAndOrPasswordMismatchAsync())
@@ -138,8 +125,7 @@ public class SellerDomainServiceTests
         var result = await _sut.AuthenticateSellerAsync(email, password);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == email.ToLower()),
+        _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(email),
             Times.Once);
         
         _domainNotificationMock.Verify(setup => setup.PublishEmailAndOrPasswordMismatchAsync(),
@@ -163,14 +149,10 @@ public class SellerDomainServiceTests
         var password = _internetFaker.Password();
         var hashedPassword =_internetFaker.Password(); 
 
-        _sellerRepositoryMock.Setup(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == email.ToLower()))
+        _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(email))
             .ReturnsAsync(true);
         
-        _sellerRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Email.ToLower() == email.ToLower(),
-                "Wallet",
-                true))
+        _sellerRepositoryMock.Setup(setup => setup.GetByEmailAsync(email, "Wallet"))
             .ReturnsAsync(seller);
 
         _argon2IdHasherMock.Setup(setup => setup.Hash(password))
@@ -183,14 +165,10 @@ public class SellerDomainServiceTests
         var result = await _sut.AuthenticateSellerAsync(email, password);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == email.ToLower()),
+        _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(email),
             Times.Once);
 
-        _sellerRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Email.ToLower() == email.ToLower(),
-                "Wallet",
-                true),
+        _sellerRepositoryMock.Verify(setup => setup.GetByEmailAsync(email, "Wallet"),
             Times.Once);
 
         _argon2IdHasherMock.Verify(setup => setup.Hash(password),
@@ -216,14 +194,10 @@ public class SellerDomainServiceTests
         var password = seller.Password;
         var hashedPassword = seller.Password;
         
-        _sellerRepositoryMock.Setup(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == email.ToLower()))
+        _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(email))
             .ReturnsAsync(true);
         
-        _sellerRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Email.ToLower() == email.ToLower(),
-                "Wallet",
-                true))
+        _sellerRepositoryMock.Setup(setup => setup.GetByEmailAsync(email, "Wallet"))
             .ReturnsAsync(seller);
 
         _argon2IdHasherMock.Setup(setup => setup.Hash(password))
@@ -233,14 +207,10 @@ public class SellerDomainServiceTests
         var result = await _sut.AuthenticateSellerAsync(email, password);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == email.ToLower()),
+        _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(email),
             Times.Once);
 
-        _sellerRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Email.ToLower() == email.ToLower(),
-                "Wallet",
-                true),
+        _sellerRepositoryMock.Verify(setup => setup.GetByEmailAsync(email, "Wallet"),
             Times.Once);
 
         _argon2IdHasherMock.Verify(setup => setup.Hash(password),
@@ -267,8 +237,7 @@ public class SellerDomainServiceTests
         // Arrange
         var seller = _sellerFaker.GetValid();
         
-        _sellerRepositoryMock.Setup(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == seller.Email.ToLower()))
+        _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(seller.Email))
             .ReturnsAsync(true);
         
         _domainNotificationMock.Setup(setup => setup.PublishSellerAlreadyExistsAsync())
@@ -278,8 +247,7 @@ public class SellerDomainServiceTests
         var result = await _sut.RegisterSellerAsync(seller);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == seller.Email.ToLower()),
+        _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(seller.Email),
             Times.Once);
         
         _domainNotificationMock.Verify(setup => setup.PublishSellerAlreadyExistsAsync(),
@@ -299,8 +267,7 @@ public class SellerDomainServiceTests
         // Arrange
         var seller = _sellerFaker.GetInvalid();
         
-        _sellerRepositoryMock.Setup(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == seller.Email.ToLower()))
+        _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(seller.Email))
             .ReturnsAsync(false);
         
         _domainNotificationMock.Setup(setup => setup.PublishSellerDataIsInvalidAsync(It.IsAny<string>()))
@@ -310,8 +277,7 @@ public class SellerDomainServiceTests
         var result = await _sut.RegisterSellerAsync(seller);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == seller.Email.ToLower()),
+        _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(seller.Email),
             Times.Once);
         
         _domainNotificationMock.Verify(setup => setup.PublishSellerDataIsInvalidAsync(It.IsAny<string>()),
@@ -333,8 +299,7 @@ public class SellerDomainServiceTests
         var seller = _sellerFaker.GetValid();
         var hashedPassword = _internetFaker.Password();
         
-        _sellerRepositoryMock.Setup(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == seller.Email.ToLower()))
+        _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(seller.Email))
             .ReturnsAsync(false);
         
         _argon2IdHasherMock.Setup(setup => setup.Hash(seller.Password))
@@ -359,8 +324,7 @@ public class SellerDomainServiceTests
         var result = await _sut.RegisterSellerAsync(seller);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == seller.Email.ToLower()),
+        _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(seller.Email),
             Times.Once);
 
         _argon2IdHasherMock.Verify(setup => setup.Hash(It.IsAny<string>()),
@@ -400,8 +364,7 @@ public class SellerDomainServiceTests
         var expectedCustomer = seller;
         expectedCustomer.SetPassword(hashedPassword);
         
-        _sellerRepositoryMock.Setup(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == seller.Email.ToLower()))
+        _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(seller.Email))
             .ReturnsAsync(false);
         
         _argon2IdHasherMock.Setup(setup => setup.Hash(seller.Password))
@@ -426,8 +389,7 @@ public class SellerDomainServiceTests
         var result = await _sut.RegisterSellerAsync(seller);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.ExistsAsync(
-                entity => entity.Email.ToLower() == seller.Email.ToLower()),
+        _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(seller.Email),
             Times.Once);
 
         _argon2IdHasherMock.Verify(setup => setup.Hash(It.IsAny<string>()),
