@@ -97,32 +97,20 @@ public class WalletDomainServiceTests
 
         seller.SetWallet(wallet);
 
-        _sellerRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Id == Guid.Parse(sellerId),
-                string.Empty,
-                true))
+        _sellerRepositoryMock.Setup(setup => setup.GetByIdAsync(sellerId))
             .ReturnsAsync(seller);
         
-        _walletRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Id == seller.WalletId,
-                string.Empty,
-                true))
+        _walletRepositoryMock.Setup(setup => setup.GetByIdAsync(seller.WalletId))
             .ReturnsAsync(wallet);
 
         // Act
         var result = await _sut.GetSellerWalletAsync(sellerId);
         
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Id == Guid.Parse(sellerId),
-                string.Empty,
-                true),
+        _sellerRepositoryMock.Verify(setup => setup.GetByIdAsync(sellerId),
             Times.Once);
 
-        _walletRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Id == seller.WalletId,
-                string.Empty,
-                true),
+        _walletRepositoryMock.Verify(setup => setup.GetByIdAsync(seller.WalletId),
             Times.Once);
 
         result.Should()
@@ -147,32 +135,20 @@ public class WalletDomainServiceTests
 
         customer.SetWallet(wallet);
 
-        _customerRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Id == Guid.Parse(customerId),
-                string.Empty,
-                true))
+        _customerRepositoryMock.Setup(setup => setup.GetByIdAsync(customerId))
             .ReturnsAsync(customer);
         
-        _walletRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Id == customer.WalletId,
-                string.Empty,
-                true))
+        _walletRepositoryMock.Setup(setup => setup.GetByIdAsync(customer.WalletId))
             .ReturnsAsync(wallet);
 
         // Act
         var result = await _sut.GetCustomerWalletAsync(customerId);
         
         // Assert
-        _customerRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Id == Guid.Parse(customerId),
-                string.Empty,
-                true),
+        _customerRepositoryMock.Verify(setup => setup.GetByIdAsync(customerId),
             Times.Once);
 
-        _walletRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Id == customer.WalletId,
-                string.Empty,
-                true),
+        _walletRepositoryMock.Verify(setup => setup.GetByIdAsync(customer.WalletId),
             Times.Once);
 
         result.Should()
@@ -214,10 +190,7 @@ public class WalletDomainServiceTests
         var expctedWalletWithAmountAdded = wallet;
         expctedWalletWithAmountAdded.AddAmount(amount);
         
-        _walletRepositoryMock.Setup(setup => setup.GetAsync(
-                entity => entity.Id == walletId,
-                string.Empty,
-                true))
+        _walletRepositoryMock.Setup(setup => setup.GetByIdAsync(walletId))
             .ReturnsAsync(wallet);
         
         _walletRepositoryMock.Setup(setup => setup.Update(expctedWalletWithAmountAdded))
@@ -230,10 +203,7 @@ public class WalletDomainServiceTests
         var result = await _sut.AddAmountToWalletAsync(walletId, amount);
         
         // Assert
-        _walletRepositoryMock.Verify(setup => setup.GetAsync(
-                entity => entity.Id == walletId,
-                string.Empty,
-                true),
+        _walletRepositoryMock.Verify(setup => setup.GetByIdAsync(walletId),
             Times.Once);
 
         _walletRepositoryMock.Verify(setup => setup.Update(expctedWalletWithAmountAdded),
