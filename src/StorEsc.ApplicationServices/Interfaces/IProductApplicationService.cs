@@ -9,4 +9,5 @@ public interface IProductApplicationService
     Task<Optional<ProductDTO>> CreateProductAsync(ProductDTO productDTO);
     Task<IList<ProductDTO>> GetLastProductsAsync();
     Task<IList<ProductDTO>> SearchProductsByName(string name);
+    Task<Optional<ProductDTO>> UpdateProductAsync(string productId, string sellerId, ProductDTO productDTO);
 }
