@@ -23,7 +23,12 @@ public class ProductDomainService : IProductDomainService
 
     public async Task<IList<Product>> SearchProductsByName(string name)
         => await _productRepository.GetAllAsync(entity => Functions.FreeText(entity.Name, name));
-    
+
+    public async Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product product)
+    {
+        return new Optional<Product>();
+    }
+
     public async Task<IList<Product>> GetLastProductsAsync()
     {
         Func<IQueryable<Product>, IOrderedQueryable<Product>> orderFilter = order => order.OrderByDescending(property => property.CreatedAt);
