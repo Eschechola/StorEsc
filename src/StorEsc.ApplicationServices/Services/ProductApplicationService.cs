@@ -51,4 +51,15 @@ public class ProductApplicationService : IProductApplicationService
 
         return _mapper.Map<IList<ProductDTO>>(products);
     }
+
+    public async Task<Optional<ProductDTO>> UpdateProductAsync(string productId, string sellerId, ProductDTO productDTO)
+    {
+        var product = _mapper.Map<Product>(productDTO);
+        var productUpdated = await _productDomainService.UpdateProductAsync(productId, sellerId, product);
+        
+        if(productUpdated.IsEmpty)
+            return new Optional<ProductDTO>();
+
+        return _mapper.Map<ProductDTO>(productUpdated);
+    }
 }
