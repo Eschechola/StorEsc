@@ -81,9 +81,34 @@ public class ProductController : BaseController
         });
     }
 
+    [HttpPatch]
+    [Authorize(Roles = Roles.Seller)]
+    [Route("update/{productId}")]
+    public async Task<IActionResult> UpdateProductAsync([FromRoute] string productId, [FromBody] UpdateProductViewModel viewModel)
+    {
+        if (ModelState.IsValid is false)
+            return UnprocessableEntity(ModelState);
+
+        var sellerId = HttpContext.User.GetId();
+
+        var productDTO = new ProductDTO();
+
+        var productUpdated = await _productApplicationService.UpdateProductAsync(productId, sellerId, productDTO);
+        
+        if (HasNotifications())
+            return Result();
+
+        return Ok(new ResultViewModel
+        {
+            Message = "Product updated with success.",
+            Success = true,
+            Data = productUpdated.Value
+        });
+    }
+
     [HttpPost]
     [Authorize(Roles = Roles.Seller)]
-    [Route("create-product")]
+    [Route("create")]
     public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductViewModel viewModel)
     {
         if (ModelState.IsValid is false)
@@ -105,9 +130,9 @@ public class ProductController : BaseController
         if (HasNotifications())
             return Result();
 
-        return Ok(new ResultViewModel
+        return Created(new ResultViewModel
         {
-            Message = "Product registered with success.",
+            Message = "Product created with success.",
             Success = true,
             Data = productCreated.Value
         });
