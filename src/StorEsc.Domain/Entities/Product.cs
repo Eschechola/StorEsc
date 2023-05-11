@@ -56,4 +56,22 @@ public class Product : Entity, IAggregateRoot
 
     public void Validate()
         => base.Validate(new ProductValidator(), this);
+
+    public void SetName(string name)
+    {
+        Name = name;
+        Validate();
+    }
+
+    public void SetDescription(string description)
+    {
+        Description = description;
+        Validate();
+    }
+
+    public void SetPrice(decimal price)
+    {
+        Price = price;
+        Validate();
+    }
 }
