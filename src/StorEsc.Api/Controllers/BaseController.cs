@@ -80,9 +80,15 @@ public abstract class BaseController : Controller
                 or DomainNotificationType.SellerDataIsInvalid
                 or DomainNotificationType.ProductDataIsInvalid
                 => 400,
-            
+
             DomainNotificationType.PaymentRefused
                 => 402,
+            
+            DomainNotificationType.Forbbiden
+                => 403,
+            
+            DomainNotificationType.ProductNotFound
+                => 404,
             
             DomainNotificationType.InternalServerError
                 => 500,

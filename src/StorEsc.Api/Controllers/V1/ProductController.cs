@@ -91,7 +91,12 @@ public class ProductController : BaseController
 
         var sellerId = HttpContext.User.GetId();
 
-        var productDTO = new ProductDTO();
+        var productDTO = new ProductDTO
+        {
+            Name = viewModel.Name,
+            Description = viewModel.Description,
+            Price = viewModel.Price
+        };
 
         var productUpdated = await _productApplicationService.UpdateProductAsync(productId, sellerId, productDTO);
         
