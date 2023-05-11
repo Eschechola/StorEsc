@@ -7,7 +7,10 @@ public enum DomainNotificationType
     SellerDataIsInvalid,
     SellerAlreadyExists,
     ProductDataIsInvalid,
+    ProductNotFound,
     EmailAndOrPasswordMismatch,
     InternalServerError,
     PaymentRefused,
+    Forbbiden,
+    
 }

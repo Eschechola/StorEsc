@@ -55,4 +55,16 @@ public class DomainNotificationFacade : IDomainNotificationFacade
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
             message: "The payment of recharge has been refused.",
             type: DomainNotificationType.PaymentRefused));
+
+    public async Task PublishProductNotFoundAsync()
+        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
+            message: "Product not found.",
+            type: DomainNotificationType.ProductNotFound));
+
+
+    public async Task PublishForbbidenAsync()
+        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
+            message: "No permission",
+            type: DomainNotificationType.Forbbiden));
+
 }
