@@ -10,4 +10,6 @@ public interface IDomainNotificationFacade
     Task PublishEmailAndOrPasswordMismatchAsync();
     Task PublishInternalServerErrorAsync();
     Task PublishPaymentRefusedAsync();
+    Task PublishProductNotFoundAsync();
+    Task PublishForbbidenAsync();
 }
