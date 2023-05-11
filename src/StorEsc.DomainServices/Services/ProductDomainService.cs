@@ -24,9 +24,40 @@ public class ProductDomainService : IProductDomainService
     public async Task<IList<Product>> SearchProductsByName(string name)
         => await _productRepository.GetAllAsync(entity => Functions.FreeText(entity.Name, name));
 
-    public async Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product product)
+    public async Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product productUpdated)
     {
-        return new Optional<Product>();
+        var exists = await _productRepository.ExistsByIdAsync(productId);
+
+        if (exists is false)
+        {
+            await _domainNotificationFacade.PublishProductNotFoundAsync();
+            return new Optional<Product>();
+        }
+
+        var product = await _productRepository.GetByIdAsync(productId);
+
+        if (product.SellerId.ToString() != sellerId)
+        {
+            await _domainNotificationFacade.PublishForbbidenAsync();
+            return new Optional<Product>();
+        }
+
+        product.SetName(productUpdated.Name);
+        product.SetDescription(productUpdated.Description);
+        product.SetPrice(productUpdated.Price);
+        
+        product.Validate();
+
+        if (product.IsInvalid())
+        {
+            await _domainNotificationFacade.PublishProductDataIsInvalidAsync(product.ErrorsToString());
+            return new Optional<Product>();
+        }
+
+        _productRepository.Update(product);
+        await _productRepository.UnitOfWork.SaveChangesAsync();
+
+        return product;
     }
 
     public async Task<IList<Product>> GetLastProductsAsync()
