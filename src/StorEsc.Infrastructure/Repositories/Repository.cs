@@ -39,7 +39,10 @@ public abstract class Repository<T> : IRepository<T> where T : Entity
 
     public async Task<T> GetByIdAsync(string id)
         => await GetAsync(entity => entity.Id.ToString() == id);
-    
+
+    public async Task<bool> ExistsByIdAsync(string id)
+        => await ExistsAsync(entity => entity.Id.ToString() == id);
+
     public async Task<T> GetByIdAsync(Guid id)
         => await GetAsync(entity => entity.Id == id);
 

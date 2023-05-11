@@ -13,6 +13,7 @@ public interface IRepository<T> where T : Entity
     Task<bool> ExistsAsync(Expression<Func<T, bool>> query);
     Task<int> CountAsync(Expression<Func<T, bool>> query = null);
     Task<T> GetByIdAsync(string id);
+    Task<bool> ExistsByIdAsync(string id);
     Task<T> GetByIdAsync(Guid id);
     Task<T> GetAsync(
         Expression<Func<T, bool>> query = null,
