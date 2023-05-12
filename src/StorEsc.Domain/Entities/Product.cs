@@ -74,4 +74,10 @@ public class Product : Entity, IAggregateRoot
         Price = price;
         Validate();
     }
+    
+    public void SetStock(int stock)
+    {
+        Stock = stock;
+        Validate();
+    }
 }

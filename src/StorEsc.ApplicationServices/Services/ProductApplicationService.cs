@@ -60,6 +60,6 @@ public class ProductApplicationService : IProductApplicationService
         if(productUpdated.IsEmpty)
             return new Optional<ProductDTO>();
 
-        return _mapper.Map<ProductDTO>(productUpdated);
+        return _mapper.Map<ProductDTO>(productUpdated.Value);
     }
 }
