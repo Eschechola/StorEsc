@@ -45,6 +45,7 @@ public class ProductDomainService : IProductDomainService
         product.SetName(productUpdated.Name);
         product.SetDescription(productUpdated.Description);
         product.SetPrice(productUpdated.Price);
+        product.SetStock(productUpdated.Stock);
         
         product.Validate();
 

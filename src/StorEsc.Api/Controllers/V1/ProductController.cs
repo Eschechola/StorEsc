@@ -95,7 +95,8 @@ public class ProductController : BaseController
         {
             Name = viewModel.Name,
             Description = viewModel.Description,
-            Price = viewModel.Price
+            Price = viewModel.Price,
+            Stock = viewModel.Stock
         };
 
         var productUpdated = await _productApplicationService.UpdateProductAsync(productId, sellerId, productDTO);
