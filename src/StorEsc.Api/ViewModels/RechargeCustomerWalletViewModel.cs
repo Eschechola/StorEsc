@@ -19,7 +19,7 @@ public class RechargeCustomerWalletViewModel
     public string Number { get; set; }
     
     [Required(ErrorMessage = "ExpirationDate can not be empty.")]
-    [ExpirationDate(ErrorMessage = "ExpirationDate is invalid.")]
+    [ExpirationDate(ErrorMessage = "ExpirationDate is invalid. [MM/YYYY]")]
     public string ExpirationDate { get; set; }
     
     [Required(ErrorMessage = "CVV can not be empty.")]
