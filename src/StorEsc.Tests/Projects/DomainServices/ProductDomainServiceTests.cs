@@ -351,4 +351,163 @@ public class ProductDomainServiceTests
     }
     
     #endregion
+    
+    #region UpdateProductAsync
+
+    [Fact(DisplayName = "UpdateProductAsync when product not exists throw notification and return empty optional")]
+    [Trait("ProductDomainService", "UpdateProductAsync")]
+    public async Task UpdateProductAsync_WhenProductNotExists_ThrowNotificationAndReturnEmptyOptional()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = product.SellerId.ToString();
+
+        _productRepositoryMock.Setup(setup => 
+                setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _sut.UpdateProductAsync(productId, sellerId, product);
+
+        // Assert
+        _productRepositoryMock.Verify(verify =>
+                verify.ExistsByIdAsync(productId),
+            Times.Once);
+        
+        _domainNotificationFacadeMock.Verify(
+            verify => verify.PublishProductNotFoundAsync(),
+            Times.Once);
+
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "UpdateProductAsync when seller is not owner of product throw notification and return empty optional")]
+    [Trait("ProductDomainService", "UpdateProductAsync")]
+    public async Task UpdateProductAsync_WhenSellerIsNotOwnerOfProduct_ThrowNotificationAndReturnEmptyOptional()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = Guid.NewGuid().ToString();
+
+        _productRepositoryMock.Setup(setup => 
+                setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup =>
+                setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+
+        // Act
+        var result = await _sut.UpdateProductAsync(productId, sellerId, product);
+
+        // Assert
+        _productRepositoryMock.Verify(verify =>
+                verify.ExistsByIdAsync(productId),
+            Times.Once);
+        
+        _productRepositoryMock.Verify(verify =>
+                verify.GetByIdAsync(productId),
+            Times.Once);
+        
+        _domainNotificationFacadeMock.Verify(
+            verify => verify.PublishForbbidenAsync(),
+            Times.Once);
+
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "UpdateProductAsync when product data is invalid throw notification and return empty optional")]
+    [Trait("ProductDomainService", "UpdateProductAsync")]
+    public async Task UpdateProductAsync_WhenProductDataIsInvalid_ThrowNotificationAndReturnEmptyOptional()
+    {
+        // Arrange
+        var product = _productFaker.GetInvalid();
+        var productId = product.Id.ToString();
+        var sellerId = product.SellerId.ToString();
+
+        _productRepositoryMock.Setup(setup => 
+                setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup =>
+                setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+
+        // Act
+        var result = await _sut.UpdateProductAsync(productId, sellerId, product);
+
+        // Assert
+        _productRepositoryMock.Verify(verify =>
+                verify.ExistsByIdAsync(productId),
+            Times.Once);
+        
+        _productRepositoryMock.Verify(verify =>
+                verify.GetByIdAsync(productId),
+            Times.Once);
+        
+        _domainNotificationFacadeMock.Verify(
+            verify => verify.PublishProductDataIsInvalidAsync(It.IsAny<string>()),
+            Times.Once);
+
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "UpdateProductAsync when product is valid create and return product updated")]
+    [Trait("ProductDomainService", "UpdateProductAsync")]
+    public async Task UpdateProductAsync_WhenProductIsValid_CreateAndReturnProductUpdated()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = product.SellerId.ToString();
+
+        _productRepositoryMock.Setup(setup => 
+                setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup =>
+                setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+        
+        _productRepositoryMock.Setup(setup =>
+                setup.Update(product))
+            .Verifiable();
+        
+        _productRepositoryMock.Setup(setup =>
+                setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.UpdateProductAsync(productId, sellerId, product);
+
+        // Assert
+        _productRepositoryMock.Verify(verify =>
+                verify.ExistsByIdAsync(productId),
+            Times.Once);
+        
+        _productRepositoryMock.Verify(verify =>
+                verify.GetByIdAsync(productId),
+            Times.Once);
+
+        _productRepositoryMock.Verify(verify =>
+                verify.Update(product),
+            Times.Once);
+
+        _productRepositoryMock.Verify(verify =>
+                verify.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+        
+        result.IsEmpty.Should()
+            .BeFalse();
+
+        result.Value.Should()
+            .BeEquivalentTo(product);
+    }
+    
+    #endregion
 }
