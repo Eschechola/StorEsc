@@ -77,7 +77,7 @@ Or send an email to <a href="mailto:lucas.eschechola@outlook.com">lucas.eschecho
 	<br>
 	<br>
 	```bash
-	$ dotnet ef migrations add InitialMigration --project src/RagnaLog.Infrastructure.Data/RagnaLog.Infrastructure.Data.csproj
+	$ dotnet ef migrations add InitialMigration --project src/StorEsc.Infrastructure/StorEsc.Infrastructure.csproj
 	```
 
 <br><br>
@@ -87,7 +87,7 @@ Or send an email to <a href="mailto:lucas.eschechola@outlook.com">lucas.eschecho
 	<br>
 	<br>
 	```bash
-	$ dotnet ef database update --connection "Server=127.0.0.1;Database=RagnaLog;User Id=<YOUR_USER>;Password=<YOUR_PASSWORD>" --context RagnaLogContext --project src/RagnaLog.Infrastructure.Data/RagnaLog.Infrastructure.Data.csproj
+	$ dotnet ef database update --connection "Server=127.0.0.1;Database=StorEsc;User Id=<YOUR_USER>;Password=<YOUR_PASSWORD>" --context StorEscContext --project src/StorEsc.Infrastructure/StorEsc.Infrastructure.csproj
 	```
 
 <br><br>
