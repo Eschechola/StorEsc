@@ -21,7 +21,7 @@ namespace StorEsc.Infrastructure.Migrations
                     GETDATE(),
                     GETDATE(),
                     'ADMINISTRATOR',
-                    'RAGNALOG',
+                    'STORESC',
                     '{1}',
                     '{2}',
                     '00000000-0000-0000-0000-000000000000'
