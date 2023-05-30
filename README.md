@@ -1,4 +1,6 @@
 # StorEsc
+[![Default🎇](https://github.com/Eschechola/StorEsc/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Eschechola/StorEsc/actions/workflows/dotnet.yml)
+[![Deploy 🔥](https://github.com/Eschechola/StorEsc/actions/workflows/main_storesc.yml/badge.svg)](https://github.com/Eschechola/StorEsc/actions/workflows/main_storesc.yml)
 A full e-commerce api built in <strong>"Construindo um ecommerce com .NET + Azure 2023"</strong> course by <strong>Lucas Eschechola!</strong>
 
 <br>
@@ -39,7 +41,7 @@ Or send an email to <a href="mailto:lucas.eschechola@outlook.com">lucas.eschecho
 3. Add environment variables
 	<br><br>3.1 SQL Server
 	```bash
-	$ dotnet user-secrets set "Databases:ConnectionStrings:SqlServer" "Server=127.0.0.1;User Id=sa;Password=<YOUR_PASSWORD>;Database=StorEsc" --project src/StorEsc.Api/StorEsc.Api.csproj
+	$ dotnet user-secrets set "Databases:ConnectionStrings:SqlServer" "Server=127.0.0.1;User Id=sa;Password=<YOUR_PASSWORD>;Database=StorEsc;TrustServerCertificate=True" --project src/StorEsc.Api/StorEsc.Api.csproj
 	```
 
 	<br>3.2 JWT (8 characters)
@@ -58,7 +60,7 @@ Or send an email to <a href="mailto:lucas.eschechola@outlook.com">lucas.eschecho
 	<br>
 	<br>
 	```bash
-	$ dotnet ef database update --connection "Server=127.0.0.1;User Id=sa;Password=<YOUR_PASSWORD>;Database=StorEsc" --context StorEscContext --project src/StorEsc.Infrastructure/StorEsc.Infrastructure.csproj
+	$ dotnet ef database update --connection "Server=127.0.0.1;User Id=sa;Password=<YOUR_PASSWORD>;Database=StorEsc;TrustServerCertificate=True" --context StorEscContext --project src/StorEsc.Infrastructure/StorEsc.Infrastructure.csproj
 	```
 
 <br><br>
@@ -87,7 +89,7 @@ Or send an email to <a href="mailto:lucas.eschechola@outlook.com">lucas.eschecho
 	<br>
 	<br>
 	```bash
-	$ dotnet ef database update --connection "Server=127.0.0.1;Database=StorEsc;User Id=<YOUR_USER>;Password=<YOUR_PASSWORD>" --context StorEscContext --project src/StorEsc.Infrastructure/StorEsc.Infrastructure.csproj
+	$ dotnet ef database update --connection "Server=127.0.0.1;Database=StorEsc;User Id=<YOUR_USER>;Password=<YOUR_PASSWORD>;TrustServerCertificate=True" --context StorEscContext --project src/StorEsc.Infrastructure/StorEsc.Infrastructure.csproj
 	```
 
 <br><br>
