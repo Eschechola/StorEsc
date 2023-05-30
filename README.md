@@ -1,5 +1,4 @@
 # StorEsc
-[![Default🎇](https://github.com/Eschechola/StorEsc/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Eschechola/StorEsc/actions/workflows/dotnet.yml)
 [![Deploy 🔥](https://github.com/Eschechola/StorEsc/actions/workflows/main_storesc.yml/badge.svg)](https://github.com/Eschechola/StorEsc/actions/workflows/main_storesc.yml)
 <br><br><br>
 A full e-commerce api built in <strong>"Construindo um ecommerce com .NET + Azure 2023"</strong> course by <strong>Lucas Eschechola!</strong>
