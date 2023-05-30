@@ -18,7 +18,7 @@ public class Voucher : Entity, IAggregateRoot
     public Voucher(
         string code,
         decimal? valueDiscount,
-        decimal percentageDiscount,
+        decimal? percentageDiscount,
         bool isPercentageDiscount)
     {
         Code = code;
@@ -33,7 +33,7 @@ public class Voucher : Entity, IAggregateRoot
         Guid id,
         string code,
         decimal? valueDiscount,
-        decimal percentageDiscount,
+        decimal? percentageDiscount,
         bool isPercentageDiscount) 
         : base(id)
     {
@@ -49,7 +49,7 @@ public class Voucher : Entity, IAggregateRoot
         Guid id,
         string code,
         decimal? valueDiscount,
-        decimal percentageDiscount,
+        decimal? percentageDiscount,
         bool isPercentageDiscount,
         List<Order> orders) 
         : base(id)

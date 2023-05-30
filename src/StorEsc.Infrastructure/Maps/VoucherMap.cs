@@ -28,7 +28,7 @@ public class VoucherMap : BaseMap<Voucher>
             .HasColumnType("DECIMAL(14,9)");
         
         builder.Property(voucher => voucher.PercentageDiscount)
-            .HasColumnName("ValueDiscount")
+            .HasColumnName("PercentageDiscount")
             .HasColumnType("DECIMAL(14,9)");
     }
 }
