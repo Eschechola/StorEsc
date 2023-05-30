@@ -1,8 +1,10 @@
-name: Default Pipeline 🎇
+name: Default 🎇
 
 on:
   push:
     branches: [ "**" ]
+    branches-ignore:
+      - master
 
 jobs:
   build:
