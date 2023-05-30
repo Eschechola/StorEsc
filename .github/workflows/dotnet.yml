@@ -2,11 +2,7 @@ name: Default🎇
 
 on:
   push:
-     branches:    
-      - '*'         
-      - '*/*'       
-      - '**'        
-      - '!main'
+     branches: ['**']
 
 jobs:
   build:

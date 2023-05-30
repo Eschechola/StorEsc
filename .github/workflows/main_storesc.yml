@@ -1,9 +1,9 @@
 name: Deploy 🔥
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    action: created
+      
   workflow_dispatch:
 
 jobs:
