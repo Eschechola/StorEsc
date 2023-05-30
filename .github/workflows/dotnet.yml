@@ -2,7 +2,6 @@ name: Default🎇
 
 on:
   push:
-    branches: [ "**" ]
     branches-ignore:
       - master
 
