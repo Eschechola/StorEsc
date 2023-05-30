@@ -27,11 +27,13 @@ jobs:
       - name: Restore 🚧
         run: dotnet restore
 
+      - name: Test 🧵
+        run: |
+          dotnet build --no-restore
+          dotnet test --no-build --verbosity normal
+
       - name: Build 🎡
         run: dotnet build --configuration Release
-
-      - name: Test 🧵
-        run: dotnet test --no-build --verbosity normal
         
       - name: Publish 📰
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
