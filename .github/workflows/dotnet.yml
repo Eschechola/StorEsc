@@ -1,4 +1,4 @@
-name: Default Pipeline
+name: Default Pipeline 🎇
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Setup .NET 🔥
+    - name: Setup .NET ✨
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 7.0.x
@@ -22,7 +22,7 @@ jobs:
     - name: Restore 🚧
       run: dotnet restore
 
-    - name: Build ✅
+    - name: Build 🎡
       run: dotnet build --no-restore
 
     - name: Test 🧵
