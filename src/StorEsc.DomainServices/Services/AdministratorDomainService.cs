@@ -55,16 +55,16 @@ public class AdministratorDomainService : IAdministratorDomainService
         var defaultAdministratorEmail = _configuration["Administrator:Email"];
         var administrator = await _administratorRepository.GetByEmailAsync(defaultAdministratorEmail);
 
-        if (administrator.IsEnabled is false)
-        {
-            var hashedPassword = _argon2IdHasher.Hash(administrator.Password);
-            administrator.SetPassword(hashedPassword);
-            administrator.Enable();
+        if (administrator.IsEnabled)
+            return true;
+        
+        var hashedPassword = _argon2IdHasher.Hash(administrator.Password);
+        administrator.SetPassword(hashedPassword);
+        administrator.Enable();
 
-            _administratorRepository.Update(administrator);
-            await _administratorRepository.UnitOfWork.SaveChangesAsync();
-        }
-
+        _administratorRepository.Update(administrator);
+        await _administratorRepository.UnitOfWork.SaveChangesAsync();
+        
         return true;
     }
 
