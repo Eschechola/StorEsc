@@ -51,7 +51,7 @@ Or send an email to <a href="mailto:lucas.eschechola@outlook.com">lucas.eschecho
 
 	<br>3.3 Argon2Id Salt (16 characters)
 	```bash
-	$ dotnet user-secrets set "Hash:Argon2iD:Salt" "<YOUR_SALT>" --project src/StorEsc.Api/StorEsc.Api.csproj
+	$ dotnet user-secrets set "Hash:Argon2Id:Salt" "<YOUR_SALT>" --project src/StorEsc.Api/StorEsc.Api.csproj
 	```
 
 <br><br>
