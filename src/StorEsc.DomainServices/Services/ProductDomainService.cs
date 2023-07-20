@@ -61,6 +61,62 @@ public class ProductDomainService : IProductDomainService
         return product;
     }
 
+    public async Task<bool> DisableProductAsync(string productId, string sellerId)
+    {
+        var exists = await _productRepository.ExistsByIdAsync(productId);
+
+        if (exists is false)
+        {
+            await _domainNotificationFacade.PublishProductNotFoundAsync();
+            return false;
+        }
+
+        var product = await _productRepository.GetByIdAsync(productId);
+
+        if (product.SellerId.ToString() != sellerId)
+        {
+            await _domainNotificationFacade.PublishForbbidenAsync();
+            return false;
+        }
+
+        if (product.Enabled)
+        {
+            product.Disable();
+            _productRepository.Update(product);
+            await _productRepository.UnitOfWork.SaveChangesAsync();
+        }
+
+        return true;
+    }
+    
+    public async Task<bool> EnableProductAsync(string productId, string sellerId)
+    {
+        var exists = await _productRepository.ExistsByIdAsync(productId);
+
+        if (exists is false)
+        {
+            await _domainNotificationFacade.PublishProductNotFoundAsync();
+            return false;
+        }
+
+        var product = await _productRepository.GetByIdAsync(productId);
+
+        if (product.SellerId.ToString() != sellerId)
+        {
+            await _domainNotificationFacade.PublishForbbidenAsync();
+            return false;
+        }
+
+        if (product.Enabled)
+            return true;
+        
+        product.Enable();
+        _productRepository.Update(product);
+        await _productRepository.UnitOfWork.SaveChangesAsync();
+        
+        return true;
+    }
+
     public async Task<IList<Product>> GetLastProductsAsync()
     {
         Func<IQueryable<Product>, IOrderedQueryable<Product>> orderFilter = order => order.OrderByDescending(property => property.CreatedAt);
@@ -69,7 +125,9 @@ public class ProductDomainService : IProductDomainService
 
     public async Task<IList<Product>> GetSellerProductsAsync(string sellerId)
         => await _productRepository.GetAllAsync(
-            entity => entity.SellerId == Guid.Parse(sellerId));
+            entity => 
+                entity.SellerId == Guid.Parse(sellerId) &&
+                entity.Enabled);
 
     public async Task<Optional<Product>> CreateProductAsync(Product product)
     {

@@ -10,4 +10,6 @@ public interface IProductDomainService
     Task<Optional<Product>> CreateProductAsync(Product product);
     Task<IList<Product>> SearchProductsByName(string name);
     Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product productUpdated);
+    Task<bool> DisableProductAsync(string productId, string sellerId);
+    Task<bool> EnableProductAsync(string productId, string sellerId);
 }
