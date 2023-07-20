@@ -1,6 +1,6 @@
-﻿namespace StorEsc.Application.DTOs;
+﻿namespace StorEsc.Application.Dtos;
 
-public abstract class BaseDTO
+public abstract class BaseDto
 {
     public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; }

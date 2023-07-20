@@ -1,6 +1,6 @@
-﻿namespace StorEsc.Application.DTOs;
+﻿namespace StorEsc.Application.Dtos;
 
-public class VoucherDTO : BaseDTO
+public class VoucherDto : BaseDto
 {
     public string Code { get; set; }
     public decimal? ValueDiscount { get; set; }

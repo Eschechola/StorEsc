@@ -1,8 +1,8 @@
-﻿using StorEsc.Application.DTOs;
+﻿using StorEsc.Application.Dtos;
 namespace StorEsc.Application.Interfaces;
 
 public interface IWalletApplicationService
 {
-    Task<WalletDTO> GetSellerWalletAsync(string sellerId);
-    Task<WalletDTO> GetCustomerWalletAsync(string customerId);
+    Task<WalletDto> GetSellerWalletAsync(string sellerId);
+    Task<WalletDto> GetCustomerWalletAsync(string customerId);
 }

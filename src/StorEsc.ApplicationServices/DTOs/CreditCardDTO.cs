@@ -1,6 +1,6 @@
-﻿namespace StorEsc.Application.DTOs;
+﻿namespace StorEsc.Application.Dtos;
 
-public class CreditCardDTO
+public class CreditCardDto
 {
     public string HoldName { get; set; }
     public string Number { get; set; }

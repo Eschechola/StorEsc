@@ -1,6 +1,6 @@
-﻿namespace StorEsc.Application.DTOs;
+﻿namespace StorEsc.Application.Dtos;
 
-public class RechargeDTO : BaseDTO
+public class RechargeDto : BaseDto
 {
     public Guid WalletId { get; set; }
     public decimal Amount { get; set; }

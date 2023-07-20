@@ -1,13 +1,13 @@
-﻿namespace StorEsc.Application.DTOs;
+﻿namespace StorEsc.Application.Dtos;
 
-public class CustomerDTO : AccountDTO
+public class CustomerDto : AccountDto
 {
     public Guid WalletId { get; set; }
-    public WalletDTO Wallet { get; set; }
-    public IList<OrderDTO> Orders { get; set; }
+    public WalletDto Wallet { get; set; }
+    public IList<OrderDto> Orders { get; set; }
 
-    public CustomerDTO()
+    public CustomerDto()
     {
-        Orders = new List<OrderDTO>();
+        Orders = new List<OrderDto>();
     }
 }

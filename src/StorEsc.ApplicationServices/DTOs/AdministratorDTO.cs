@@ -1,6 +1,6 @@
-namespace StorEsc.Application.DTOs;
+namespace StorEsc.Application.Dtos;
 
-public class AdministratorDTO : AccountDTO
+public class AdministratorDto : AccountDto
 {
     public Guid CreatedBy { get; set; }
     public bool IsEnabled { get; set; }

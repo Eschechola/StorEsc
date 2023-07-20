@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using StorEsc.Application.DTOs;
+using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Data.Structs;
 using StorEsc.Domain.Entities;
@@ -28,38 +28,38 @@ public class AuthApplicationService : IAuthApplicationService
 
     #region Customer
 
-    public async Task<Optional<CustomerDTO>> AuthenticateCustomerAsync(string email, string password)
+    public async Task<Optional<CustomerDto>> AuthenticateCustomerAsync(string email, string password)
     {
         var customer = await _customerDomainService.AuthenticateCustomerAsync(email, password);
 
         if (customer.IsEmpty)
-            return new Optional<CustomerDTO>();
+            return new Optional<CustomerDto>();
 
-        return _mapper.Map<CustomerDTO>(customer.Value);
+        return _mapper.Map<CustomerDto>(customer.Value);
     }
 
-    public async Task<Optional<AdministratorDTO>> AuthenticateAdministratorAsync(string email, string password)
+    public async Task<Optional<AdministratorDto>> AuthenticateAdministratorAsync(string email, string password)
     {
         var administrator = await _administratorDomainService.AuthenticateAdministratorAsync(email, password);
 
         if (administrator.IsEmpty)
-            return new Optional<AdministratorDTO>();
+            return new Optional<AdministratorDto>();
 
-        return _mapper.Map<AdministratorDTO>(administrator.Value);
+        return _mapper.Map<AdministratorDto>(administrator.Value);
     }
 
-    public async Task<Optional<CustomerDTO>> RegisterCustomerAsync(CustomerDTO customerDTO)
+    public async Task<Optional<CustomerDto>> RegisterCustomerAsync(CustomerDto customerDto)
     {
-        var customer = _mapper.Map<Customer>(customerDTO);
+        var customer = _mapper.Map<Customer>(customerDto);
         var customerRegistred = await _customerDomainService.RegisterCustomerAsync(customer);
 
         if (customerRegistred.IsEmpty)
-            return new Optional<CustomerDTO>();
+            return new Optional<CustomerDto>();
 
-        return _mapper.Map<CustomerDTO>(customerRegistred.Value);
+        return _mapper.Map<CustomerDto>(customerRegistred.Value);
     }
 
-    public Task<Optional<AdministratorDTO>> RegisterAdministratorAsync(AdministratorDTO administratorDTO)
+    public Task<Optional<AdministratorDto>> RegisterAdministratorAsync(AdministratorDto administratorDto)
     {
         throw new NotImplementedException();
     }
@@ -73,25 +73,25 @@ public class AuthApplicationService : IAuthApplicationService
 
     #region Seller
     
-    public async Task<Optional<SellerDTO>> AuthenticateSellerAsync(string email, string password)
+    public async Task<Optional<SellerDto>> AuthenticateSellerAsync(string email, string password)
     {
         var seller = await _sellerDomainService.AuthenticateSellerAsync(email, password);
 
         if (seller.IsEmpty)
-            return new Optional<SellerDTO>();
+            return new Optional<SellerDto>();
 
-        return _mapper.Map<SellerDTO>(seller.Value);
+        return _mapper.Map<SellerDto>(seller.Value);
     }
 
-    public async Task<Optional<SellerDTO>> RegisterSellerAsync(SellerDTO sellerDTO)
+    public async Task<Optional<SellerDto>> RegisterSellerAsync(SellerDto sellerDto)
     {
-        var seller = _mapper.Map<Seller>(sellerDTO);
+        var seller = _mapper.Map<Seller>(sellerDto);
         var sellerRegistred = await _sellerDomainService.RegisterSellerAsync(seller);
 
         if (sellerRegistred.IsEmpty)
-            return new Optional<SellerDTO>();
+            return new Optional<SellerDto>();
 
-        return _mapper.Map<SellerDTO>(sellerRegistred.Value);
+        return _mapper.Map<SellerDto>(sellerRegistred.Value);
     }
 
     public Task<bool> ResetSellerPasswordAsync(string email)

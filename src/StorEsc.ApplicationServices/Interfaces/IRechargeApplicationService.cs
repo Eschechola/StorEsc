@@ -1,4 +1,4 @@
-﻿using StorEsc.Application.DTOs;
+﻿using StorEsc.Application.Dtos;
 
 namespace StorEsc.Application.Interfaces;
 
@@ -7,5 +7,5 @@ public interface IRechargeApplicationService
     Task<bool> RechargeCustomerWalletAsync(
         string customerId,
         decimal amount,
-        CreditCardDTO creditCardDTO);
+        CreditCardDto creditCardDto);
 }

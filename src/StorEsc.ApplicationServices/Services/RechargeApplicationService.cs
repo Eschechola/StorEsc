@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using StorEsc.Application.DTOs;
+using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
@@ -20,9 +20,9 @@ public class RechargeApplicationService : IRechargeApplicationService
     public async Task<bool> RechargeCustomerWalletAsync(
         string customerId,
         decimal amount,
-        CreditCardDTO creditCardDTO)
+        CreditCardDto creditCardDto)
     {
-        var creditCard = _mapper.Map<CreditCard>(creditCardDTO);
+        var creditCard = _mapper.Map<CreditCard>(creditCardDto);
         return await _rechargeDomainService.RechargeCustomerWalletAsync(customerId, amount, creditCard);
     }
 }
