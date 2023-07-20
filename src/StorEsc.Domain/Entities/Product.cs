@@ -10,6 +10,7 @@ public class Product : Entity, IAggregateRoot
     public string Description { get; private set; }
     public decimal Price { get; private set; }
     public int Stock { get; private set; }
+    public bool Enabled { get; private set; }
     
     //EF
     public Seller Seller { get; private set; }
@@ -22,13 +23,15 @@ public class Product : Entity, IAggregateRoot
         string name,
         string description,
         decimal price,
-        int stock)
+        int stock,
+        bool enabled)
     {
         SellerId = sellerId;
         Name = name;
         Description = description;
         Price = price;
         Stock = stock;
+        Enabled = enabled;
         
         Validate();
     }
@@ -40,6 +43,7 @@ public class Product : Entity, IAggregateRoot
         string description,
         decimal price,
         int stock,
+        bool enabled,
         Seller seller = null,
         List<OrderItem> orderItens = null) : base(id)
     {
@@ -49,6 +53,7 @@ public class Product : Entity, IAggregateRoot
         Price = price;
         Stock = stock;
         Seller = seller;
+        Enabled = enabled;
         OrderItens = orderItens;
         
         Validate();
@@ -80,4 +85,10 @@ public class Product : Entity, IAggregateRoot
         Stock = stock;
         Validate();
     }
+
+    public void Disable() 
+        => Enabled = false;
+    
+    public void Enable() 
+        => Enabled = true;
 }

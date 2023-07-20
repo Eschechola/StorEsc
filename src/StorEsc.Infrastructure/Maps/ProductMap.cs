@@ -36,6 +36,12 @@ public class ProductMap : BaseMap<Product>
             .IsRequired()
             .HasColumnType("INT")
             .HasColumnName("Stock");
+
+        builder.Property(product => product.Enabled)
+            .IsRequired()
+            .HasDefaultValue(0)
+            .HasColumnType("BIT")
+            .HasColumnName("Enabled");
         
         builder.HasOne(product => product.Seller)
             .WithMany(seller => seller.Products)
