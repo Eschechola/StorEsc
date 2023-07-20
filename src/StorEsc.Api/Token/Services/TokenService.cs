@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using StorEsc.API.Token.Interfaces;
-using StorEsc.Application.DTOs;
+using StorEsc.Application.Dtos;
 
 namespace StorEsc.API.Token.Services;
 
@@ -23,11 +23,11 @@ public class TokenService : ITokenService
         _now = DateTime.UtcNow.AddHours(-3);
     }
     
-    public Token GenerateCustomerToken(CustomerDTO customerDTO)
+    public Token GenerateCustomerToken(CustomerDto customerDto)
     {
         var claims = CreateIdentityClaims(
-            uuid: customerDTO.Id.ToString(),
-            email: customerDTO.Email,
+            uuid: customerDto.Id.ToString(),
+            email: customerDto.Email,
             tokenType: TokenType.Customer);
         
         return new Token(
@@ -37,11 +37,11 @@ public class TokenService : ITokenService
             hoursToExpire: _hoursToExpire);
     }
 
-    public Token GenerateSellerToken(SellerDTO sellerDTO)
+    public Token GenerateSellerToken(SellerDto sellerDto)
     {
         var claims = CreateIdentityClaims(
-            uuid: sellerDTO.Id.ToString(),
-            email: sellerDTO.Email,
+            uuid: sellerDto.Id.ToString(),
+            email: sellerDto.Email,
             tokenType: TokenType.Seller);
 
         return new Token(
@@ -51,11 +51,11 @@ public class TokenService : ITokenService
             hoursToExpire: _hoursToExpire);
     }
 
-    public Token GenerateAdministratorToken(AdministratorDTO administratorDTO)
+    public Token GenerateAdministratorToken(AdministratorDto administratorDto)
     {
         var claims = CreateIdentityClaims(
-            uuid: administratorDTO.Id.ToString(),
-            email: administratorDTO.Email,
+            uuid: administratorDto.Id.ToString(),
+            email: administratorDto.Email,
             tokenType: TokenType.Administrator);
         
         return new Token(

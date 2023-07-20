@@ -8,7 +8,7 @@ namespace StorEsc.API.IoC;
 
 public static class TokenDependencies
 {
-    public static IServiceCollection AddTokenAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AdDtokenAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var secretKey = configuration["Token:SecretKey"];
         var issuer = configuration["Token:Issuer"];

@@ -1,10 +1,10 @@
-﻿using StorEsc.Application.DTOs;
+﻿using StorEsc.Application.Dtos;
 
 namespace StorEsc.API.Token.Interfaces;
 
 public interface ITokenService
 {
-    Token GenerateCustomerToken(CustomerDTO customerDTO);
-    Token GenerateSellerToken(SellerDTO sellerDTO);
-    Token GenerateAdministratorToken(AdministratorDTO administratorDTO);
+    Token GenerateCustomerToken(CustomerDto customerDto);
+    Token GenerateSellerToken(SellerDto sellerDto);
+    Token GenerateAdministratorToken(AdministratorDto administratorDto);
 }

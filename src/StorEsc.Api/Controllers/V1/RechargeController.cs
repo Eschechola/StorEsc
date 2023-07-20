@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StorEsc.API.Token;
 using StorEsc.API.Token.Extensions;
 using StorEsc.API.ViewModels;
-using StorEsc.Application.DTOs;
+using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
@@ -34,7 +34,7 @@ public class RechargeController : BaseController
         var customerId = HttpContext.User.GetId();
         var amount = viewModel.Amount;
         
-        var creditCardDTO = new CreditCardDTO
+        var creditCardDto = new CreditCardDto
         {
             HoldName = viewModel.HoldName,
             ExpirationDate = viewModel.ExpirationDate,
@@ -43,7 +43,7 @@ public class RechargeController : BaseController
             CVV = viewModel.CVV
         };
 
-        await _rechargeApplicationService.RechargeCustomerWalletAsync(customerId, amount, creditCardDTO);
+        await _rechargeApplicationService.RechargeCustomerWalletAsync(customerId, amount, creditCardDto);
 
         if (HasNotifications())
             return Result();

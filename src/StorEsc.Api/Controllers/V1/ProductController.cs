@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StorEsc.API.Token;
 using StorEsc.API.Token.Extensions;
 using StorEsc.API.ViewModels;
-using StorEsc.Application.DTOs;
+using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
@@ -91,7 +91,7 @@ public class ProductController : BaseController
 
         var sellerId = HttpContext.User.GetId();
 
-        var productDTO = new ProductDTO
+        var productDto = new ProductDto
         {
             Name = viewModel.Name,
             Description = viewModel.Description,
@@ -99,7 +99,7 @@ public class ProductController : BaseController
             Stock = viewModel.Stock
         };
 
-        var productUpdated = await _productApplicationService.UpdateProductAsync(productId, sellerId, productDTO);
+        var productUpdated = await _productApplicationService.UpdateProductAsync(productId, sellerId, productDto);
         
         if (HasNotifications())
             return Result();
@@ -122,7 +122,7 @@ public class ProductController : BaseController
         
         var sellerId = HttpContext.User.GetId();
         
-        var productDTO = new ProductDTO
+        var productDto = new ProductDto
         {
             SellerId = Guid.Parse(sellerId),
             Name = viewModel.Name,
@@ -131,7 +131,7 @@ public class ProductController : BaseController
             Stock = viewModel.Stock
         };
         
-        var productCreated = await _productApplicationService.CreateProductAsync(productDTO);
+        var productCreated = await _productApplicationService.CreateProductAsync(productDto);
         
         if (HasNotifications())
             return Result();
@@ -141,6 +141,66 @@ public class ProductController : BaseController
             Message = "Product created with success.",
             Success = true,
             Data = productCreated.Value
+        });
+    }
+
+    [HttpPatch]
+    [Authorize(Roles = Roles.Seller)]
+    [Route("disable/{productId}")]
+    public async Task<IActionResult> DisableProductAsync([FromRoute] string productId)
+    {
+        var sellerId = HttpContext.User.GetId();
+
+        if (string.IsNullOrEmpty(productId))
+        {
+            return BadRequest(new ResultViewModel
+            {
+                Message = "Product Id can not be null or empty",
+                Success = false,
+                Data = null
+            });
+        }
+
+        await _productApplicationService.DisableProductAsync(productId, sellerId);
+
+        if (HasNotifications())
+            return Result();
+        
+        return Ok(new ResultViewModel
+        {
+            Message = "Product disabled with success",
+            Success = true,
+            Data = null
+        });
+    }
+    
+    [HttpPatch]
+    [Authorize(Roles = Roles.Seller)]
+    [Route("enable/{productId}")]
+    public async Task<IActionResult> EnableProductAsync([FromRoute] string productId)
+    {
+        var sellerId = HttpContext.User.GetId();
+
+        if (string.IsNullOrEmpty(productId))
+        {
+            return BadRequest(new ResultViewModel
+            {
+                Message = "Product Id can not be null or empty",
+                Success = false,
+                Data = null
+            });
+        }
+
+        await _productApplicationService.EnableProductAsync(productId, sellerId);
+
+        if (HasNotifications())
+            return Result();
+        
+        return Ok(new ResultViewModel
+        {
+            Message = "Product enabled with success",
+            Success = true,
+            Data = null
         });
     }
 }

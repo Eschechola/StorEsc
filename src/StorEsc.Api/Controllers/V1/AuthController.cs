@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StorEsc.API.Token.Extensions;
 using StorEsc.API.Token.Interfaces;
 using StorEsc.API.ViewModels;
-using StorEsc.Application.DTOs;
+using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
@@ -59,7 +59,7 @@ public class AuthController : BaseController
         if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
-        var customerDTO = new CustomerDTO
+        var customerDto = new CustomerDto
         {
             FirstName = viewModel.FirstName,
             LastName = viewModel.LastName,
@@ -67,7 +67,7 @@ public class AuthController : BaseController
             Password = viewModel.Password
         };
         
-        var customerCreated = await _authApplicationService.RegisterCustomerAsync(customerDTO);
+        var customerCreated = await _authApplicationService.RegisterCustomerAsync(customerDto);
         
         if (HasNotifications())
             return Result();
@@ -178,7 +178,7 @@ public class AuthController : BaseController
         if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
-        var sellerDTO = new SellerDTO
+        var sellerDto = new SellerDto
         {
             FirstName = viewModel.FirstName,
             LastName = viewModel.LastName,
@@ -186,7 +186,7 @@ public class AuthController : BaseController
             Password = viewModel.Password
         };
         
-        var sellerCreated = await _authApplicationService.RegisterSellerAsync(sellerDTO);
+        var sellerCreated = await _authApplicationService.RegisterSellerAsync(sellerDto);
         
         if (HasNotifications())
             return Result();

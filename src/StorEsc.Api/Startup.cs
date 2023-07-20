@@ -48,7 +48,7 @@ public class Startup
             .AddMediatR(typeof(Startup))
             .AddMediator()
             .AddMapper()
-            .AddTokenAuthentication(_configuration);
+            .AdDtokenAuthentication(_configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
