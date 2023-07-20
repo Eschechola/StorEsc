@@ -207,7 +207,7 @@ public class ProductDomainServiceTests
         var products = _productFaker.GetValidList();
 
         _productRepositoryMock.Setup(setup => setup.GetAllAsync(
-                entity => entity.SellerId == Guid.Parse(sellerId),
+                entity => entity.SellerId == Guid.Parse(sellerId) && entity.Enabled,
                 string.Empty,
                 null,
                 true,
@@ -219,7 +219,7 @@ public class ProductDomainServiceTests
 
         // Assert
         _productRepositoryMock.Verify(setup => setup.GetAllAsync(
-                entity => entity.SellerId == Guid.Parse(sellerId),
+                entity => entity.SellerId == Guid.Parse(sellerId) && entity.Enabled,
                 string.Empty,
                 null,
                 true,
@@ -243,7 +243,7 @@ public class ProductDomainServiceTests
         var products = new List<Product>();
 
         _productRepositoryMock.Setup(setup => setup.GetAllAsync(
-                entity => entity.SellerId == Guid.Parse(sellerId),
+                entity => entity.SellerId == Guid.Parse(sellerId) && entity.Enabled,
                 string.Empty,
                 null,
                 true,
@@ -255,7 +255,7 @@ public class ProductDomainServiceTests
 
         // Assert
         _productRepositoryMock.Verify(setup => setup.GetAllAsync(
-                entity => entity.SellerId == Guid.Parse(sellerId),
+                entity => entity.SellerId == Guid.Parse(sellerId) && entity.Enabled,
                 string.Empty,
                 null,
                 true,
@@ -508,6 +508,224 @@ public class ProductDomainServiceTests
         result.Value.Should()
             .BeEquivalentTo(product);
     }
-    
+
+    #endregion
+
+    #region DisableProductAsync
+
+    [Fact(DisplayName = "DisableProductAsync when product not exists throw notification and return false")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task DisableProductAsync_WhenProductNotExists_ThrowNotificationAndReturnFalse()
+    {
+        // Arrange
+        var productId = Guid.NewGuid().ToString();
+        var sellerId = Guid.NewGuid().ToString();
+
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _sut.DisableProductAsync(productId, sellerId);
+
+        // Assert
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductNotFoundAsync(),
+            Times.Once);
+        
+        result.Should()
+            .BeFalse();
+    }
+
+    [Fact(DisplayName = "DisableProductAsync when seller is not owner of product throw notification and return false")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task DisableProductAsync_WhenSellerIsNotOwnerOfProduct_ThrowNotificationAndReturnFalse()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = Guid.NewGuid().ToString();
+
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup => setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+
+        // Act
+        var result = await _sut.DisableProductAsync(productId, sellerId);
+
+        // Assert
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbbidenAsync(),
+            Times.Once);
+
+        result.Should()
+            .BeFalse();
+    }
+
+    [Fact(DisplayName = "DisableProductAsync when product is enabled disable and return true")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task DisableProductAsync_WhenProductIsEnabled_Disable_And_ReturnTrue()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = product.SellerId.ToString();
+
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup => setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+
+        _productRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.DisableProductAsync(productId, sellerId);
+
+        // Assert
+        _productRepositoryMock.Verify(verify => verify.Update(It.IsAny<Product>()),
+            Times.Once);
+
+        _productRepositoryMock.Verify(verify => verify.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+
+        result.Should()
+            .BeTrue();
+    }
+
+    [Fact(DisplayName = "DisableProductAsync when product is already disabled return true")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task DisableProductAsync_WhenProductIsAlreadyDisabled_ReturnTrue()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = product.SellerId.ToString();
+
+        product.Disable();
+
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup => setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+
+        // Act
+        var result = await _sut.DisableProductAsync(productId, sellerId);
+
+        // Assert
+        result.Should()
+            .BeTrue();
+    }
+
+    #endregion
+
+    #region EnableProductAsync
+
+    [Fact(DisplayName = "EnableProductAsync when product not exists throw notification and return false")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task EnableProductAsync_WhenProductNotExists_ThrowNotificationAndReturnFalse()
+    {
+        // Arrange
+        var productId = Guid.NewGuid().ToString();
+        var sellerId = Guid.NewGuid().ToString();
+
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _sut.EnableProductAsync(productId, sellerId);
+
+        // Assert
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductNotFoundAsync(),
+            Times.Once);
+
+        result.Should()
+            .BeFalse();
+    }
+
+    [Fact(DisplayName = "EnableProductAsync when seller is not owner of product throw notification and return false")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task EnableProductAsync_WhenSellerIsNotOwnerOfProduct_ThrowNotificationAndReturnFalse()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = Guid.NewGuid().ToString();
+
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup => setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+
+        // Act
+        var result = await _sut.EnableProductAsync(productId, sellerId);
+
+        // Assert
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbbidenAsync(),
+            Times.Once);
+
+        result.Should()
+            .BeFalse();
+    }
+
+    [Fact(DisplayName = "EnableProductAsync when product is disabled enable and return true")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task EnableProductAsync_WhenProductIsDisabled_EnableAndReturnTrue()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = product.SellerId.ToString();
+
+        product.Disable();
+
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup => setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+
+        _productRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.EnableProductAsync(productId, sellerId);
+
+        // Assert
+        _productRepositoryMock.Verify(verify => verify.Update(It.IsAny<Product>()),
+            Times.Once);
+
+        _productRepositoryMock.Verify(verify => verify.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+
+        result.Should()
+            .BeTrue();
+    }
+
+    [Fact(DisplayName = "EnableProductAsync when product is already enabled return true")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task EnableProductAsync_WhenProductIsAlreadyEnabled_ReturnTrue()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var sellerId = product.SellerId.ToString();
+
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup => setup.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+
+        // Act
+        var result = await _sut.EnableProductAsync(productId, sellerId);
+
+        // Assert
+        result.Should()
+            .BeTrue();
+    }
+
     #endregion
 }
