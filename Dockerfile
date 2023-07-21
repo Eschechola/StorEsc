@@ -1,7 +1,7 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 
 WORKDIR /storesc
-COPY ["src/StorEsc.Api/StorEsc.Api.csproj", "StorEsc.Api/"]
+COPY ["src/StorEsc.API/StorEsc.API.csproj", "StorEsc.API/"]
 COPY ["src/StorEsc.ApplicationServices/StorEsc.ApplicationServices.csproj", "StorEsc.ApplicationServices/"]
 COPY ["src/StorEsc.DomainServices/StorEsc.DomainServices.csproj", "StorEsc.DomainServices/"]
 COPY ["src/StorEsc.Domain/StorEsc.Domain.csproj", "StorEsc.Domain/"]
@@ -11,13 +11,17 @@ COPY ["src/StorEsc.Core/StorEsc.Core.csproj", "StorEsc.Core/"]
 COPY ["src/StorEsc.IoC/StorEsc.IoC.csproj", "StorEsc.IoC/"]
 COPY ["src/StorEsc.Tests/StorEsc.Tests.csproj", "StorEsc.Tests/"]
 
-RUN dotnet restore "StorEsc.Api/StorEsc.Api.csproj"
+RUN dotnet restore "StorEsc.API/StorEsc.API.csproj"
 WORKDIR "/storesc/api"
 COPY . .
-RUN dotnet build "src/StorEsc.Api/StorEsc.Api.csproj" -c Release -o build
-RUN dotnet publish "src/StorEsc.Api/StorEsc.Api.csproj" -c Release -o publish
+RUN dotnet build "src/StorEsc.API/StorEsc.API.csproj" -c Release -o build
+RUN dotnet publish "src/StorEsc.API/StorEsc.API.csproj" -c Release -o publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /published-app
 COPY --from=build-env /storesc/api/publish .
-ENTRYPOINT ["dotnet", "StorEsc.Api.dll"]
+
+EXPOSE 443
+EXPOSE 80
+
+ENTRYPOINT ["dotnet", "StorEsc.API.dll"]
