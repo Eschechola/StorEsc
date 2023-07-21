@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storesc-deployment
+  namespace: storesc
+  labels:
+    app: storesc-api
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: storesc-api
+  template:
+    metadata:
+      labels:
+        app: storesc-api
+    spec:
+      containers:
+      - name: storesc-api-pod
+        image: storesc.azurecr.io/storesc/storesc-api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_URLS
+          value: http://*:80
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"
