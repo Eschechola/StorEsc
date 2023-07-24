@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storesc-sqlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: storesc-sqlserver
+  template:
+    metadata:
+      labels:
+        app: storesc-sqlserver
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: storesc-sqlserver
+        image:  storesc.azurecr.io/storesc/storesc-sqlserver:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 1433
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: MSSQL_SA_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: storesc-sqlserver-secret
+              key: 'SA_PASSWORD'
+        volumeMounts:
+        - name: mssql-persistent-storage
+          mountPath: /mssql/data
+        resources:
+          limits:
+            memory: 5Gi
+            cpu: "2"
+          requests:
+            memory: 512Mi
+            cpu: "0.5"
+      volumes:
+      - name: mssql-persistent-storage
+        persistentVolumeClaim:
+          claimName: storesc-sqlserver-persistent-volume
