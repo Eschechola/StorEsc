@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: storesc-deployment
+  name: storesc-api
   namespace: storesc
   labels:
     app: storesc-api
 spec:
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
       app: storesc-api
@@ -16,9 +16,9 @@ spec:
         app: storesc-api
     spec:
       containers:
-      - name: storesc-api-pod
+      - name: storesc-api
         image: storesc.azurecr.io/storesc/storesc-api:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
