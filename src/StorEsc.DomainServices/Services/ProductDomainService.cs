@@ -1,10 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using StorEsc.Core.Communication.Mediator.Interfaces;
 using StorEsc.Core.Data.Structs;
 using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 using StorEsc.Infrastructure.Interfaces.Repositories;
-using static Microsoft.EntityFrameworkCore.EF;
 
 namespace StorEsc.DomainServices.Services;
 
@@ -21,9 +19,14 @@ public class ProductDomainService : IProductDomainService
         _domainNotificationFacade = domainNotificationFacade;
     }
 
-    public async Task<IList<Product>> SearchProductsByName(string name)
-        => await _productRepository.GetAllAsync(entity => Functions.FreeText(entity.Name, name));
-
+    public async Task<IList<Product>> SearchProductsAsync(
+        string sellerId,
+        string name,
+        string description,
+        decimal minimumPrice = 0,
+        decimal maximumPrice = Decimal.MaxValue)
+        => await _productRepository.SearchProductsAsync(sellerId, name, description, minimumPrice, maximumPrice);
+    
     public async Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product productUpdated)
     {
         var exists = await _productRepository.ExistsByIdAsync(productId);
