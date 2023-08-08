@@ -58,17 +58,20 @@ public class ProductController : BaseController
 
     [HttpGet]
     [AllowAnonymous]
-    [Route("search-by-name")]
-    public async Task<IActionResult> SearchByProductName([FromQuery] string name)
+    [Route("search")]
+    public async Task<IActionResult> SearchProductsAsync(
+        [FromQuery] string sellerId,
+        [FromQuery] string name,
+        [FromQuery] string description,
+        [FromQuery] decimal minimumPrice = 0,
+        [FromQuery] decimal maximumPrice = decimal.MaxValue)
     {
-        if (string.IsNullOrEmpty(name))
-            return Ok(new ResultViewModel
-            {
-                Message = "Name cannot be empty.",
-                Success = false,
-            });
-        
-        var products = await _productApplicationService.SearchProductsByName(name);
+        var products = await _productApplicationService.SearchProductsAsync(
+            sellerId,
+            name,
+            description,
+            minimumPrice,
+            maximumPrice);
 
         if (products.Any() is false)
             return NoContent();
