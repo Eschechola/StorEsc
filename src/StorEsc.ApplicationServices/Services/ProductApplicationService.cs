@@ -45,9 +45,19 @@ public class ProductApplicationService : IProductApplicationService
         return _mapper.Map<IList<ProductDto>>(products);
     }
 
-    public async Task<IList<ProductDto>> SearchProductsByName(string name)
+    public async Task<IList<ProductDto>> SearchProductsAsync(
+        string sellerId,
+        string name,
+        string description,
+        decimal minimumPrice = 0,
+        decimal maximumPrice = Decimal.MaxValue)
     {
-        var products = await _productDomainService.SearchProductsByName(name);
+        var products = await _productDomainService.SearchProductsAsync(
+            sellerId,
+            name,
+            description,
+            minimumPrice,
+            maximumPrice);
 
         return _mapper.Map<IList<ProductDto>>(products);
     }
