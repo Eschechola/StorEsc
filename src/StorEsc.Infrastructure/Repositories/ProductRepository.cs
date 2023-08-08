@@ -36,7 +36,6 @@ public class ProductRepository : Repository<Product>, IProductRepository
             .ToListAsync();
     }
 
-
     private IQueryable<Product> FilterProductsBySellerId(IQueryable<Product> query, string sellerId)
         => string.IsNullOrEmpty(sellerId)
             ? query
@@ -51,12 +50,12 @@ public class ProductRepository : Repository<Product>, IProductRepository
         => string.IsNullOrEmpty(description)
             ? query
             : query.Where(entity => Functions.FreeText(entity.Description, description));
-    
+
     private IQueryable<Product> FilterProductsByPrice(
         IQueryable<Product> query,
         decimal minimumPrice = 0,
         decimal maximumPrice = Decimal.MaxValue)
         => minimumPrice < 0
             ? query
-            : query.Where(entity => entity.Price >= minimumPrice && entity.Price <= maxiumPrice);
+            : query.Where(entity => entity.Price >= minimumPrice && entity.Price <= maximumPrice);
 }
