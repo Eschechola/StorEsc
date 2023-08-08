@@ -10,7 +10,7 @@ namespace StorEsc.Infrastructure.Repositories;
 public abstract class Repository<T> : IRepository<T> where T : Entity
 {
     private readonly StorEscContext _context;
-    private readonly DbSet<T> _dbSet;
+    protected readonly DbSet<T> _dbSet;
 
     public Repository(StorEscContext context)
     {
