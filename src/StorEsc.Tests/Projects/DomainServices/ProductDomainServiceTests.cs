@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using StorEsc.Core.Communication.Mediator.Interfaces;
+using StorEsc.Core.Enums;
 using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 using StorEsc.DomainServices.Services;
@@ -691,7 +692,7 @@ public class ProductDomainServiceTests
         var maximumPrice = 1_000_000;
         var products = _productFaker.GetValidList();
         
-        _productRepositoryMock.Setup(setup => setup.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice))
+        _productRepositoryMock.Setup(setup => setup.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice, It.IsAny<OrderBy>()))
             .ReturnsAsync(products);
         
         // Act
@@ -701,7 +702,7 @@ public class ProductDomainServiceTests
         result.Should()
             .BeEquivalentTo(products);
         
-        _productRepositoryMock.Verify(verify => verify.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice),
+        _productRepositoryMock.Verify(verify => verify.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice, It.IsAny<OrderBy>()),
             Times.Once);
     }
     
