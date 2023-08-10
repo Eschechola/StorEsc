@@ -9,11 +9,10 @@ public interface IProductDomainService
     Task<IList<Product>> GetSellerProductsAsync(string sellerId);
     Task<Optional<Product>> CreateProductAsync(Product product);
     Task<IList<Product>> SearchProductsAsync(
-        string sellerId,
-        string name,
-        string description,
+        string sellerId = "",
+        string name = "",
         decimal minimumPrice = 0,
-        decimal maximumPrice = Decimal.MaxValue);
+        decimal maximumPrice = 1_000_000);
     Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product productUpdated);
     Task<bool> DisableProductAsync(string productId, string sellerId);
     Task<bool> EnableProductAsync(string productId, string sellerId);

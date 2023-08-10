@@ -46,16 +46,14 @@ public class ProductApplicationService : IProductApplicationService
     }
 
     public async Task<IList<ProductDto>> SearchProductsAsync(
-        string sellerId,
-        string name,
-        string description,
+        string sellerId = "",
+        string name = "",
         decimal minimumPrice = 0,
-        decimal maximumPrice = Decimal.MaxValue)
+        decimal maximumPrice = 1_000_000)
     {
         var products = await _productDomainService.SearchProductsAsync(
             sellerId,
             name,
-            description,
             minimumPrice,
             maximumPrice);
 
