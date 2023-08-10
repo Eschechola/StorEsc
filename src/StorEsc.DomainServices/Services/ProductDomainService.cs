@@ -20,12 +20,32 @@ public class ProductDomainService : IProductDomainService
     }
 
     public async Task<IList<Product>> SearchProductsAsync(
-        string sellerId,
-        string name,
-        string description,
+        string sellerId = "",
+        string name = "",
         decimal minimumPrice = 0,
-        decimal maximumPrice = Decimal.MaxValue)
-        => await _productRepository.SearchProductsAsync(sellerId, name, description, minimumPrice, maximumPrice);
+        decimal maximumPrice = 1_000_000)
+    {
+        
+        if (minimumPrice < 0 || maximumPrice > 1_000_000)
+        {
+            await _domainNotificationFacade.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000");
+            return new List<Product>();
+        }
+
+        if (minimumPrice > maximumPrice)
+        {
+            await _domainNotificationFacade.PublishProductDataIsInvalidAsync("Minimum price cannot be greater than maximum price");
+            return new List<Product>();
+        }
+
+        if (!string.IsNullOrEmpty(name) && name.Length > 200)
+        {
+            await _domainNotificationFacade.PublishProductDataIsInvalidAsync("Name can be between 1 and 200 characters");
+            return new List<Product>();
+        }
+        
+        return await _productRepository.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+    }
     
     public async Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product productUpdated)
     {
