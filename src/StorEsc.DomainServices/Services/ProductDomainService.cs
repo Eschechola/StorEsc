@@ -143,14 +143,10 @@ public class ProductDomainService : IProductDomainService
     public async Task<IList<Product>> GetLastProductsAsync()
     {
         Func<IQueryable<Product>, IOrderedQueryable<Product>> orderFilter = order => order.OrderByDescending(property => property.CreatedAt);
-        return await _productRepository.GetAllAsync(orderBy: orderFilter);
+        return await _productRepository.GetAllAsync(
+            entity => entity.Enabled,
+            orderBy: orderFilter);
     }
-
-    public async Task<IList<Product>> GetSellerProductsAsync(string sellerId)
-        => await _productRepository.GetAllAsync(
-            entity => 
-                entity.SellerId == Guid.Parse(sellerId) &&
-                entity.Enabled);
 
     public async Task<Optional<Product>> CreateProductAsync(Product product)
     {

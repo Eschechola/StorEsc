@@ -39,24 +39,6 @@ public class ProductController : BaseController
     }
     
     [HttpGet]
-    [Route("get-seller-products/{sellerId}")]
-    [AllowAnonymous]
-    public async Task<IActionResult> GetSellerProductsAsync([FromRoute] string sellerId)
-    {
-        var products = await _productApplicationService.GetSellerProductsAsync(sellerId);
-
-        if (products.Any() is false)
-            return NoContent();
-
-        return Ok(new ResultViewModel
-        {
-            Message = "Products found with success.",
-            Success = true,
-            Data = products
-        });
-    }
-
-    [HttpGet]
     [AllowAnonymous]
     [Route("search")]
     public async Task<IActionResult> SearchProductsAsync(
