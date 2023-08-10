@@ -1,5 +1,6 @@
 using StorEsc.Core.Communication.Mediator.Interfaces;
 using StorEsc.Core.Data.Structs;
+using StorEsc.Core.Enums;
 using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 using StorEsc.Infrastructure.Interfaces.Repositories;
@@ -23,7 +24,8 @@ public class ProductDomainService : IProductDomainService
         string sellerId = "",
         string name = "",
         decimal minimumPrice = 0,
-        decimal maximumPrice = 1_000_000)
+        decimal maximumPrice = 1_000_000,
+        OrderBy orderBy = OrderBy.CreatedAtDescending)
     {
         
         if (minimumPrice < 0 || maximumPrice > 1_000_000)
@@ -44,7 +46,7 @@ public class ProductDomainService : IProductDomainService
             return new List<Product>();
         }
         
-        return await _productRepository.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+        return await _productRepository.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice, orderBy);
     }
     
     public async Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product productUpdated)
