@@ -13,7 +13,7 @@ namespace StorEsc.Infrastructure.Migrations
                 suppressTransaction: true);
 
             migrationBuilder.Sql(
-                sql: @"CREATE FULLTEXT INDEX ON [StorEsc].[ste].[Product](Name)
+                sql: @"CREATE FULLTEXT INDEX ON [StorEsc].[ste].[Product](Name, Description)
                        KEY INDEX PK_Product ON StorEscFullTextSearchCatalog
                        WITH STOPLIST = OFF, CHANGE_TRACKING AUTO;",
                 suppressTransaction: true);
