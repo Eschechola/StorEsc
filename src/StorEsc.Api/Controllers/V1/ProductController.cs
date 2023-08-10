@@ -7,6 +7,7 @@ using StorEsc.API.ViewModels;
 using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
+using StorEsc.Core.Enums;
 
 namespace StorEsc.API.Controllers;
 
@@ -45,13 +46,15 @@ public class ProductController : BaseController
         [FromQuery] string sellerId = "",
         [FromQuery] string name = "",
         [FromQuery] decimal minimumPrice = 0,
-        [FromQuery] decimal maximumPrice = 1_000_000)
+        [FromQuery] decimal maximumPrice = 1_000_000,
+        [FromQuery] OrderBy orderBy = OrderBy.CreatedAtDescending)
     {
         var products = await _productApplicationService.SearchProductsAsync(
             sellerId,
             name,
             minimumPrice,
-            maximumPrice);
+            maximumPrice,
+            orderBy);
 
         if (HasNotifications())
             return Result();
