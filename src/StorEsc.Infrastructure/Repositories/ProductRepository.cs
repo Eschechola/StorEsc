@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using StorEsc.Core.Enums;
 using StorEsc.Domain.Entities;
 using StorEsc.Infrastructure.Context;
 using StorEsc.Infrastructure.Interfaces;
@@ -22,17 +23,41 @@ public class ProductRepository : Repository<Product>, IProductRepository
         string sellerId = "",
         string name = "",
         decimal minimumPrice = 0,
-        decimal maximumPrice = 1_000_000)
+        decimal maximumPrice = 1_000_000,
+        OrderBy orderBy = OrderBy.CreatedAtDescending)
     {
         var query = _dbSet as IQueryable<Product>;
 
         query = FilterProductsBySellerId(query, sellerId);
         query = FilterProductsByNameOrDescription(query, name);
         query = FilterProductsByPrice(query, minimumPrice, maximumPrice);
-
-        return await query.AsNoTracking()
-            .OrderBy(entity => entity.Name)
+        query = OrderQuery(query, orderBy);
+        
+        return await query
+            .Where(entity => entity.Enabled)
+            .AsNoTracking()
             .ToListAsync();
+    }
+
+    private IQueryable<Product> OrderQuery(IQueryable<Product> query, OrderBy orderBy)
+    {
+        switch (orderBy)
+        {
+            case OrderBy.NameAscending:
+                return query.OrderBy(entity => entity.Name);
+            
+            case OrderBy.NameDescending:
+                return query.OrderByDescending(entity => entity.Name);
+            
+            case OrderBy.CreatedAtAscending:
+                return query.OrderBy(entity => entity.CreatedAt);
+            
+            case OrderBy.CreatedAtDescending:
+                return query.OrderByDescending(entity => entity.CreatedAt);
+            
+            default:
+                return query.OrderByDescending(entity => entity.CreatedAt);
+        }
     }
 
     private IQueryable<Product> FilterProductsBySellerId(IQueryable<Product> query, string sellerId)
