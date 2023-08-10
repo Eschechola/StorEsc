@@ -2,6 +2,7 @@ using AutoMapper;
 using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Data.Structs;
+using StorEsc.Core.Enums;
 using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 
@@ -42,13 +43,15 @@ public class ProductApplicationService : IProductApplicationService
         string sellerId = "",
         string name = "",
         decimal minimumPrice = 0,
-        decimal maximumPrice = 1_000_000)
+        decimal maximumPrice = 1_000_000,
+        OrderBy orderBy = OrderBy.CreatedAtDescending)
     {
         var products = await _productDomainService.SearchProductsAsync(
             sellerId,
             name,
             minimumPrice,
-            maximumPrice);
+            maximumPrice,
+            orderBy);
 
         return _mapper.Map<IList<ProductDto>>(products);
     }
