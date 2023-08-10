@@ -60,19 +60,20 @@ public class ProductController : BaseController
     [AllowAnonymous]
     [Route("search")]
     public async Task<IActionResult> SearchProductsAsync(
-        [FromQuery] string sellerId,
-        [FromQuery] string name,
-        [FromQuery] string description,
+        [FromQuery] string sellerId = "",
+        [FromQuery] string name = "",
         [FromQuery] decimal minimumPrice = 0,
-        [FromQuery] decimal maximumPrice = decimal.MaxValue)
+        [FromQuery] decimal maximumPrice = 1_000_000)
     {
         var products = await _productApplicationService.SearchProductsAsync(
             sellerId,
             name,
-            description,
             minimumPrice,
             maximumPrice);
 
+        if (HasNotifications())
+            return Result();
+        
         if (products.Any() is false)
             return NoContent();
 
