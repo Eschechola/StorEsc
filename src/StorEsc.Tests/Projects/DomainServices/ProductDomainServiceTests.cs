@@ -1,4 +1,5 @@
-﻿using Bogus.DataSets;
+﻿using Bogus;
+using Bogus.DataSets;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -24,7 +25,7 @@ public class ProductDomainServiceTests
 
     private readonly ProductFaker _productFaker;
 
-    private readonly Commerce _commerceFaker;
+    private readonly Faker _defaultFaker;
 
     #endregion
 
@@ -32,7 +33,7 @@ public class ProductDomainServiceTests
 
     public ProductDomainServiceTests()
     {
-        _commerceFaker = new Commerce();
+        _defaultFaker = new Faker();
         
         _productFaker = new ProductFaker();
         
@@ -651,5 +652,134 @@ public class ProductDomainServiceTests
             .BeTrue();
     }
 
+    #endregion
+
+    #region SearchProductsAsync
+
+    [Fact(DisplayName =
+        "SearchProductsAsync when minimumPrice is lower than 0 throw notification and return empty list")]
+    [Trait("ProductDomainService", "SearchProductsAsync")]
+    public async Task SearchProductsAsync_WhenMinimumPriceIsLowerThanZero_ThrowNotificationAndReturnsEmptyList()
+    {
+        // Arrange
+        var sellerId = "";
+        var name = "test";
+        var minimumPrice = -1;;
+
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
+            .Verifiable();
+        
+        // Act
+        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice);
+
+        // Assert
+        result.Should()
+            .BeEmpty();
+        
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
+            Times.Once);
+    }
+
+    [Fact(DisplayName =
+        "SearchProductsAsync when maximumPrice is greater than 1_000_000 throw notification and return empty list")]
+    [Trait("ProductDomainService", "SearchProductsAsync")]
+    public async Task SearchProductsAsync_WhenMaximumPriceIsGreaterThan1kk_ThrowNotificationAndReturnsEmptyList()
+    {
+        // Arrange
+        var sellerId = "";
+        var name = "test";
+        var minimumPrice = 5;
+        var maximumPrice = 1_000_001;
+
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
+            .Verifiable();
+        
+        // Act
+        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+
+        // Assert
+        result.Should()
+            .BeEmpty();
+        
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
+            Times.Once);
+    }
+    
+    [Fact(DisplayName =
+        "SearchProductsAsync when minimumPrice is greater than maximumPrice throw notification and return empty list")]
+    [Trait("ProductDomainService", "SearchProductsAsync")]
+    public async Task SearchProductsAsync_WhenMinimumPriceIsGreaterThanMaximumPrice_ThrowNotificationAndReturnsEmptyList()
+    {
+        // Arrange
+        var sellerId = "";
+        var name = "test";
+        var minimumPrice = 100_001;
+        var maximumPrice = 5;
+
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync("Minimum price cannot be greater than maximum price"))
+            .Verifiable();
+        
+        // Act
+        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+
+        // Assert
+        result.Should()
+            .BeEmpty();
+        
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductDataIsInvalidAsync("Minimum price cannot be greater than maximum price"),
+            Times.Once);
+    }
+    
+    [Fact(DisplayName =
+        "SearchProductsAsync when name lenght is greater than 200 throw notification and return empty list")]
+    [Trait("ProductDomainService", "SearchProductsAsync")]
+    public async Task SearchProductsAsync_WhenNameLenghtIsGreaterThan200_ThrowNotificationAndReturnsEmptyList()
+    {
+        // Arrange
+        var sellerId = "";
+        var name = _defaultFaker.Random.String(201);
+        var minimumPrice = 5;
+        var maximumPrice = 100_000;
+
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync("Name can be between 1 and 200 characters"))
+            .Verifiable();
+        
+        // Act
+        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+
+        // Assert
+        result.Should()
+            .BeEmpty();
+        
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductDataIsInvalidAsync("Name can be between 1 and 200 characters"),
+            Times.Once);
+    }
+    
+    [Fact(DisplayName =
+        "SearchProductsAsync when parameters is ok return found products")]
+    [Trait("ProductDomainService", "SearchProductsAsync")]
+    public async Task SearchProductsAsync_WhenParametersIsOk_ReturnFoundProducts()
+    {
+        // Arrange
+        var sellerId = "";
+        var name = _defaultFaker.Random.String(35);
+        var minimumPrice = 5;
+        var maximumPrice = 1_000_000;
+        var products = _productFaker.GetValidList();
+        
+        _productRepositoryMock.Setup(setup => setup.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice))
+            .ReturnsAsync(products);
+        
+        // Act
+        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+
+        // Assert
+        result.Should()
+            .BeEquivalentTo(products);
+        
+        _productRepositoryMock.Verify(verify => verify.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice),
+            Times.Once);
+    }
+    
     #endregion
 }
