@@ -17,6 +17,12 @@ public class VoucherMap : BaseMap<Voucher>
             .HasColumnName("Code")
             .HasColumnType("VARCHAR(80)");
         
+        builder.Property(voucher => voucher.Enabled)
+            .IsRequired()
+            .HasDefaultValue(0)
+            .HasColumnName("Enabled")
+            .HasColumnType("BIT");
+        
         builder.Property(voucher => voucher.IsPercentageDiscount)
             .IsRequired()
             .HasDefaultValue(0)
@@ -30,5 +36,9 @@ public class VoucherMap : BaseMap<Voucher>
         builder.Property(voucher => voucher.PercentageDiscount)
             .HasColumnName("PercentageDiscount")
             .HasColumnType("DECIMAL(14,9)");
+
+        builder.HasOne(voucher => voucher.Seller)
+            .WithMany(seller => seller.Vouchers)
+            .HasForeignKey(voucher => voucher.SellerId);
     }
 }
