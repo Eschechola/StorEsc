@@ -5,12 +5,7 @@ namespace StorEsc.Tests.Fakers.Entities;
 
 public class WalletFaker : BaseFaker<Wallet>
 {
-    private readonly Randomizer _randomizer;
-
-    public WalletFaker()
-    {
-        _randomizer = new Randomizer();
-    }
+    private readonly Randomizer _randomizer = new();
 
     public override Wallet GetValid()
         => new Wallet(

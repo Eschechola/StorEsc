@@ -6,14 +6,8 @@ namespace StorEsc.Tests.Fakers.Entities;
 
 public class SellerFaker : BaseFaker<Seller>
 {
-    private readonly Person _personFaker;
-    private readonly Internet _internetFaker;
-
-    public SellerFaker()
-    {
-        _personFaker = new Person();
-        _internetFaker = new Internet();
-    }
+    private readonly Person _personFaker = new();
+    private readonly Internet _internetFaker = new();
 
     public override Seller GetValid()
         => new Seller(

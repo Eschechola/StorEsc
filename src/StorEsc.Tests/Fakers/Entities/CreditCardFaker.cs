@@ -6,14 +6,8 @@ namespace StorEsc.Tests.Fakers.Entities;
 
 public class CreditCardFaker : BaseFaker<CreditCard>
 {
-    private readonly Person _person;
-    private readonly Finance _finance;
-
-    public CreditCardFaker()
-    {
-        _person = new Person();
-        _finance = new Finance();
-    }
+    private readonly Person _person = new();
+    private readonly Finance _finance = new();
 
     public override CreditCard GetValid()
         => new CreditCard(
