@@ -6,15 +6,9 @@ namespace StorEsc.Tests.Fakers.Entities;
 
 public class CustomerFaker : BaseFaker<Customer>
 {
-    private readonly Person _personFaker;
-    private readonly Internet _internetFaker;
+    private readonly Person _personFaker = new();
+    private readonly Internet _internetFaker = new();
 
-    public CustomerFaker()
-    {
-        _personFaker = new Person();
-        _internetFaker = new Internet();
-    }
-    
     public override Customer GetValid()
         => new Customer(
             walletId: Guid.NewGuid(),

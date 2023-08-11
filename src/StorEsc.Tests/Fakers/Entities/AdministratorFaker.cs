@@ -6,15 +6,9 @@ namespace StorEsc.Tests.Fakers.Entities;
 
 public class AdministratorFaker : BaseFaker<Administrator>
 {
-    private readonly Person _personFaker;
-    private readonly Internet _internetFaker;
+    private readonly Person _personFaker = new();
+    private readonly Internet _internetFaker = new();
 
-    public AdministratorFaker()
-    {
-        _personFaker = new Person();
-        _internetFaker = new Internet();
-    }
-    
     public override Administrator GetValid()
         => new Administrator(
             firstName: _personFaker.FirstName,
