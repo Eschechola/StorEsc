@@ -32,22 +32,6 @@ public class Wallet : Entity, IAggregateRoot
         Validate();
     }
     
-    public Wallet(
-        Guid id,
-        decimal amount,
-        IList<Customer> customers = null,
-        IList<Seller> sellers = null,
-        List<Recharge> recharges = null) 
-        : base(id)
-    {
-        Amount = amount;
-        Customers = customers;
-        Sellers = sellers;
-        Recharges = recharges;
-        
-        Validate();
-    }
-    
     public void Validate()
         => base.Validate(new WalletValidator(), this);
 

@@ -21,18 +21,6 @@ public class OrderItem : Entity
         Product = product;
         Order = order;
     }
-    
-    public OrderItem(
-        Guid id,
-        int itemCount,
-        Product product,
-        Order order)
-        : base (id)
-    {
-        ItemCount = itemCount;
-        Product = product;
-        Order = order;
-    }
 
     public decimal CalculateItemValue()
         => Product.Price * ItemCount;

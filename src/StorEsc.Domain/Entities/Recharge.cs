@@ -25,23 +25,6 @@ public class Recharge : Entity, IAggregateRoot
         Amount = amount;
     }
 
-    public Recharge(
-        Guid id,
-        Guid paymentId,
-        Guid walletId,
-        decimal amount,
-        Wallet wallet,
-        Payment payment) : base(id)
-    {
-        WalletId = walletId;
-        PaymentId = paymentId;
-        Amount = amount;
-        Wallet = wallet;
-        Payment = payment;
-        
-        Validate();
-    }
-
     public void Validate()
         => base.Validate(new RechargeValidator(), this);
 }
