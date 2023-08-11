@@ -30,25 +30,6 @@ public class Order : Entity, IAggregateRoot
         Validate();
     }
     
-    public Order(
-        Guid id,
-        Guid customerId,
-        bool isPaid,
-        List<OrderItem> orderItens = null,
-        Customer customer = null,
-        Voucher voucher = null)
-        : base(id)
-    {
-        CustomerId = customerId;
-        IsPaid = isPaid;
-        OrderItens = orderItens;
-        Customer = customer;
-        Voucher = voucher;
-        TotalValue = CalculateOrderPrice();
-        
-        Validate();
-    }
-    
     public void Validate()
         => base.Validate(new OrderValidator(), this);
 

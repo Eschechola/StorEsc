@@ -25,18 +25,6 @@ public class Payment : Entity
         
         Validate();
     }
-    
-    public Payment(
-        string hash,
-        bool isPaid,
-        IList<Recharge> recharges = null)
-    {
-        Hash = hash;
-        IsPaid = isPaid;
-        Recharges = recharges;
-        
-        Validate();
-    }
 
     public void Validate()
         => base.Validate(new PaymentValidator(), this);
