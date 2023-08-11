@@ -7,6 +7,7 @@ public class Seller : Account
     // EF
     public Wallet Wallet { get; private set; }
     public IList<Product> Products { get; private set; }
+    public IList<Voucher> Vouchers { get; private set; }
 
     protected Seller() { }
     
