@@ -42,6 +42,18 @@ public class VoucherController : BaseController
         
         return NoContent();
     }
-    
 
+    [HttpPost]
+    [Route("create")]
+    [Authorize(Roles = Roles.Seller)]
+    public async Task<IActionResult> CreateVoucherAsync()
+    {
+        var sellerId = User.GetId();
+
+        
+        if (HasNotifications())
+            return Result();
+
+        return Ok();
+    }
 }
