@@ -13,6 +13,7 @@ public static class ApplicationServicesDependencies
         services.AddScoped<IRechargeApplicationService, RechargeApplicationService>();
         services.AddScoped<IProductApplicationService, ProductApplicationService>();
         services.AddScoped<IAdministratorApplicationService, AdministratorApplicationService>();
+        services.AddScoped<IVoucherApplicationService, VoucherApplicationService>();
 
         return services;
     }
