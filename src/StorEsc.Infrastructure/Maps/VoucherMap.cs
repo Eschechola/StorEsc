@@ -12,6 +12,11 @@ public class VoucherMap : BaseMap<Voucher>
         
         base.Configure(builder);
 
+        builder.Property(entity => entity.SellerId)
+            .IsRequired()
+            .HasColumnName("SellerId")
+            .HasColumnType("VARCHAR(36)");
+        
         builder.Property(voucher => voucher.Code)
             .IsRequired()
             .HasColumnName("Code")
