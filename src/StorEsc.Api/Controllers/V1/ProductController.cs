@@ -59,15 +59,15 @@ public class ProductController : BaseController
         if (HasNotifications())
             return Result();
         
-        if (products.Any() is false)
-            return NoContent();
-
-        return Ok(new ResultViewModel
-        {
-            Message = "Products found with success!",
-            Success = true,
-            Data = products
-        });
+        if (products.Any())
+            return Ok(new ResultViewModel
+            {
+                Message = "Products found with success!",
+                Success = true,
+                Data = products
+            });
+            
+        return NoContent();
     }
 
     [HttpPatch]
