@@ -15,6 +15,7 @@ public static class RepositoriesDependencies
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IRechargeRepository, RechargeRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<IVoucherRepository, VoucherRepository>();
 
         return services;
     } 
