@@ -9,7 +9,6 @@ COPY ["src/StorEsc.Infrastructure/StorEsc.Infrastructure.csproj", "StorEsc.Infra
 COPY ["src/StorEsc.Infrastructure.ExternalServices/StorEsc.Infrastructure.ExternalServices.csproj", "StorEsc.Infrastructure.ExternalServices/"]
 COPY ["src/StorEsc.Core/StorEsc.Core.csproj", "StorEsc.Core/"]
 COPY ["src/StorEsc.IoC/StorEsc.IoC.csproj", "StorEsc.IoC/"]
-COPY ["src/StorEsc.Tests/StorEsc.Tests.csproj", "StorEsc.Tests/"]
 
 RUN dotnet restore "StorEsc.Api/StorEsc.Api.csproj"
 WORKDIR "/storesc/api"
