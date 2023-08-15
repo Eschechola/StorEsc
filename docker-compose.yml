@@ -1,14 +1,31 @@
 version: '3.4'
+networks:
+  storesc-network:
+    driver: bridge
 services:
   database:
-    build: ./environment/database
+    build: 
+      context: .
+      dockerfile: ./Dockerfile.database
     environment:
-      SA_PASSWORD: "Stor3sc@2023"
+      SA_PASSWORD: ${DB_LOCAL_PASSWORD}
       ACCEPT_EULA: "Y"
-      MSSQL_PID: "Developer"
     ports:
       - "1433:1433"
+    networks:
+      - storesc-network
   api:
-    build: ./
+    build:
+      context: .
+      dockerfile: ./Dockerfile.api
     ports:
       - "8081:80"
+    networks:
+      - storesc-network
+    depends_on:
+      - database
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - Databases:ConnectionStrings:SqlServer=Server=${DB_HOST};Database=${DB_NAME};User=${DB_USER};Password=${DB_LOCAL_PASSWORD};TrustServerCertificate=True;Connection Timeout=30;
+      - Token:SecretKey=${TOKEN_SECRET_KEY}
+      - Hash:Argon2Id:Salt=${HASH_ARGON2ID_SALT}

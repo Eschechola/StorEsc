@@ -1,6 +1,5 @@
 # StorEsc
-[![Deploy 🔥](https://github.com/Eschechola/StorEsc/actions/workflows/main_storesc.yml/badge.svg)](https://github.com/Eschechola/StorEsc/actions/workflows/main_storesc.yml)
-<br><br><br>
+<br>
 A full e-commerce api built in <strong>"Construindo um ecommerce com .NET + Azure 2023"</strong> course by <strong>Lucas Eschechola!</strong>
 
 <br>
@@ -27,13 +26,23 @@ Or send an email to <a href="mailto:lucas.eschechola@outlook.com">lucas.eschecho
 	
 <br><br>
 
-2. Create custom database
+2. Create custom database image <strong>OR</strong> use compose
 	<br>
 	<br>
 	```bash
 	$ cd environment/database
 	$ docker build -t sqlserver_storesc .
 	$ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YOUR_PASSWORD>" -p 1433:1433 -d sqlserver_storesc
+	```
+
+	<br>
+
+	<h3><strong>OR</strong></h3>
+
+	<br>
+
+	```bash
+	$ docker-compose up --build
 	```
 
 <br><br>
