@@ -12,18 +12,18 @@ public class CustomerDomainService : ICustomerDomainService
     private readonly ICustomerRepository _customerRepository;
     private readonly IArgon2IdHasher _argon2IdHasher;
     private readonly IWalletDomainService _walletDomainService;
-    private readonly IDomainNotificationFacade _domainNotification;
+    private readonly IDomainNotificationFacade _domainNotificationFacade;
 
     public CustomerDomainService(
         ICustomerRepository customerRepository,
         IArgon2IdHasher argon2IdHasher,
         IWalletDomainService walletDomainService,
-        IDomainNotificationFacade domainNotification)
+        IDomainNotificationFacade domainNotificationFacade)
     {
         _customerRepository = customerRepository;
         _argon2IdHasher = argon2IdHasher;
         _walletDomainService = walletDomainService;
-        _domainNotification = domainNotification;
+        _domainNotificationFacade = domainNotificationFacade;
     }
 
     public async Task<Customer> GetCustomerAsync(string id)
@@ -35,7 +35,7 @@ public class CustomerDomainService : ICustomerDomainService
 
         if (exists is false)
         {
-            await _domainNotification.PublishEmailAndOrPasswordMismatchAsync();
+            await _domainNotificationFacade.PublishEmailAndOrPasswordMismatchAsync();
             return new Optional<Customer>();
         }
 
@@ -45,7 +45,7 @@ public class CustomerDomainService : ICustomerDomainService
 
         if (customer.Password != hashedPassword)
         {
-            await _domainNotification.PublishEmailAndOrPasswordMismatchAsync();
+            await _domainNotificationFacade.PublishEmailAndOrPasswordMismatchAsync();
             return new Optional<Customer>();
         }
         
@@ -60,7 +60,7 @@ public class CustomerDomainService : ICustomerDomainService
 
             if (exists)
             {
-                await _domainNotification.PublishCustomerAlreadyExistsAsync();
+                await _domainNotificationFacade.PublishAlreadyExistsAsync("Customer");
                 return new Optional<Customer>();
             }
 
@@ -68,7 +68,7 @@ public class CustomerDomainService : ICustomerDomainService
 
             if (customer.IsInvalid())
             {
-                await _domainNotification.PublishCustomerDataIsInvalidAsync(customer.ErrorsToString());
+                await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(customer.ErrorsToString());
                 return new Optional<Customer>();
             }
 
@@ -90,7 +90,7 @@ public class CustomerDomainService : ICustomerDomainService
         catch (Exception)
         {
             await _customerRepository.UnitOfWork.RollbackAsync();
-            await _domainNotification.PublishInternalServerErrorAsync();
+            await _domainNotificationFacade.PublishInternalServerErrorAsync();
             return new Optional<Customer>();
         }
     }

@@ -10,18 +10,18 @@ namespace StorEsc.DomainServices.Services;
 public class SellerDomainService : ISellerDomainService
 {
     private readonly ISellerRepository _sellerRepository;
-    private readonly IDomainNotificationFacade _domainNotification;
+    private readonly IDomainNotificationFacade _domainNotificationFacade;
     private readonly IArgon2IdHasher _argon2IdHasher;
     private readonly IWalletDomainService _walletDomainService;
     
     public SellerDomainService(
         ISellerRepository sellerRepository,
-        IDomainNotificationFacade domainNotification,
+        IDomainNotificationFacade domainNotificationFacade,
         IArgon2IdHasher argon2IdHasher,
         IWalletDomainService walletDomainService)
     {
         _sellerRepository = sellerRepository;
-        _domainNotification = domainNotification;
+        _domainNotificationFacade = domainNotificationFacade;
         _argon2IdHasher = argon2IdHasher;
         _walletDomainService = walletDomainService;
     }
@@ -35,7 +35,7 @@ public class SellerDomainService : ISellerDomainService
 
         if (exists is false)
         {
-            await _domainNotification.PublishEmailAndOrPasswordMismatchAsync();
+            await _domainNotificationFacade.PublishEmailAndOrPasswordMismatchAsync();
             return new Optional<Seller>();
         }
 
@@ -45,7 +45,7 @@ public class SellerDomainService : ISellerDomainService
 
         if (seller.Password != hashedPassword)
         {
-            await _domainNotification.PublishEmailAndOrPasswordMismatchAsync();
+            await _domainNotificationFacade.PublishEmailAndOrPasswordMismatchAsync();
             return new Optional<Seller>();
         }
         
@@ -60,7 +60,7 @@ public class SellerDomainService : ISellerDomainService
 
             if (exists)
             {
-                await _domainNotification.PublishSellerAlreadyExistsAsync();
+                await _domainNotificationFacade.PublishAlreadyExistsAsync("Seller");
                 return new Optional<Seller>();
             }
 
@@ -68,7 +68,7 @@ public class SellerDomainService : ISellerDomainService
 
             if (seller.IsInvalid())
             {
-                await _domainNotification.PublishSellerDataIsInvalidAsync(seller.ErrorsToString());
+                await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(seller.ErrorsToString());
                 return new Optional<Seller>();
             }
 
@@ -90,7 +90,7 @@ public class SellerDomainService : ISellerDomainService
         catch (Exception)
         {
             await _sellerRepository.UnitOfWork.RollbackAsync();
-            await _domainNotification.PublishInternalServerErrorAsync();
+            await _domainNotificationFacade.PublishInternalServerErrorAsync();
             return new Optional<Seller>();
         }
     }
