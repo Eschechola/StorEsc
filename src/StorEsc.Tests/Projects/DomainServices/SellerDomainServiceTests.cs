@@ -20,7 +20,7 @@ public class SellerDomainServiceTests
     private readonly ISellerDomainService _sut;
 
     private readonly Mock<ISellerRepository> _sellerRepositoryMock;
-    private readonly Mock<IDomainNotificationFacade> _domainNotificationMock;
+    private readonly Mock<IDomainNotificationFacade> _domainNotificationFacadeMock;
     private readonly Mock<IArgon2IdHasher> _argon2IdHasherMock;
     private readonly Mock<IWalletDomainService> _walletDomainServiceMock;
 
@@ -37,7 +37,7 @@ public class SellerDomainServiceTests
     public SellerDomainServiceTests()
     {
         _sellerRepositoryMock = new Mock<ISellerRepository>();
-        _domainNotificationMock = new Mock<IDomainNotificationFacade>();
+        _domainNotificationFacadeMock = new Mock<IDomainNotificationFacade>();
         _argon2IdHasherMock = new Mock<IArgon2IdHasher>();
         _walletDomainServiceMock = new Mock<IWalletDomainService>();
 
@@ -49,7 +49,7 @@ public class SellerDomainServiceTests
 
         _sut = new SellerDomainService(
             sellerRepository: _sellerRepositoryMock.Object,
-            domainNotification: _domainNotificationMock.Object,
+            domainNotificationFacade: _domainNotificationFacadeMock.Object,
             argon2IdHasher: _argon2IdHasherMock.Object,
             walletDomainService: _walletDomainServiceMock.Object);
     }
@@ -118,7 +118,7 @@ public class SellerDomainServiceTests
         _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(email))
             .ReturnsAsync(false);
         
-        _domainNotificationMock.Setup(setup => setup.PublishEmailAndOrPasswordMismatchAsync())
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishEmailAndOrPasswordMismatchAsync())
             .Verifiable();
 
         // Act
@@ -128,7 +128,7 @@ public class SellerDomainServiceTests
         _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(email),
             Times.Once);
         
-        _domainNotificationMock.Verify(setup => setup.PublishEmailAndOrPasswordMismatchAsync(),
+        _domainNotificationFacadeMock.Verify(setup => setup.PublishEmailAndOrPasswordMismatchAsync(),
             Times.Once);
         
         result.Should()
@@ -158,7 +158,7 @@ public class SellerDomainServiceTests
         _argon2IdHasherMock.Setup(setup => setup.Hash(password))
             .Returns(hashedPassword);
         
-        _domainNotificationMock.Setup(setup => setup.PublishEmailAndOrPasswordMismatchAsync())
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishEmailAndOrPasswordMismatchAsync())
             .Verifiable();
 
         // Act
@@ -174,7 +174,7 @@ public class SellerDomainServiceTests
         _argon2IdHasherMock.Verify(setup => setup.Hash(password),
             Times.Once);
 
-        _domainNotificationMock.Verify(setup => setup.PublishEmailAndOrPasswordMismatchAsync(),
+        _domainNotificationFacadeMock.Verify(setup => setup.PublishEmailAndOrPasswordMismatchAsync(),
             Times.Once);
         
         result.Should()
@@ -240,7 +240,7 @@ public class SellerDomainServiceTests
         _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(seller.Email))
             .ReturnsAsync(true);
         
-        _domainNotificationMock.Setup(setup => setup.PublishSellerAlreadyExistsAsync())
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishAlreadyExistsAsync("Seller"))
             .Verifiable();
         
         // Act
@@ -250,7 +250,7 @@ public class SellerDomainServiceTests
         _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(seller.Email),
             Times.Once);
         
-        _domainNotificationMock.Verify(setup => setup.PublishSellerAlreadyExistsAsync(),
+        _domainNotificationFacadeMock.Verify(setup => setup.PublishAlreadyExistsAsync("Seller"),
             Times.Once);
         
         result.Should()
@@ -270,7 +270,7 @@ public class SellerDomainServiceTests
         _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(seller.Email))
             .ReturnsAsync(false);
         
-        _domainNotificationMock.Setup(setup => setup.PublishSellerDataIsInvalidAsync(It.IsAny<string>()))
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync(It.IsAny<string>()))
             .Verifiable();
         
         // Act
@@ -280,7 +280,7 @@ public class SellerDomainServiceTests
         _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(seller.Email),
             Times.Once);
         
-        _domainNotificationMock.Verify(setup => setup.PublishSellerDataIsInvalidAsync(It.IsAny<string>()),
+        _domainNotificationFacadeMock.Verify(setup => setup.PublishEntityDataIsInvalidAsync(It.IsAny<string>()),
             Times.Once);
         
         result.Should()
@@ -317,7 +317,7 @@ public class SellerDomainServiceTests
         _sellerRepositoryMock.Setup(setup => setup.UnitOfWork.RollbackAsync())
             .Verifiable();
         
-        _domainNotificationMock.Setup(setup => setup.PublishInternalServerErrorAsync())
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishInternalServerErrorAsync())
             .Verifiable();
         
         // Act
@@ -342,7 +342,7 @@ public class SellerDomainServiceTests
         _sellerRepositoryMock.Verify(setup => setup.UnitOfWork.RollbackAsync(),
             Times.Once);
         
-        _domainNotificationMock.Verify(setup => setup.PublishInternalServerErrorAsync(),
+        _domainNotificationFacadeMock.Verify(setup => setup.PublishInternalServerErrorAsync(),
             Times.Once);
         
         result.Should()
