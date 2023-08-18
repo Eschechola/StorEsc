@@ -2,14 +2,11 @@
 
 public interface IDomainNotificationFacade
 {
-    Task PublishCustomerDataIsInvalidAsync(string errors);
-    Task PublishCustomerAlreadyExistsAsync();
-    Task PublishSellerDataIsInvalidAsync(string errors);
-    Task PublishSellerAlreadyExistsAsync();
-    Task PublishProductDataIsInvalidAsync(string errors);
+    Task PublishEntityDataIsInvalidAsync(string errors);
+    Task PublishAlreadyExistsAsync(string entityName);
     Task PublishEmailAndOrPasswordMismatchAsync();
     Task PublishInternalServerErrorAsync();
     Task PublishPaymentRefusedAsync();
-    Task PublishProductNotFoundAsync();
-    Task PublishForbbidenAsync();
+    Task PublishNotFoundAsync(string entityName);
+    Task PublishForbiddenAsync();
 }

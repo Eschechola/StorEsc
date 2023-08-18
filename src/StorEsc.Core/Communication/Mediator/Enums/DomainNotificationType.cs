@@ -2,15 +2,12 @@
 
 public enum DomainNotificationType
 {
-    CustomerDataIsInvalid,
-    CustomerAlreadyExists,
-    SellerDataIsInvalid,
-    SellerAlreadyExists,
-    ProductDataIsInvalid,
-    ProductNotFound,
+    EntityDataIsInvalid,
+    AlreadyExists,
+    NotFound,
     EmailAndOrPasswordMismatch,
     InternalServerError,
     PaymentRefused,
-    Forbbiden,
+    Forbidden,
     
 }

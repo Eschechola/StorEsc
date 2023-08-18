@@ -13,33 +13,16 @@ public class DomainNotificationFacade : IDomainNotificationFacade
         _mediatorHandler = mediatorHandler;
     }
 
-    public async Task PublishCustomerDataIsInvalidAsync(string errors)
+    public async Task PublishEntityDataIsInvalidAsync(string errors)
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
-            message: "Customer data is invalid, please fix it!",
+            message: $"Data is invalid, please fix it!",
             data: errors,
-            type: DomainNotificationType.CustomerDataIsInvalid));
+            type: DomainNotificationType.EntityDataIsInvalid));
 
-    public async Task PublishCustomerAlreadyExistsAsync()
+    public async Task PublishAlreadyExistsAsync(string entityName)
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
-            message: "Customer already exists.",
-            type: DomainNotificationType.CustomerAlreadyExists));
-
-    public async Task PublishSellerDataIsInvalidAsync(string errors)
-        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
-            message: "Seller data is invalid, please fix it!",
-            data: errors,
-            type: DomainNotificationType.SellerDataIsInvalid));
-
-    public async Task PublishSellerAlreadyExistsAsync()
-        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
-            message: "Seller already exists.",
-            type: DomainNotificationType.SellerAlreadyExists));
-
-    public async Task PublishProductDataIsInvalidAsync(string errors)
-        => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
-            message: "Product data is invalid, please fix it!",
-            data: errors,
-            type: DomainNotificationType.ProductDataIsInvalid));
+            message: $"{entityName} Customer already exists.",
+            type: DomainNotificationType.AlreadyExists));
 
     public async Task PublishEmailAndOrPasswordMismatchAsync()
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
@@ -56,15 +39,14 @@ public class DomainNotificationFacade : IDomainNotificationFacade
             message: "The payment of recharge has been refused.",
             type: DomainNotificationType.PaymentRefused));
 
-    public async Task PublishProductNotFoundAsync()
+    public async Task PublishNotFoundAsync(string entityName)
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
-            message: "Product not found.",
-            type: DomainNotificationType.ProductNotFound));
-
-
-    public async Task PublishForbbidenAsync()
+            message: $"{entityName} not found.",
+            type: DomainNotificationType.NotFound));
+    
+    public async Task PublishForbiddenAsync()
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
             message: "No permission",
-            type: DomainNotificationType.Forbbiden));
+            type: DomainNotificationType.Forbidden));
 
 }
