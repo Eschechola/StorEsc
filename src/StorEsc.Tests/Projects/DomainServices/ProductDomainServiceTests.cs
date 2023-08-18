@@ -131,7 +131,7 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetInvalid();
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync(
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync(
                 It.IsAny<string>()))
             .Verifiable();
 
@@ -139,7 +139,7 @@ public class ProductDomainServiceTests
         var result = await _sut.CreateProductAsync(product);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(setup => setup.PublishProductDataIsInvalidAsync(
+        _domainNotificationFacadeMock.Verify(setup => setup.PublishEntityDataIsInvalidAsync(
                 It.IsAny<string>()),
             Times.Once);
 
@@ -226,7 +226,7 @@ public class ProductDomainServiceTests
             Times.Once);
         
         _domainNotificationFacadeMock.Verify(
-            verify => verify.PublishProductNotFoundAsync(),
+            verify => verify.PublishNotFoundAsync("Product"),
             Times.Once);
 
         result.IsEmpty.Should()
@@ -263,7 +263,7 @@ public class ProductDomainServiceTests
             Times.Once);
         
         _domainNotificationFacadeMock.Verify(
-            verify => verify.PublishForbbidenAsync(),
+            verify => verify.PublishForbiddenAsync(),
             Times.Once);
 
         result.IsEmpty.Should()
@@ -300,7 +300,7 @@ public class ProductDomainServiceTests
             Times.Once);
         
         _domainNotificationFacadeMock.Verify(
-            verify => verify.PublishProductDataIsInvalidAsync(It.IsAny<string>()),
+            verify => verify.PublishEntityDataIsInvalidAsync(It.IsAny<string>()),
             Times.Once);
 
         result.IsEmpty.Should()
@@ -378,7 +378,7 @@ public class ProductDomainServiceTests
         var result = await _sut.DisableProductAsync(productId, sellerId);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductNotFoundAsync(),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishNotFoundAsync("Product"),
             Times.Once);
         
         result.Should()
@@ -404,7 +404,7 @@ public class ProductDomainServiceTests
         var result = await _sut.DisableProductAsync(productId, sellerId);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbbidenAsync(),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
             Times.Once);
 
         result.Should()
@@ -487,7 +487,7 @@ public class ProductDomainServiceTests
         var result = await _sut.EnableProductAsync(productId, sellerId);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductNotFoundAsync(),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishNotFoundAsync("Product"),
             Times.Once);
 
         result.Should()
@@ -513,7 +513,7 @@ public class ProductDomainServiceTests
         var result = await _sut.EnableProductAsync(productId, sellerId);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbbidenAsync(),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
             Times.Once);
 
         result.Should()
@@ -591,7 +591,7 @@ public class ProductDomainServiceTests
         var name = "test";
         var minimumPrice = -1;;
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
             .Verifiable();
         
         // Act
@@ -601,7 +601,7 @@ public class ProductDomainServiceTests
         result.Should()
             .BeEmpty();
         
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
             Times.Once);
     }
 
@@ -616,7 +616,7 @@ public class ProductDomainServiceTests
         var minimumPrice = 5;
         var maximumPrice = 1_000_001;
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
             .Verifiable();
         
         // Act
@@ -626,7 +626,7 @@ public class ProductDomainServiceTests
         result.Should()
             .BeEmpty();
         
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
             Times.Once);
     }
     
@@ -641,7 +641,7 @@ public class ProductDomainServiceTests
         var minimumPrice = 100_001;
         var maximumPrice = 5;
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync("Minimum price cannot be greater than maximum price"))
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync("Minimum price cannot be greater than maximum price"))
             .Verifiable();
         
         // Act
@@ -651,7 +651,7 @@ public class ProductDomainServiceTests
         result.Should()
             .BeEmpty();
         
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductDataIsInvalidAsync("Minimum price cannot be greater than maximum price"),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync("Minimum price cannot be greater than maximum price"),
             Times.Once);
     }
     
@@ -666,7 +666,7 @@ public class ProductDomainServiceTests
         var minimumPrice = 5;
         var maximumPrice = 100_000;
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishProductDataIsInvalidAsync("Name can be between 1 and 200 characters"))
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync("Name can be between 1 and 200 characters"))
             .Verifiable();
         
         // Act
@@ -676,7 +676,7 @@ public class ProductDomainServiceTests
         result.Should()
             .BeEmpty();
         
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishProductDataIsInvalidAsync("Name can be between 1 and 200 characters"),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync("Name can be between 1 and 200 characters"),
             Times.Once);
     }
     
