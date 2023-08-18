@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StorEsc.API.Token;
 using StorEsc.API.Token.Extensions;
 using StorEsc.API.ViewModels;
+using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
@@ -46,14 +47,28 @@ public class VoucherController : BaseController
     [HttpPost]
     [Route("create")]
     [Authorize(Roles = Roles.Seller)]
-    public async Task<IActionResult> CreateVoucherAsync()
+    public async Task<IActionResult> CreateVoucherAsync([FromBody] CreateVoucherViewModel viewModel)
     {
         var sellerId = User.GetId();
 
+        var voucherDto = new VoucherDto()
+        {
+            Code = viewModel.Code,
+            ValueDiscount = viewModel.ValueDiscount,
+            PercentageDiscount = viewModel.PercentageDiscount,
+            IsPercentageDiscount = viewModel.IsPercentageDiscount
+        };
+
+        var voucherCreated = await _voucherApplicationService.CreateVoucherAsync(sellerId, voucherDto);
         
         if (HasNotifications())
             return Result();
 
-        return Ok();
+        return Ok(new ResultViewModel
+        {
+            Message = "Voucher created with success!",
+            Success = true,
+            Data = voucherCreated
+        });
     }
 }

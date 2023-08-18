@@ -74,20 +74,17 @@ public abstract class BaseController : Controller
             DomainNotificationType.EmailAndOrPasswordMismatch
                 => 401,
             
-            DomainNotificationType.CustomerAlreadyExists 
-                or DomainNotificationType.CustomerDataIsInvalid
-                or DomainNotificationType.SellerAlreadyExists
-                or DomainNotificationType.SellerDataIsInvalid
-                or DomainNotificationType.ProductDataIsInvalid
+            DomainNotificationType.AlreadyExists
+                or DomainNotificationType.EntityDataIsInvalid
                 => 400,
 
             DomainNotificationType.PaymentRefused
                 => 402,
             
-            DomainNotificationType.Forbbiden
+            DomainNotificationType.Forbidden
                 => 403,
             
-            DomainNotificationType.ProductNotFound
+            DomainNotificationType.NotFound
                 => 404,
             
             DomainNotificationType.InternalServerError
