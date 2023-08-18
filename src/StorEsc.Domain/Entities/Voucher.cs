@@ -44,4 +44,7 @@ public class Voucher : Entity, IAggregateRoot
 
     public void Disable()
         => Enabled = false;
+
+    public void SetSellerId(string sellerId)
+        => SellerId = Guid.Parse(sellerId);
 }
