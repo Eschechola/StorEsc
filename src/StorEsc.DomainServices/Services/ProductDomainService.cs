@@ -30,19 +30,19 @@ public class ProductDomainService : IProductDomainService
         
         if (minimumPrice < 0 || maximumPrice > 1_000_000)
         {
-            await _domainNotificationFacade.PublishProductDataIsInvalidAsync("Prices should be between 0 and 1.000.000");
+            await _domainNotificationFacade.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000");
             return new List<Product>();
         }
 
         if (minimumPrice > maximumPrice)
         {
-            await _domainNotificationFacade.PublishProductDataIsInvalidAsync("Minimum price cannot be greater than maximum price");
+            await _domainNotificationFacade.PublishEntityDataIsInvalidAsync("Minimum price cannot be greater than maximum price");
             return new List<Product>();
         }
 
         if (!string.IsNullOrEmpty(name) && name.Length > 200)
         {
-            await _domainNotificationFacade.PublishProductDataIsInvalidAsync("Name can be between 1 and 200 characters");
+            await _domainNotificationFacade.PublishEntityDataIsInvalidAsync("Name can be between 1 and 200 characters");
             return new List<Product>();
         }
         
@@ -55,7 +55,7 @@ public class ProductDomainService : IProductDomainService
 
         if (exists is false)
         {
-            await _domainNotificationFacade.PublishProductNotFoundAsync();
+            await _domainNotificationFacade.PublishNotFoundAsync("Product");
             return new Optional<Product>();
         }
 
@@ -63,7 +63,7 @@ public class ProductDomainService : IProductDomainService
 
         if (product.SellerId.ToString() != sellerId)
         {
-            await _domainNotificationFacade.PublishForbbidenAsync();
+            await _domainNotificationFacade.PublishForbiddenAsync();
             return new Optional<Product>();
         }
 
@@ -76,7 +76,7 @@ public class ProductDomainService : IProductDomainService
 
         if (product.IsInvalid())
         {
-            await _domainNotificationFacade.PublishProductDataIsInvalidAsync(product.ErrorsToString());
+            await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(product.ErrorsToString());
             return new Optional<Product>();
         }
 
@@ -92,7 +92,7 @@ public class ProductDomainService : IProductDomainService
 
         if (exists is false)
         {
-            await _domainNotificationFacade.PublishProductNotFoundAsync();
+            await _domainNotificationFacade.PublishNotFoundAsync("Product");
             return false;
         }
 
@@ -100,7 +100,7 @@ public class ProductDomainService : IProductDomainService
 
         if (product.SellerId.ToString() != sellerId)
         {
-            await _domainNotificationFacade.PublishForbbidenAsync();
+            await _domainNotificationFacade.PublishForbiddenAsync();
             return false;
         }
 
@@ -120,7 +120,7 @@ public class ProductDomainService : IProductDomainService
 
         if (exists is false)
         {
-            await _domainNotificationFacade.PublishProductNotFoundAsync();
+            await _domainNotificationFacade.PublishNotFoundAsync("Product");
             return false;
         }
 
@@ -128,7 +128,7 @@ public class ProductDomainService : IProductDomainService
 
         if (product.SellerId.ToString() != sellerId)
         {
-            await _domainNotificationFacade.PublishForbbidenAsync();
+            await _domainNotificationFacade.PublishForbiddenAsync();
             return false;
         }
 
@@ -158,7 +158,7 @@ public class ProductDomainService : IProductDomainService
 
             if (product.IsInvalid())
             {
-                await _domainNotificationFacade.PublishProductDataIsInvalidAsync(product.ErrorsToString());
+                await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(product.ErrorsToString());
                 return new Optional<Product>();
             }
 
