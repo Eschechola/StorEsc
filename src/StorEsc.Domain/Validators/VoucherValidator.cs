@@ -23,28 +23,6 @@ public class VoucherValidator : AbstractValidator<Voucher>
 
         RuleFor(x => x.IsPercentageDiscount)
             .NotNull()
-            .WithMessage(ValidatorMessages.NotNull("IsPercentageDiscount"))
-
-            .NotEmpty()
-            .WithMessage(ValidatorMessages.NotEmpty("IsPercentageDiscount"));
-
-        RuleFor(x => x.ValueDiscount)
-            .Must((rootObject, property) =>
-            {
-                if (rootObject.IsPercentageDiscount)
-                    property = 0;
-                
-                return true;
-            });
-        
-        RuleFor(x => x.PercentageDiscount)
-            .Must((rootObject, property) =>
-            {
-                if (rootObject.IsPercentageDiscount is false)
-                    property = 0;
-                
-                return true;
-            });
-
+            .WithMessage(ValidatorMessages.NotNull("IsPercentageDiscount"));
     }
 }
