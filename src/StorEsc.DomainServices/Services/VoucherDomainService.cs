@@ -21,15 +21,6 @@ public class VoucherDomainService : IVoucherDomainService
 
     public async Task<Optional<Voucher>> CreateVoucherAsync(string sellerId, Voucher voucher)
     {
-        var exists = await _voucherRepository.ExistsAsync(entity
-            => entity.Code.ToLower().Equals(voucher.Code.ToLower()));
-
-        if (exists)
-        {
-            await _domainNotificationFacade.PublishAlreadyExistsAsync("Voucher");
-            return new Optional<Voucher>();
-        }
-
         voucher.Validate();
 
         if (voucher.IsInvalid())
@@ -38,7 +29,18 @@ public class VoucherDomainService : IVoucherDomainService
             return new Optional<Voucher>();
         }
         
+        var exists = await _voucherRepository.ExistsAsync(entity
+            => entity.Code.ToLower().Equals(voucher.Code.ToLower()));
+
+        if (exists)
+        {
+            await _domainNotificationFacade.PublishAlreadyExistsAsync("Voucher");
+            return new Optional<Voucher>();
+        }
+        
         voucher.SetSellerId(sellerId);
+        voucher.CodeToUpper();
+        voucher.SetDiscounts();
         voucher.Disable();
 
         _voucherRepository.Create(voucher);
