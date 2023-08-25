@@ -47,4 +47,13 @@ public class Voucher : Entity, IAggregateRoot
 
     public void SetSellerId(string sellerId)
         => SellerId = Guid.Parse(sellerId);
+
+    public void CodeToUpper()
+        => Code = Code.ToUpper();
+
+    public void SetDiscounts()
+    {
+        ValueDiscount = IsPercentageDiscount ? null : ValueDiscount;
+        PercentageDiscount = IsPercentageDiscount ? PercentageDiscount : null;
+    }
 }
