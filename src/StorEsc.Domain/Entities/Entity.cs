@@ -22,24 +22,13 @@ public abstract class Entity
         Id = id;
         _errors = new List<string>();
     }
-
-    public Entity(
-        Guid id,
-        DateTime createdAt,
-        DateTime updatedAt)
-    {
-        Id = id;
-        CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
-        _errors = new List<string>();
-    }
-
+    
     public string ErrorsToString()
     {
         string errors = "";
 
         foreach (var error in _errors)
-            errors += error + "\n";
+            errors += error + " ";
 
         return errors;
     }
