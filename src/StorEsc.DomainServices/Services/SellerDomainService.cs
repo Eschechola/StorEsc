@@ -56,19 +56,19 @@ public class SellerDomainService : ISellerDomainService
     {
         try
         {
-            var exists = await _sellerRepository.ExistsByEmailAsync(seller.Email);
-
-            if (exists)
-            {
-                await _domainNotificationFacade.PublishAlreadyExistsAsync("Seller");
-                return new Optional<Seller>();
-            }
-
             seller.Validate();
 
             if (seller.IsInvalid())
             {
                 await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(seller.ErrorsToString());
+                return new Optional<Seller>();
+            }
+            
+            var exists = await _sellerRepository.ExistsByEmailAsync(seller.Email);
+
+            if (exists)
+            {
+                await _domainNotificationFacade.PublishAlreadyExistsAsync("Seller");
                 return new Optional<Seller>();
             }
 
