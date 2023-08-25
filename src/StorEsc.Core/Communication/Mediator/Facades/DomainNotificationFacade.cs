@@ -21,7 +21,7 @@ public class DomainNotificationFacade : IDomainNotificationFacade
 
     public async Task PublishAlreadyExistsAsync(string entityName)
         => await _mediatorHandler.PublishNotificationAsync(new DomainNotification(
-            message: $"{entityName} Customer already exists.",
+            message: $"{entityName} already exists.",
             type: DomainNotificationType.AlreadyExists));
 
     public async Task PublishEmailAndOrPasswordMismatchAsync()
