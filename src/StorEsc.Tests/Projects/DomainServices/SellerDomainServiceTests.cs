@@ -267,9 +267,6 @@ public class SellerDomainServiceTests
         // Arrange
         var seller = _sellerFaker.GetInvalid();
         
-        _sellerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(seller.Email))
-            .ReturnsAsync(false);
-        
         _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync(It.IsAny<string>()))
             .Verifiable();
         
@@ -277,9 +274,6 @@ public class SellerDomainServiceTests
         var result = await _sut.RegisterSellerAsync(seller);
 
         // Assert
-        _sellerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(seller.Email),
-            Times.Once);
-        
         _domainNotificationFacadeMock.Verify(setup => setup.PublishEntityDataIsInvalidAsync(It.IsAny<string>()),
             Times.Once);
         

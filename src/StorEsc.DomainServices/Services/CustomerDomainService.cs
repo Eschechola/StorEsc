@@ -56,6 +56,14 @@ public class CustomerDomainService : ICustomerDomainService
     {
         try
         {
+            customer.Validate();
+            
+            if (customer.IsInvalid())
+            {
+                await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(customer.ErrorsToString());
+                return new Optional<Customer>();
+            }
+            
             var exists = await _customerRepository.ExistsByEmailAsync(customer.Email);
 
             if (exists)
@@ -65,12 +73,6 @@ public class CustomerDomainService : ICustomerDomainService
             }
 
             customer.Validate();
-
-            if (customer.IsInvalid())
-            {
-                await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(customer.ErrorsToString());
-                return new Optional<Customer>();
-            }
 
             var hashedPassword = _argon2IdHasher.Hash(customer.Password);
             customer.SetPassword(hashedPassword);

@@ -267,9 +267,6 @@ public class CustomerDomainServiceTests
         // Arrange
         var customer = _customerFaker.GetInvalid();
         
-        _customerRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(customer.Email))
-            .ReturnsAsync(false);
-        
         _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync(It.IsAny<string>()))
             .Verifiable();
         
@@ -277,9 +274,6 @@ public class CustomerDomainServiceTests
         var result = await _sut.RegisterCustomerAsync(customer);
 
         // Assert
-        _customerRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(customer.Email),
-            Times.Once);
-        
         _domainNotificationFacadeMock.Verify(setup => setup.PublishEntityDataIsInvalidAsync(It.IsAny<string>()),
             Times.Once);
         
