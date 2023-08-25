@@ -49,6 +49,9 @@ public class VoucherController : BaseController
     [Authorize(Roles = Roles.Seller)]
     public async Task<IActionResult> CreateVoucherAsync([FromBody] CreateVoucherViewModel viewModel)
     {
+        if (ModelState.IsValid is false)
+            return UnprocessableEntity(ModelState);
+        
         var sellerId = User.GetId();
 
         var voucherDto = new VoucherDto()
@@ -68,7 +71,7 @@ public class VoucherController : BaseController
         {
             Message = "Voucher created with success!",
             Success = true,
-            Data = voucherCreated
+            Data = voucherCreated.Value
         });
     }
 }
