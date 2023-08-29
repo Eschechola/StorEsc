@@ -18,10 +18,8 @@ public class WalletDomainServiceTests
 
     private readonly Mock<IWalletRepository> _walletRepositoryMock;
     private readonly Mock<ICustomerRepository> _customerRepositoryMock;
-    private readonly Mock<ISellerRepository> _sellerRepositoryMock;
 
     private readonly WalletFaker _walletFaker;
-    private readonly SellerFaker _sellerFaker;
     private readonly CustomerFaker _customerFaker;
 
     private readonly Randomizer _randomizer;
@@ -34,18 +32,15 @@ public class WalletDomainServiceTests
     {
         _walletRepositoryMock = new Mock<IWalletRepository>();
         _customerRepositoryMock = new Mock<ICustomerRepository>();
-        _sellerRepositoryMock = new Mock<ISellerRepository>();
 
         _walletFaker = new WalletFaker();
-        _sellerFaker = new SellerFaker();
         _customerFaker = new CustomerFaker();
 
         _randomizer = new Randomizer();
         
         _sut = new WalletDomainService(
             walletRepository: _walletRepositoryMock.Object,
-            customerRepository: _customerRepositoryMock.Object,
-            sellerRepository: _sellerRepositoryMock.Object);
+            customerRepository: _customerRepositoryMock.Object);
     }
 
     #endregion
@@ -84,44 +79,6 @@ public class WalletDomainServiceTests
 
     #endregion
 
-    #region GetSellerWalletAsync
-
-    [Fact(DisplayName = "GetSellerWalletAsync returns seller wallet")]
-    [Trait("WalletDomainService", "GetSellerWalletAsync")]
-    public async Task GetSellerWalletAsync_ReturnsSellerWallet()
-    {
-        // Arrange
-        var sellerId = Guid.NewGuid().ToString();
-        var seller = _sellerFaker.GetValid();
-        var wallet = _walletFaker.GetValid();
-
-        seller.SetWallet(wallet);
-
-        _sellerRepositoryMock.Setup(setup => setup.GetByIdAsync(sellerId))
-            .ReturnsAsync(seller);
-        
-        _walletRepositoryMock.Setup(setup => setup.GetByIdAsync(seller.WalletId))
-            .ReturnsAsync(wallet);
-
-        // Act
-        var result = await _sut.GetSellerWalletAsync(sellerId);
-        
-        // Assert
-        _sellerRepositoryMock.Verify(setup => setup.GetByIdAsync(sellerId),
-            Times.Once);
-
-        _walletRepositoryMock.Verify(setup => setup.GetByIdAsync(seller.WalletId),
-            Times.Once);
-
-        result.Should()
-            .NotBeNull();
-
-        result.Should()
-            .BeEquivalentTo(wallet);
-    }    
-
-    #endregion
-    
     #region GetCustomerWalletAsync
 
     [Fact(DisplayName = "GetCustomerWalletAsync returns customer wallet")]
