@@ -24,6 +24,6 @@ public class AdministratorController : BaseController
     public async Task<IActionResult> EnableDefaultAdministratorAccount()
     {   
         await _admnistratorApplicationService.EnableDefaultAdministratorAsync();
-        return Ok();
+        return Accepted();
     }
 }

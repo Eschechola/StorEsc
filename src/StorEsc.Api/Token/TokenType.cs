@@ -3,6 +3,5 @@
 public enum TokenType
 {
     Customer,
-    Seller,
     Administrator
 }

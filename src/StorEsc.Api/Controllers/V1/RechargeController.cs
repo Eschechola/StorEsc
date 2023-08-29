@@ -40,7 +40,7 @@ public class RechargeController : BaseController
             ExpirationDate = viewModel.ExpirationDate,
             Document = viewModel.Document,
             Number = viewModel.Number,
-            CVV = viewModel.CVV
+            Cvv = viewModel.Cvv
         };
 
         await _rechargeApplicationService.RechargeCustomerWalletAsync(customerId, amount, creditCardDto);

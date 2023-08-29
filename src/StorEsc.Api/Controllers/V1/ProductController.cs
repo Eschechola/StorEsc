@@ -25,12 +25,15 @@ public class ProductController : BaseController
     }
 
     [HttpGet]
-    [Route("get-last-products")]
+    [Route("get-latest-products")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetLastProducts()
+    public async Task<IActionResult> GetLatestProductsAsync()
     {
-        var products = await _productApplicationService.GetLastProductsAsync();
+        var products = await _productApplicationService.GetLatestProductsAsync();
 
+        if (products.Any() is false)
+            return NoContent();
+        
         return Ok(new ResultViewModel
         {
             Message = "Products found with success",
@@ -43,14 +46,12 @@ public class ProductController : BaseController
     [AllowAnonymous]
     [Route("search")]
     public async Task<IActionResult> SearchProductsAsync(
-        [FromQuery] string sellerId = "",
         [FromQuery] string name = "",
         [FromQuery] decimal minimumPrice = 0,
         [FromQuery] decimal maximumPrice = 1_000_000,
         [FromQuery] OrderBy orderBy = OrderBy.CreatedAtDescending)
     {
         var products = await _productApplicationService.SearchProductsAsync(
-            sellerId,
             name,
             minimumPrice,
             maximumPrice,
@@ -71,14 +72,14 @@ public class ProductController : BaseController
     }
 
     [HttpPatch]
-    [Authorize(Roles = Roles.Seller)]
+    [Authorize(Roles = Roles.Administrator)]
     [Route("update/{productId}")]
     public async Task<IActionResult> UpdateProductAsync([FromRoute] string productId, [FromBody] UpdateProductViewModel viewModel)
     {
         if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
 
-        var sellerId = HttpContext.User.GetId();
+        var administratorId = HttpContext.User.GetId();
 
         var productDto = new ProductDto
         {
@@ -88,7 +89,7 @@ public class ProductController : BaseController
             Stock = viewModel.Stock
         };
 
-        var productUpdated = await _productApplicationService.UpdateProductAsync(productId, sellerId, productDto);
+        var productUpdated = await _productApplicationService.UpdateProductAsync(productId, administratorId, productDto);
         
         if (HasNotifications())
             return Result();
@@ -102,25 +103,24 @@ public class ProductController : BaseController
     }
 
     [HttpPost]
-    [Authorize(Roles = Roles.Seller)]
+    [Authorize(Roles = Roles.Administrator)]
     [Route("create")]
     public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductViewModel viewModel)
     {
         if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
-        var sellerId = HttpContext.User.GetId();
+        var administratorId = HttpContext.User.GetId();
         
         var productDto = new ProductDto
         {
-            SellerId = Guid.Parse(sellerId),
             Name = viewModel.Name,
             Description = viewModel.Description,
             Price = viewModel.Price,
             Stock = viewModel.Stock
         };
         
-        var productCreated = await _productApplicationService.CreateProductAsync(productDto);
+        var productCreated = await _productApplicationService.CreateProductAsync(administratorId, productDto);
         
         if (HasNotifications())
             return Result();
@@ -134,11 +134,11 @@ public class ProductController : BaseController
     }
 
     [HttpPatch]
-    [Authorize(Roles = Roles.Seller)]
+    [Authorize(Roles = Roles.Administrator)]
     [Route("disable/{productId}")]
     public async Task<IActionResult> DisableProductAsync([FromRoute] string productId)
     {
-        var sellerId = HttpContext.User.GetId();
+        var administratorId = HttpContext.User.GetId();
 
         if (string.IsNullOrEmpty(productId))
         {
@@ -150,7 +150,7 @@ public class ProductController : BaseController
             });
         }
 
-        await _productApplicationService.DisableProductAsync(productId, sellerId);
+        await _productApplicationService.DisableProductAsync(productId, administratorId);
 
         if (HasNotifications())
             return Result();
@@ -164,11 +164,11 @@ public class ProductController : BaseController
     }
     
     [HttpPatch]
-    [Authorize(Roles = Roles.Seller)]
+    [Authorize(Roles = Roles.Administrator)]
     [Route("enable/{productId}")]
     public async Task<IActionResult> EnableProductAsync([FromRoute] string productId)
     {
-        var sellerId = HttpContext.User.GetId();
+        var administratorId = HttpContext.User.GetId();
 
         if (string.IsNullOrEmpty(productId))
         {
@@ -180,7 +180,7 @@ public class ProductController : BaseController
             });
         }
 
-        await _productApplicationService.EnableProductAsync(productId, sellerId);
+        await _productApplicationService.EnableProductAsync(productId, administratorId);
 
         if (HasNotifications())
             return Result();

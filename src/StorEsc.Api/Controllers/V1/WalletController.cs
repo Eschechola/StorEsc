@@ -41,24 +41,4 @@ public class WalletController : BaseController
             }
         });
     }
-    
-    [HttpGet]
-    [Authorize(Roles = Roles.Seller)]
-    [Route("seller/get-wallet")]
-    public async Task<IActionResult> GetSellerWalletAsync()
-    {
-        var customerId = HttpContext.User.GetId();
-        var wallet = await _walletApplicationService.GetSellerWalletAsync(customerId);
-
-        return Ok(new ResultViewModel
-        {
-            Message = "Wallet found with success!",
-            Success = true,
-            Data = new
-            {
-                Id = wallet.Id,
-                Amount = wallet.Amount
-            }
-        });
-    }
 }

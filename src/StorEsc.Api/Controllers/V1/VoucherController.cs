@@ -23,12 +23,12 @@ public class VoucherController : BaseController
     }
     
     [HttpGet]
-    [Route("my-vouchers")]
-    [Authorize(Roles = Roles.Seller)]
+    [Route("get-all-vouchers")]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<IActionResult> GetVouchersAsync()
     {
-        var sellerId = User.GetId();
-        var vouchers = await _voucherApplicationService.GetSellerVouchersAsync(sellerId);
+        var administratorId = User.GetId();
+        var vouchers = await _voucherApplicationService.GetAllVouchersAsync(administratorId);
         
         if (HasNotifications())
             return Result();
@@ -46,7 +46,7 @@ public class VoucherController : BaseController
 
     [HttpPost]
     [Route("create")]
-    [Authorize(Roles = Roles.Seller)]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<IActionResult> CreateVoucherAsync([FromBody] CreateVoucherViewModel viewModel)
     {
         if (ModelState.IsValid is false)
