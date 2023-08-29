@@ -46,7 +46,7 @@ public class Order : Entity, IAggregateRoot
         foreach (var item in OrderItens)
             totalValue += item.CalculateItemValue();
 
-        if (Voucher == null)
+        if (string.IsNullOrEmpty(Voucher.Code))
             return totalValue;
 
         if (Voucher.IsPercentageDiscount)
