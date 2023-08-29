@@ -8,16 +8,13 @@ public class WalletDomainService : IWalletDomainService
 {
     private readonly IWalletRepository _walletRepository;
     private readonly ICustomerRepository _customerRepository;
-    private readonly ISellerRepository _sellerRepository;
     
     public WalletDomainService(
         IWalletRepository walletRepository,
-        ICustomerRepository customerRepository,
-        ISellerRepository sellerRepository)
+        ICustomerRepository customerRepository)
     {
         _walletRepository = walletRepository;
         _customerRepository = customerRepository;
-        _sellerRepository = sellerRepository;
     }
 
     public async Task<Wallet> CreateNewEmptyWalletAsync()
@@ -27,14 +24,6 @@ public class WalletDomainService : IWalletDomainService
         _walletRepository.Create(wallet);
         await _walletRepository.UnitOfWork.SaveChangesAsync();
 
-        return wallet;
-    }
-
-    public async Task<Wallet> GetSellerWalletAsync(string sellerId)
-    {
-        var seller = await _sellerRepository.GetByIdAsync(sellerId);
-        var wallet = await _walletRepository.GetByIdAsync(seller.WalletId);
-        
         return wallet;
     }
 
