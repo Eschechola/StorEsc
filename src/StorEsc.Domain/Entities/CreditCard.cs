@@ -5,7 +5,7 @@ public class CreditCard
     public string HoldName { get; private set; }
     public string Number { get; private set; }
     public string ExpirationDate { get; private set; }
-    public int CVV { get; private set; }
+    public int Cvv { get; private set; }
     public string Document { get; private set; }
     
     public CreditCard(
@@ -18,7 +18,7 @@ public class CreditCard
         HoldName = holdName;
         Number = number;
         ExpirationDate = expirationDate;
-        CVV = cvv;
+        Cvv = cvv;
         Document = document;
     }
 }
