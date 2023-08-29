@@ -20,7 +20,6 @@ public class ProductRepository : Repository<Product>, IProductRepository
     public override IUnitOfWork UnitOfWork => _context;
 
     public async Task<IList<Product>> SearchProductsAsync(
-        string sellerId = "",
         string name = "",
         decimal minimumPrice = 0,
         decimal maximumPrice = 1_000_000,
@@ -28,7 +27,6 @@ public class ProductRepository : Repository<Product>, IProductRepository
     {
         var query = _dbSet as IQueryable<Product>;
 
-        query = FilterProductsBySellerId(query, sellerId);
         query = FilterProductsByNameOrDescription(query, name);
         query = FilterProductsByPrice(query, minimumPrice, maximumPrice);
         query = OrderQuery(query, orderBy);
@@ -59,11 +57,6 @@ public class ProductRepository : Repository<Product>, IProductRepository
                 return query.OrderByDescending(entity => entity.CreatedAt);
         }
     }
-
-    private IQueryable<Product> FilterProductsBySellerId(IQueryable<Product> query, string sellerId)
-        => string.IsNullOrEmpty(sellerId)
-            ? query
-            : query.Where(entity => entity.SellerId.Equals(Guid.Parse(sellerId)));
     
     private IQueryable<Product> FilterProductsByNameOrDescription(IQueryable<Product> query, string name)
         => string.IsNullOrEmpty(name)

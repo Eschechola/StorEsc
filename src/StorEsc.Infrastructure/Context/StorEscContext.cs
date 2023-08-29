@@ -25,7 +25,6 @@ public class StorEscContext : DbContext, IUnitOfWork
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<Seller> Sellers { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<Wallet> Recharges { get; set; }
     public DbSet<Payment> Payments { get; set; }
@@ -41,7 +40,6 @@ public class StorEscContext : DbContext, IUnitOfWork
         builder.ApplyConfiguration(new OrderMap());
         builder.ApplyConfiguration(new OrderItemMap());
         builder.ApplyConfiguration(new ProductMap());
-        builder.ApplyConfiguration(new SellerMap());
         builder.ApplyConfiguration(new WalletMap());
         builder.ApplyConfiguration(new RechargeMap());
         builder.ApplyConfiguration(new VoucherMap());
