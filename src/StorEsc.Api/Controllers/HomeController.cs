@@ -9,5 +9,5 @@ public class HomeController : Controller
     [Route("/")]
     [AllowAnonymous]
     public IActionResult Home()
-        => Ok("It's running!");
+        => Ok(new { Message = "It's running!"});
 }

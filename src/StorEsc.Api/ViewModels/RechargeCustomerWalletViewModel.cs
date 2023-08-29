@@ -24,7 +24,7 @@ public class RechargeCustomerWalletViewModel
     
     [Required(ErrorMessage = "CVV can not be empty.")]
     [Range(100, 999, ErrorMessage = "CVV is invalid.")]
-    public int CVV { get; set; }
+    public int Cvv { get; set; }
     
     [Required(ErrorMessage = "Document can not be empty.")]
     [Document(ErrorMessage = "Document is invalid.")]
