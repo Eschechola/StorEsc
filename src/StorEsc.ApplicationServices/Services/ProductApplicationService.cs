@@ -21,10 +21,10 @@ public class ProductApplicationService : IProductApplicationService
         _mapper = mapper;
     }
 
-    public async Task<Optional<ProductDto>> CreateProductAsync(ProductDto productDto)
+    public async Task<Optional<ProductDto>> CreateProductAsync(string administratorId, ProductDto productDto)
     {
         var product = _mapper.Map<Product>(productDto);
-        var productCreated = await _productDomainService.CreateProductAsync(product);
+        var productCreated = await _productDomainService.CreateProductAsync(administratorId, product);
 
         if (productCreated.IsEmpty)
             return new Optional<ProductDto>();
@@ -32,22 +32,20 @@ public class ProductApplicationService : IProductApplicationService
         return _mapper.Map<ProductDto>(productCreated.Value);
     }
 
-    public async Task<IList<ProductDto>> GetLastProductsAsync()
+    public async Task<IList<ProductDto>> GetLatestProductsAsync()
     {
-        var products = await _productDomainService.GetLastProductsAsync();
+        var products = await _productDomainService.GetLatestProductsAsync();
 
         return _mapper.Map<IList<ProductDto>>(products);
     }
 
     public async Task<IList<ProductDto>> SearchProductsAsync(
-        string sellerId = "",
         string name = "",
         decimal minimumPrice = 0,
         decimal maximumPrice = 1_000_000,
         OrderBy orderBy = OrderBy.CreatedAtDescending)
     {
         var products = await _productDomainService.SearchProductsAsync(
-            sellerId,
             name,
             minimumPrice,
             maximumPrice,
@@ -56,10 +54,10 @@ public class ProductApplicationService : IProductApplicationService
         return _mapper.Map<IList<ProductDto>>(products);
     }
 
-    public async Task<Optional<ProductDto>> UpdateProductAsync(string productId, string sellerId, ProductDto productDto)
+    public async Task<Optional<ProductDto>> UpdateProductAsync(string productId, string administratorId, ProductDto productDto)
     {
         var product = _mapper.Map<Product>(productDto);
-        var productUpdated = await _productDomainService.UpdateProductAsync(productId, sellerId, product);
+        var productUpdated = await _productDomainService.UpdateProductAsync(productId, administratorId, product);
         
         if(productUpdated.IsEmpty)
             return new Optional<ProductDto>();
@@ -67,9 +65,9 @@ public class ProductApplicationService : IProductApplicationService
         return _mapper.Map<ProductDto>(productUpdated.Value);
     }
 
-    public async Task<bool> DisableProductAsync(string productId, string sellerId)
-        => await _productDomainService.DisableProductAsync(productId, sellerId);
+    public async Task<bool> DisableProductAsync(string productId, string administratorId)
+        => await _productDomainService.DisableProductAsync(productId, administratorId);
     
-    public async Task<bool> EnableProductAsync(string productId, string sellerId)
-        => await _productDomainService.EnableProductAsync(productId, sellerId);
+    public async Task<bool> EnableProductAsync(string productId, string administratorId)
+        => await _productDomainService.EnableProductAsync(productId, administratorId);
 }

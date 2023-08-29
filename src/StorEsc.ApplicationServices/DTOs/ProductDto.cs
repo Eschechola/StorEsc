@@ -1,11 +1,10 @@
 ﻿namespace StorEsc.Application.Dtos;
 
-public class ProductDto : BaseDto
+public record ProductDto : BaseDto
 {
-    public Guid SellerId { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public decimal Price { get; set; }
-    public int Stock { get; set; }
-    public bool Enabled { get; set; }
+    public string Name { get; init; }
+    public string Description { get; init; }
+    public decimal Price { get; init; }
+    public int Stock { get; init; }
+    public bool Enabled { get; init; }
 }

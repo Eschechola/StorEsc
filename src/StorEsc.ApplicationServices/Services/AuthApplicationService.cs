@@ -10,18 +10,15 @@ namespace StorEsc.Application.Services;
 public class AuthApplicationService : IAuthApplicationService
 {
     private readonly ICustomerDomainService _customerDomainService;
-    private readonly ISellerDomainService _sellerDomainService;
     private readonly IAdministratorDomainService _administratorDomainService;
     private readonly IMapper _mapper;
     
     public AuthApplicationService(
         ICustomerDomainService customerDomainService,
-        ISellerDomainService sellerDomainService,
         IAdministratorDomainService administratorDomainService,
         IMapper mapper)
     {
         _customerDomainService = customerDomainService;
-        _sellerDomainService = sellerDomainService;
         _administratorDomainService = administratorDomainService;
         _mapper = mapper;
     }
@@ -38,16 +35,6 @@ public class AuthApplicationService : IAuthApplicationService
         return _mapper.Map<CustomerDto>(customer.Value);
     }
 
-    public async Task<Optional<AdministratorDto>> AuthenticateAdministratorAsync(string email, string password)
-    {
-        var administrator = await _administratorDomainService.AuthenticateAdministratorAsync(email, password);
-
-        if (administrator.IsEmpty)
-            return new Optional<AdministratorDto>();
-
-        return _mapper.Map<AdministratorDto>(administrator.Value);
-    }
-
     public async Task<Optional<CustomerDto>> RegisterCustomerAsync(CustomerDto customerDto)
     {
         var customer = _mapper.Map<Customer>(customerDto);
@@ -59,11 +46,6 @@ public class AuthApplicationService : IAuthApplicationService
         return _mapper.Map<CustomerDto>(customerRegistred.Value);
     }
 
-    public Task<Optional<AdministratorDto>> RegisterAdministratorAsync(AdministratorDto administratorDto)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task<bool> ResetCustomerPasswordAsync(string email)
     {
         throw new NotImplementedException();
@@ -71,30 +53,19 @@ public class AuthApplicationService : IAuthApplicationService
     
     #endregion
 
-    #region Seller
+    #region Administrator
     
-    public async Task<Optional<SellerDto>> AuthenticateSellerAsync(string email, string password)
+    public async Task<Optional<AdministratorDto>> AuthenticateAdministratorAsync(string email, string password)
     {
-        var seller = await _sellerDomainService.AuthenticateSellerAsync(email, password);
+        var administrator = await _administratorDomainService.AuthenticateAdministratorAsync(email, password);
 
-        if (seller.IsEmpty)
-            return new Optional<SellerDto>();
+        if (administrator.IsEmpty)
+            return new Optional<AdministratorDto>();
 
-        return _mapper.Map<SellerDto>(seller.Value);
+        return _mapper.Map<AdministratorDto>(administrator.Value);
     }
-
-    public async Task<Optional<SellerDto>> RegisterSellerAsync(SellerDto sellerDto)
-    {
-        var seller = _mapper.Map<Seller>(sellerDto);
-        var sellerRegistred = await _sellerDomainService.RegisterSellerAsync(seller);
-
-        if (sellerRegistred.IsEmpty)
-            return new Optional<SellerDto>();
-
-        return _mapper.Map<SellerDto>(sellerRegistred.Value);
-    }
-
-    public Task<bool> ResetSellerPasswordAsync(string email)
+    
+    public Task<Optional<AdministratorDto>> RegisterAdministratorAsync(string administratorId, AdministratorDto administratorDto)
     {
         throw new NotImplementedException();
     }

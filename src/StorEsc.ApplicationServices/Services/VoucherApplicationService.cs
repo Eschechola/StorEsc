@@ -20,9 +20,9 @@ public class VoucherApplicationService : IVoucherApplicationService
         _mapper = mapper;
     }
 
-    public async Task<IList<VoucherDto>> GetSellerVouchersAsync(string sellerId)
+    public async Task<IList<VoucherDto>> GetAllVouchersAsync(string administratorId)
     {
-        var vouchers = await _voucherDomainService.GetSellerVouchersAsync(sellerId);
+        var vouchers = await _voucherDomainService.GetAllVouchersAsync(administratorId);
 
         return _mapper.Map<IList<VoucherDto>>(vouchers);
     }

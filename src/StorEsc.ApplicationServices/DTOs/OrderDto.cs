@@ -1,12 +1,12 @@
 ﻿namespace StorEsc.Application.Dtos;
 
-public class OrderDto : BaseDto
+public record OrderDto : BaseDto
 {
-    public Guid CustomerId { get; set; }
-    public Guid? VoucherId { get; set; }
-    public decimal TotalValue { get; set;  }
-    public bool IsPaid { get; set; }
-    public CustomerDto Customer { get; set; }
-    public VoucherDto Voucher { get; set; }
-    public IList<OrderItemDto> OrderItens { get; set; }
+    public Guid CustomerId { get; init; }
+    public Guid? VoucherId { get; init; }
+    public decimal TotalValue { get; init;  }
+    public bool IsPaid { get; init; }
+    public CustomerDto Customer { get; init; }
+    public VoucherDto Voucher { get; init; }
+    public IList<OrderItemDto> OrderItens { get; init; }
 }

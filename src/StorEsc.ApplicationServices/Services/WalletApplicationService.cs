@@ -18,12 +18,6 @@ public class WalletApplicationService : IWalletApplicationService
         _mapper = mapper;
     }
 
-    public async Task<WalletDto> GetSellerWalletAsync(string sellerId)
-    {
-        var wallet = await _walletDomainService.GetSellerWalletAsync(sellerId);
-        return _mapper.Map<WalletDto>(wallet);
-    }
-
     public async Task<WalletDto> GetCustomerWalletAsync(string customerId)
     {
         var wallet = await _walletDomainService.GetCustomerWalletAsync(customerId);
