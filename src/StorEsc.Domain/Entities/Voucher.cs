@@ -5,7 +5,6 @@ namespace StorEsc.Domain.Entities;
 
 public class Voucher : Entity, IAggregateRoot
 {
-    public Guid SellerId { get; private set; }
     public string Code { get; private set; }
     public decimal? ValueDiscount { get; private set; }
     public decimal? PercentageDiscount { get; private set; }
@@ -14,7 +13,6 @@ public class Voucher : Entity, IAggregateRoot
     
     //EF
     public List<Order> Orders { get; private set; }
-    public Seller Seller { get; private set; }
 
     protected Voucher() { }
     
@@ -26,7 +24,6 @@ public class Voucher : Entity, IAggregateRoot
         bool isPercentageDiscount,
         bool enabled)
     {
-        SellerId = sellerId;
         Code = code;
         ValueDiscount = valueDiscount;
         PercentageDiscount = percentageDiscount;
@@ -44,9 +41,6 @@ public class Voucher : Entity, IAggregateRoot
 
     public void Disable()
         => Enabled = false;
-
-    public void SetSellerId(string sellerId)
-        => SellerId = Guid.Parse(sellerId);
 
     public void CodeToUpper()
         => Code = Code.ToUpper();

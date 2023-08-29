@@ -5,7 +5,6 @@ namespace StorEsc.Domain.Entities;
 
 public class Product : Entity, IAggregateRoot
 {
-    public Guid SellerId { get; private set; }
     public string Name { get; private set; }
     public string Description { get; private set; }
     public decimal Price { get; private set; }
@@ -13,20 +12,17 @@ public class Product : Entity, IAggregateRoot
     public bool Enabled { get; private set; }
     
     //EF
-    public Seller Seller { get; private set; }
     public List<OrderItem> OrderItens { get; private set; }
 
     protected Product() { }
     
     public Product(
-        Guid sellerId,
         string name,
         string description,
         decimal price,
         int stock,
         bool enabled)
     {
-        SellerId = sellerId;
         Name = name;
         Description = description;
         Price = price;
