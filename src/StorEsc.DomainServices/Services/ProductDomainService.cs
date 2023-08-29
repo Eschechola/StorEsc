@@ -10,24 +10,25 @@ namespace StorEsc.DomainServices.Services;
 public class ProductDomainService : IProductDomainService
 {
     private readonly IProductRepository _productRepository;
+    private readonly IAdministratorDomainService _administratorDomainService;
     private readonly IDomainNotificationFacade _domainNotificationFacade;
 
     public ProductDomainService(
         IProductRepository productRepository,
+        IAdministratorDomainService administratorDomainService,
         IDomainNotificationFacade domainNotificationFacade)
     {
+        _administratorDomainService = administratorDomainService;
         _productRepository = productRepository;
         _domainNotificationFacade = domainNotificationFacade;
     }
 
     public async Task<IList<Product>> SearchProductsAsync(
-        string sellerId = "",
         string name = "",
         decimal minimumPrice = 0,
         decimal maximumPrice = 1_000_000,
         OrderBy orderBy = OrderBy.CreatedAtDescending)
     {
-        
         if (minimumPrice < 0 || maximumPrice > 1_000_000)
         {
             await _domainNotificationFacade.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000");
@@ -36,7 +37,8 @@ public class ProductDomainService : IProductDomainService
 
         if (minimumPrice > maximumPrice)
         {
-            await _domainNotificationFacade.PublishEntityDataIsInvalidAsync("Minimum price cannot be greater than maximum price");
+            await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(
+                "Minimum price cannot be greater than maximum price");
             return new List<Product>();
         }
 
@@ -45,12 +47,21 @@ public class ProductDomainService : IProductDomainService
             await _domainNotificationFacade.PublishEntityDataIsInvalidAsync("Name can be between 1 and 200 characters");
             return new List<Product>();
         }
-        
-        return await _productRepository.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice, orderBy);
+
+        return await _productRepository.SearchProductsAsync(name, minimumPrice, maximumPrice, orderBy);
     }
-    
-    public async Task<Optional<Product>> UpdateProductAsync(string productId, string sellerId, Product productUpdated)
+
+    public async Task<Optional<Product>> UpdateProductAsync(string productId, string administratorId,
+        Product productUpdated)
     {
+        var administratorIsValid = await _administratorDomainService.ValidateAdministratorAsync(administratorId);
+
+        if (administratorIsValid is false)
+        {
+            await _domainNotificationFacade.PublishForbiddenAsync();
+            return new Optional<Product>();
+        }
+        
         var exists = await _productRepository.ExistsByIdAsync(productId);
 
         if (exists is false)
@@ -61,17 +72,11 @@ public class ProductDomainService : IProductDomainService
 
         var product = await _productRepository.GetByIdAsync(productId);
 
-        if (product.SellerId.ToString() != sellerId)
-        {
-            await _domainNotificationFacade.PublishForbiddenAsync();
-            return new Optional<Product>();
-        }
-
         product.SetName(productUpdated.Name);
         product.SetDescription(productUpdated.Description);
         product.SetPrice(productUpdated.Price);
         product.SetStock(productUpdated.Stock);
-        
+
         product.Validate();
 
         if (product.IsInvalid())
@@ -86,8 +91,16 @@ public class ProductDomainService : IProductDomainService
         return product;
     }
 
-    public async Task<bool> DisableProductAsync(string productId, string sellerId)
+    public async Task<bool> DisableProductAsync(string productId, string administratorId)
     {
+        var administratorIsValid = await _administratorDomainService.ValidateAdministratorAsync(administratorId);
+
+        if (administratorIsValid is false)
+        {
+            await _domainNotificationFacade.PublishForbiddenAsync();
+            return false;
+        }
+
         var exists = await _productRepository.ExistsByIdAsync(productId);
 
         if (exists is false)
@@ -97,12 +110,6 @@ public class ProductDomainService : IProductDomainService
         }
 
         var product = await _productRepository.GetByIdAsync(productId);
-
-        if (product.SellerId.ToString() != sellerId)
-        {
-            await _domainNotificationFacade.PublishForbiddenAsync();
-            return false;
-        }
 
         if (product.Enabled)
         {
@@ -113,9 +120,17 @@ public class ProductDomainService : IProductDomainService
 
         return true;
     }
-    
-    public async Task<bool> EnableProductAsync(string productId, string sellerId)
+
+    public async Task<bool> EnableProductAsync(string productId, string administratorId)
     {
+        var administratorIsValid = await _administratorDomainService.ValidateAdministratorAsync(administratorId);
+
+        if (administratorIsValid is false)
+        {
+            await _domainNotificationFacade.PublishForbiddenAsync();
+            return false;
+        }
+
         var exists = await _productRepository.ExistsByIdAsync(productId);
 
         if (exists is false)
@@ -126,51 +141,40 @@ public class ProductDomainService : IProductDomainService
 
         var product = await _productRepository.GetByIdAsync(productId);
 
-        if (product.SellerId.ToString() != sellerId)
-        {
-            await _domainNotificationFacade.PublishForbiddenAsync();
-            return false;
-        }
-
         if (product.Enabled)
             return true;
-        
+
         product.Enable();
         _productRepository.Update(product);
         await _productRepository.UnitOfWork.SaveChangesAsync();
-        
+
         return true;
     }
 
-    public async Task<IList<Product>> GetLastProductsAsync()
+    public async Task<IList<Product>> GetLatestProductsAsync()
+        => await SearchProductsAsync(orderBy: OrderBy.CreatedAtDescending);
+
+    public async Task<Optional<Product>> CreateProductAsync(string administratorId, Product product)
     {
-        Func<IQueryable<Product>, IOrderedQueryable<Product>> orderFilter = order => order.OrderByDescending(property => property.CreatedAt);
-        return await _productRepository.GetAllAsync(
-            entity => entity.Enabled,
-            orderBy: orderFilter);
-    }
+        var administratorIsValid = await _administratorDomainService.ValidateAdministratorAsync(administratorId);
 
-    public async Task<Optional<Product>> CreateProductAsync(Product product)
-    {
-        try
+        if (administratorIsValid is false)
         {
-            product.Validate();
-
-            if (product.IsInvalid())
-            {
-                await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(product.ErrorsToString());
-                return new Optional<Product>();
-            }
-
-            _productRepository.Create(product);
-            await _productRepository.UnitOfWork.SaveChangesAsync();
-
-            return product;
-        }
-        catch (Exception)
-        {
-            await _domainNotificationFacade.PublishInternalServerErrorAsync();
+            await _domainNotificationFacade.PublishForbiddenAsync();
             return new Optional<Product>();
         }
+        
+        product.Validate();
+
+        if (product.IsInvalid())
+        {
+            await _domainNotificationFacade.PublishEntityDataIsInvalidAsync(product.ErrorsToString());
+            return new Optional<Product>();
+        }
+
+        _productRepository.Create(product);
+        await _productRepository.UnitOfWork.SaveChangesAsync();
+
+        return product;
     }
 }

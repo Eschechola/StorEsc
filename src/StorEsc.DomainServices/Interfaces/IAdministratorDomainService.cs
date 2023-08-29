@@ -7,4 +7,5 @@ public interface IAdministratorDomainService
 {
     Task<Optional<Administrator>> AuthenticateAdministratorAsync(string email, string password);
     Task<bool> EnableDefaultAdministratorAsync();
+    Task<bool> ValidateAdministratorAsync(string administratorId);
 }

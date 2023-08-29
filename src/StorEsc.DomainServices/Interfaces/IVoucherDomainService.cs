@@ -5,6 +5,6 @@ namespace StorEsc.DomainServices.Interfaces;
 
 public interface IVoucherDomainService
 {
-    Task<Optional<Voucher>> CreateVoucherAsync(string sellerId, Voucher voucher);
-    Task<IList<Voucher>> GetSellerVouchersAsync(string sellerId);
+    Task<Optional<Voucher>> CreateVoucherAsync(string administratorId, Voucher voucher);
+    Task<IList<Voucher>> GetAllVouchersAsync(string administratorId);
 }
