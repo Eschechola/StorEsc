@@ -1,9 +1,9 @@
 ﻿namespace StorEsc.Application.Dtos;
 
-public abstract class AccountDto : BaseDto
+public abstract record AccountDto : BaseDto
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string FirstName { get; init; }
+    public string LastName { get; init; }
+    public string Email { get; init; }
+    public string Password { get; init; }
 }

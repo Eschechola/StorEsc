@@ -1,6 +1,6 @@
 ﻿namespace StorEsc.Application.Dtos;
 
-public class WalletDto : BaseDto
+public record WalletDto : BaseDto
 {
-    public decimal Amount { get; set; }
+    public decimal Amount { get; init; }
 }

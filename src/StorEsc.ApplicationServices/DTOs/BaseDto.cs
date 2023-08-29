@@ -1,8 +1,8 @@
 ﻿namespace StorEsc.Application.Dtos;
 
-public abstract class BaseDto
+public abstract record BaseDto
 {
-    public Guid Id { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public Guid Id { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
 }
