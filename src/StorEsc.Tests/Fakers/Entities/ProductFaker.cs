@@ -12,7 +12,6 @@ public class ProductFaker : BaseFaker<Product>
 
     public override Product GetValid()
         => new Product(
-            sellerId: Guid.NewGuid(),
             name: _commerceFaker.ProductName(),
             description: _loremFaker.Paragraph(3),
             price: _randomizerFaker.Decimal(0, 10_000),
@@ -21,7 +20,6 @@ public class ProductFaker : BaseFaker<Product>
 
     public override Product GetInvalid()
         => new Product(
-            sellerId: Guid.Empty,
             name: "",
             description: "",
             price: 0,

@@ -1,7 +1,5 @@
 ﻿using Bogus;
-using Bogus.DataSets;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using StorEsc.Core.Communication.Mediator.Interfaces;
 using StorEsc.Core.Enums;
@@ -11,17 +9,17 @@ using StorEsc.DomainServices.Services;
 using StorEsc.Infrastructure.Interfaces.Repositories;
 using StorEsc.Tests.Fakers.Entities;
 using Xunit;
-using static Microsoft.EntityFrameworkCore.EF;
 
 namespace StorEsc.Tests.Projects.DomainServices;
 
 public class ProductDomainServiceTests
 {
     #region Properties
-    
+
     private readonly IProductDomainService _sut;
 
     private readonly Mock<IProductRepository> _productRepositoryMock;
+    private readonly Mock<IAdministratorDomainService> _administratorDomainServiceMock;
     private readonly Mock<IDomainNotificationFacade> _domainNotificationFacadeMock;
 
     private readonly ProductFaker _productFaker;
@@ -35,81 +33,75 @@ public class ProductDomainServiceTests
     public ProductDomainServiceTests()
     {
         _defaultFaker = new Faker();
-        
+
         _productFaker = new ProductFaker();
-        
+
         _productRepositoryMock = new Mock<IProductRepository>();
+        _administratorDomainServiceMock = new Mock<IAdministratorDomainService>();
         _domainNotificationFacadeMock = new Mock<IDomainNotificationFacade>();
 
         _sut = new ProductDomainService(
             productRepository: _productRepositoryMock.Object,
+            administratorDomainService: _administratorDomainServiceMock.Object,
             domainNotificationFacade: _domainNotificationFacadeMock.Object);
     }
 
     #endregion
-    
-    #region GetLastProductsAsync
 
-    [Fact(DisplayName = "GetLastProductsAsync when products found returns product list")]
-    [Trait("ProductDomainService", "GetLastProductsAsync")]
-    public async Task GetLastProductsAsync_WhenProductsFound_ReturnsProductList()
+    #region GetLatestProductsAsync
+
+    [Fact(DisplayName = "GetLatestProductsAsync when no products found returns empty list")]
+    [Trait("ProductDomainService", "GetLatestProductsAsync")]
+    public async Task GetLatestProductsAsync_WhenNoProductsFound_ReturnsEmptyList()
     {
         // Arrange
         var products = _productFaker.GetValidList();
-        
-        _productRepositoryMock.Setup(setup => setup.GetAllAsync(
-                entity => entity.Enabled,
-                string.Empty,
-                It.IsAny<Func<IQueryable<Product>, IOrderedQueryable<Product>>>(),
-                true,
-                null))
-            .ReturnsAsync(products);
+
+        _productRepositoryMock.Setup(setup => setup.SearchProductsAsync(
+                It.IsAny<string>(),
+                It.IsAny<decimal>(),
+                It.IsAny<decimal>(),
+                OrderBy.CreatedAtDescending))
+            .ReturnsAsync(new List<Product>());
 
         // Act
-        var result = await _sut.GetLastProductsAsync();
+        var result = await _sut.GetLatestProductsAsync();
 
         // Assert
-        _productRepositoryMock.Verify(setup => setup.GetAllAsync(
-                entity => entity.Enabled,
-                string.Empty,
-                It.IsAny<Func<IQueryable<Product>, IOrderedQueryable<Product>>>(),
-                true,
-                null),
+        _productRepositoryMock.Verify(setup => setup.SearchProductsAsync(
+                It.IsAny<string>(),
+                It.IsAny<decimal>(),
+                It.IsAny<decimal>(),
+                OrderBy.CreatedAtDescending),
             Times.Once);
 
         result.Should()
-            .NotBeNull()
-            .And
-            .NotBeEmpty()
-            .And
-            .BeEquivalentTo(products);
+            .BeEmpty();
     }
-    
-    [Fact(DisplayName = "GetLastProductsAsync when anyone product found returns empty list")]
-    [Trait("ProductDomainService", "GetLastProductsAsync")]
-    public async Task GetLastProductsAsync_WhenAnyoneProductFound_ReturnsEmptyList()
+
+    [Fact(DisplayName = "GetLatestProductsAsync when any product found returns empty list")]
+    [Trait("ProductDomainService", "GetLatestProductsAsync")]
+    public async Task GetLatestProductsAsync_WhenAnyProductFound_ReturnsEmptyList()
     {
         // Arrange
         var products = new List<Product>();
 
-        _productRepositoryMock.Setup(setup => setup.GetAllAsync(
-                entity => entity.Enabled,
-                string.Empty,
-                It.IsAny<Func<IQueryable<Product>, IOrderedQueryable<Product>>>(),
-                true,
-                null))
+        _productRepositoryMock.Setup(setup => setup.SearchProductsAsync(
+                It.IsAny<string>(),
+                It.IsAny<decimal>(),
+                It.IsAny<decimal>(),
+                OrderBy.CreatedAtDescending))
             .ReturnsAsync(products);
 
         // Act
-        var result = await _sut.GetLastProductsAsync();
+        var result = await _sut.GetLatestProductsAsync();
 
         // Assert
-        _productRepositoryMock.Verify(setup => setup.GetAllAsync(
-                entity => entity.Enabled,
-                string.Empty,
-                It.IsAny<Func<IQueryable<Product>, IOrderedQueryable<Product>>>(),
-                true,
-                null),
+        _productRepositoryMock.Verify(setup => setup.SearchProductsAsync(
+                It.IsAny<string>(),
+                It.IsAny<decimal>(),
+                It.IsAny<decimal>(),
+                OrderBy.CreatedAtDescending),
             Times.Once);
 
         result.Should()
@@ -121,8 +113,37 @@ public class ProductDomainServiceTests
     }
 
     #endregion
-    
+
     #region CreateProductAsync
+
+    [Fact(DisplayName =
+        "CreateProductAsync when administrator is not valid throw notification and returns empty optional")]
+    [Trait("ProductDomainService", "CreateProductAsync")]
+    public async Task CreateProductAsync_WhenAdministratorIsNotValid_ThrowNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var product = _productFaker.GetInvalid();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(false);
+
+        _domainNotificationFacadeMock.Setup(setup => setup.PublishForbiddenAsync())
+            .Verifiable();
+
+        // Act
+        var result = await _sut.CreateProductAsync(administratorId, product);
+
+        // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
+            Times.Once);
+
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
 
     [Fact(DisplayName = "CreateProductAsync when product is not valid throw notification and returns empty optional")]
     [Trait("ProductDomainService", "CreateProductAsync")]
@@ -130,41 +151,26 @@ public class ProductDomainServiceTests
     {
         // Arrange
         var product = _productFaker.GetInvalid();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
 
         _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync(
                 It.IsAny<string>()))
             .Verifiable();
 
         // Act
-        var result = await _sut.CreateProductAsync(product);
+        var result = await _sut.CreateProductAsync(administratorId, product);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(setup => setup.PublishEntityDataIsInvalidAsync(
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync(
                 It.IsAny<string>()),
             Times.Once);
 
-        result.IsEmpty.Should()
-            .BeTrue();
-    }
-
-    [Fact(DisplayName =
-        "CreateProductAsync when any exception has throw throw notification and returns empty optional")]
-    [Trait("ProductDomainService", "CreateProductAsync")]
-    public async Task CreateProductAsync_WhenAnyExceptionHasThrow_ThrowNotificationAndReturnsEmptyOptional()
-    {
-        // Arrange
-        var product = _productFaker.GetValid();
-
-        _productRepositoryMock.Setup(setup => setup.Create(product))
-            .Throws(new Exception("Some exception!"));
-
-        // Act
-        var result = await _sut.CreateProductAsync(product);
-
-        // Assert
-        _domainNotificationFacadeMock.Verify(setup=> setup.PublishInternalServerErrorAsync(),
-            Times.Once);
-        
         result.IsEmpty.Should()
             .BeTrue();
     }
@@ -175,34 +181,69 @@ public class ProductDomainServiceTests
     {
         // Arrange
         var product = _productFaker.GetValid();
-        
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
+
         _productRepositoryMock.Setup(setup => setup.Create(product))
             .Verifiable();
-        
+
         _productRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .Verifiable();
-        
+
         // Act
-        var result = await _sut.CreateProductAsync(product);
+        var result = await _sut.CreateProductAsync(administratorId, product);
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
 
         _productRepositoryMock.Verify(setup => setup.Create(product),
             Times.Once);
 
         _productRepositoryMock.Verify(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
             Times.Once());
-        
+
         result.IsEmpty.Should()
             .BeFalse();
 
         result.Value.Should()
             .BeEquivalentTo(product);
     }
-    
+
     #endregion
-    
+
     #region UpdateProductAsync
+
+    [Fact(DisplayName =
+        "UpdateProductAsync when administrator is not valid throw notification and return empty optional")]
+    [Trait("ProductDomainService", "UpdateProductAsync")]
+    public async Task UpdateProductAsync_WhenAdministratorIsNotValid_ThrowNotificationAndReturnEmptyOptional()
+    {
+        // Arrange
+        var product = _productFaker.GetValid();
+        var productId = product.Id.ToString();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _sut.UpdateProductAsync(productId, administratorId, product);
+
+        // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
+        _domainNotificationFacadeMock.Verify(
+            verify => verify.PublishForbiddenAsync(),
+            Times.Once);
+
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
+
 
     [Fact(DisplayName = "UpdateProductAsync when product not exists throw notification and return empty optional")]
     [Trait("ProductDomainService", "UpdateProductAsync")]
@@ -211,20 +252,26 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var sellerId = product.SellerId.ToString();
+        var administratorId = Guid.NewGuid().ToString();
 
-        _productRepositoryMock.Setup(setup => 
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup =>
                 setup.ExistsByIdAsync(productId))
             .ReturnsAsync(false);
 
         // Act
-        var result = await _sut.UpdateProductAsync(productId, sellerId, product);
+        var result = await _sut.UpdateProductAsync(productId, administratorId, product);
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
         _productRepositoryMock.Verify(verify =>
                 verify.ExistsByIdAsync(productId),
             Times.Once);
-        
+
         _domainNotificationFacadeMock.Verify(
             verify => verify.PublishNotFoundAsync("Product"),
             Times.Once);
@@ -232,44 +279,7 @@ public class ProductDomainServiceTests
         result.IsEmpty.Should()
             .BeTrue();
     }
-    
-    [Fact(DisplayName = "UpdateProductAsync when seller is not owner of product throw notification and return empty optional")]
-    [Trait("ProductDomainService", "UpdateProductAsync")]
-    public async Task UpdateProductAsync_WhenSellerIsNotOwnerOfProduct_ThrowNotificationAndReturnEmptyOptional()
-    {
-        // Arrange
-        var product = _productFaker.GetValid();
-        var productId = product.Id.ToString();
-        var sellerId = Guid.NewGuid().ToString();
 
-        _productRepositoryMock.Setup(setup => 
-                setup.ExistsByIdAsync(productId))
-            .ReturnsAsync(true);
-
-        _productRepositoryMock.Setup(setup =>
-                setup.GetByIdAsync(productId))
-            .ReturnsAsync(product);
-
-        // Act
-        var result = await _sut.UpdateProductAsync(productId, sellerId, product);
-
-        // Assert
-        _productRepositoryMock.Verify(verify =>
-                verify.ExistsByIdAsync(productId),
-            Times.Once);
-        
-        _productRepositoryMock.Verify(verify =>
-                verify.GetByIdAsync(productId),
-            Times.Once);
-        
-        _domainNotificationFacadeMock.Verify(
-            verify => verify.PublishForbiddenAsync(),
-            Times.Once);
-
-        result.IsEmpty.Should()
-            .BeTrue();
-    }
-    
     [Fact(DisplayName = "UpdateProductAsync when product data is invalid throw notification and return empty optional")]
     [Trait("ProductDomainService", "UpdateProductAsync")]
     public async Task UpdateProductAsync_WhenProductDataIsInvalid_ThrowNotificationAndReturnEmptyOptional()
@@ -277,9 +287,12 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetInvalid();
         var productId = product.Id.ToString();
-        var sellerId = product.SellerId.ToString();
+        var administratorId = Guid.NewGuid().ToString();
 
-        _productRepositoryMock.Setup(setup => 
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup =>
                 setup.ExistsByIdAsync(productId))
             .ReturnsAsync(true);
 
@@ -288,17 +301,20 @@ public class ProductDomainServiceTests
             .ReturnsAsync(product);
 
         // Act
-        var result = await _sut.UpdateProductAsync(productId, sellerId, product);
+        var result = await _sut.UpdateProductAsync(productId, administratorId, product);
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
         _productRepositoryMock.Verify(verify =>
                 verify.ExistsByIdAsync(productId),
             Times.Once);
-        
+
         _productRepositoryMock.Verify(verify =>
                 verify.GetByIdAsync(productId),
             Times.Once);
-        
+
         _domainNotificationFacadeMock.Verify(
             verify => verify.PublishEntityDataIsInvalidAsync(It.IsAny<string>()),
             Times.Once);
@@ -306,7 +322,7 @@ public class ProductDomainServiceTests
         result.IsEmpty.Should()
             .BeTrue();
     }
-    
+
     [Fact(DisplayName = "UpdateProductAsync when product is valid create and return product updated")]
     [Trait("ProductDomainService", "UpdateProductAsync")]
     public async Task UpdateProductAsync_WhenProductIsValid_CreateAndReturnProductUpdated()
@@ -314,32 +330,38 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var sellerId = product.SellerId.ToString();
+        var administratorId = Guid.NewGuid().ToString();
 
-        _productRepositoryMock.Setup(setup => 
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
+
+        _productRepositoryMock.Setup(setup =>
                 setup.ExistsByIdAsync(productId))
             .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup =>
                 setup.GetByIdAsync(productId))
             .ReturnsAsync(product);
-        
+
         _productRepositoryMock.Setup(setup =>
                 setup.Update(product))
             .Verifiable();
-        
+
         _productRepositoryMock.Setup(setup =>
                 setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .Verifiable();
 
         // Act
-        var result = await _sut.UpdateProductAsync(productId, sellerId, product);
+        var result = await _sut.UpdateProductAsync(productId, administratorId, product);
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
         _productRepositoryMock.Verify(verify =>
                 verify.ExistsByIdAsync(productId),
             Times.Once);
-        
+
         _productRepositoryMock.Verify(verify =>
                 verify.GetByIdAsync(productId),
             Times.Once);
@@ -351,7 +373,7 @@ public class ProductDomainServiceTests
         _productRepositoryMock.Verify(verify =>
                 verify.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
             Times.Once);
-        
+
         result.IsEmpty.Should()
             .BeFalse();
 
@@ -363,48 +385,53 @@ public class ProductDomainServiceTests
 
     #region DisableProductAsync
 
+    [Fact(DisplayName = "DisableProductAsync when administrator is not valid throw notification and return false")]
+    [Trait("ProductDomainService", "DisableProductAsync")]
+    public async Task DisableProductAsync_WhenAdministratorIsNotValid_ThrowNotificationAndReturnFalse()
+    {
+        // Arrange
+        var productId = Guid.NewGuid().ToString();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _sut.DisableProductAsync(productId, administratorId);
+
+        // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
+            Times.Once);
+
+        result.Should()
+            .BeFalse();
+    }
+
     [Fact(DisplayName = "DisableProductAsync when product not exists throw notification and return false")]
     [Trait("ProductDomainService", "DisableProductAsync")]
     public async Task DisableProductAsync_WhenProductNotExists_ThrowNotificationAndReturnFalse()
     {
         // Arrange
         var productId = Guid.NewGuid().ToString();
-        var sellerId = Guid.NewGuid().ToString();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
             .ReturnsAsync(false);
 
         // Act
-        var result = await _sut.DisableProductAsync(productId, sellerId);
+        var result = await _sut.DisableProductAsync(productId, administratorId);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishNotFoundAsync("Product"),
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
             Times.Once);
-        
-        result.Should()
-            .BeFalse();
-    }
 
-    [Fact(DisplayName = "DisableProductAsync when seller is not owner of product throw notification and return false")]
-    [Trait("ProductDomainService", "DisableProductAsync")]
-    public async Task DisableProductAsync_WhenSellerIsNotOwnerOfProduct_ThrowNotificationAndReturnFalse()
-    {
-        // Arrange
-        var product = _productFaker.GetValid();
-        var productId = product.Id.ToString();
-        var sellerId = Guid.NewGuid().ToString();
-
-        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
-            .ReturnsAsync(true);
-
-        _productRepositoryMock.Setup(setup => setup.GetByIdAsync(productId))
-            .ReturnsAsync(product);
-
-        // Act
-        var result = await _sut.DisableProductAsync(productId, sellerId);
-
-        // Assert
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishNotFoundAsync("Product"),
             Times.Once);
 
         result.Should()
@@ -418,7 +445,10 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var sellerId = product.SellerId.ToString();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
             .ReturnsAsync(true);
@@ -430,9 +460,12 @@ public class ProductDomainServiceTests
             .Verifiable();
 
         // Act
-        var result = await _sut.DisableProductAsync(productId, sellerId);
+        var result = await _sut.DisableProductAsync(productId, administratorId);
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
         _productRepositoryMock.Verify(verify => verify.Update(It.IsAny<Product>()),
             Times.Once);
 
@@ -450,7 +483,10 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var sellerId = product.SellerId.ToString();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
 
         product.Disable();
 
@@ -461,9 +497,12 @@ public class ProductDomainServiceTests
             .ReturnsAsync(product);
 
         // Act
-        var result = await _sut.DisableProductAsync(productId, sellerId);
+        var result = await _sut.DisableProductAsync(productId, administratorId);
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
         result.Should()
             .BeTrue();
     }
@@ -472,48 +511,53 @@ public class ProductDomainServiceTests
 
     #region EnableProductAsync
 
-    [Fact(DisplayName = "EnableProductAsync when product not exists throw notification and return false")]
+    [Fact(DisplayName = "EnableProductAsync when administrator is not valid throw notification and return false")]
     [Trait("ProductDomainService", "DisableProductAsync")]
-    public async Task EnableProductAsync_WhenProductNotExists_ThrowNotificationAndReturnFalse()
+    public async Task EnableProductAsync_WhenAdministratorIsNotValid_ThrowNotificationAndReturnFalse()
     {
         // Arrange
         var productId = Guid.NewGuid().ToString();
-        var sellerId = Guid.NewGuid().ToString();
+        var administratorId = Guid.NewGuid().ToString();
 
-        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
             .ReturnsAsync(false);
 
         // Act
-        var result = await _sut.EnableProductAsync(productId, sellerId);
+        var result = await _sut.EnableProductAsync(productId, administratorId);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishNotFoundAsync("Product"),
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
             Times.Once);
 
         result.Should()
             .BeFalse();
     }
 
-    [Fact(DisplayName = "EnableProductAsync when seller is not owner of product throw notification and return false")]
+    [Fact(DisplayName = "EnableProductAsync when product not exists throw notification and return false")]
     [Trait("ProductDomainService", "DisableProductAsync")]
-    public async Task EnableProductAsync_WhenSellerIsNotOwnerOfProduct_ThrowNotificationAndReturnFalse()
+    public async Task EnableProductAsync_WhenProductNotExists_ThrowNotificationAndReturnFalse()
     {
         // Arrange
-        var product = _productFaker.GetValid();
-        var productId = product.Id.ToString();
-        var sellerId = Guid.NewGuid().ToString();
+        var productId = Guid.NewGuid().ToString();
+        var administratorId = Guid.NewGuid().ToString();
 
-        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
             .ReturnsAsync(true);
 
-        _productRepositoryMock.Setup(setup => setup.GetByIdAsync(productId))
-            .ReturnsAsync(product);
+        _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
+            .ReturnsAsync(false);
 
         // Act
-        var result = await _sut.EnableProductAsync(productId, sellerId);
+        var result = await _sut.EnableProductAsync(productId, administratorId);
 
         // Assert
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
+        _domainNotificationFacadeMock.Verify(verify => verify.PublishNotFoundAsync("Product"),
             Times.Once);
 
         result.Should()
@@ -527,7 +571,10 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var sellerId = product.SellerId.ToString();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
 
         product.Disable();
 
@@ -541,9 +588,12 @@ public class ProductDomainServiceTests
             .Verifiable();
 
         // Act
-        var result = await _sut.EnableProductAsync(productId, sellerId);
+        var result = await _sut.EnableProductAsync(productId, administratorId);
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
         _productRepositoryMock.Verify(verify => verify.Update(It.IsAny<Product>()),
             Times.Once);
 
@@ -561,7 +611,10 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var sellerId = product.SellerId.ToString();
+        var administratorId = Guid.NewGuid().ToString();
+
+        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
+            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
             .ReturnsAsync(true);
@@ -570,9 +623,12 @@ public class ProductDomainServiceTests
             .ReturnsAsync(product);
 
         // Act
-        var result = await _sut.EnableProductAsync(productId, sellerId);
+        var result = await _sut.EnableProductAsync(productId, administratorId);
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
+            Times.Once);
+
         result.Should()
             .BeTrue();
     }
@@ -587,21 +643,23 @@ public class ProductDomainServiceTests
     public async Task SearchProductsAsync_WhenMinimumPriceIsLowerThanZero_ThrowNotificationAndReturnsEmptyList()
     {
         // Arrange
-        var sellerId = "";
         var name = "test";
-        var minimumPrice = -1;;
+        var minimumPrice = -1;
+        ;
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
+        _domainNotificationFacadeMock.Setup(setup =>
+                setup.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
             .Verifiable();
-        
+
         // Act
-        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice);
+        var result = await _sut.SearchProductsAsync(name, minimumPrice);
 
         // Assert
         result.Should()
             .BeEmpty();
-        
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
+
+        _domainNotificationFacadeMock.Verify(
+            verify => verify.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
             Times.Once);
     }
 
@@ -611,100 +669,105 @@ public class ProductDomainServiceTests
     public async Task SearchProductsAsync_WhenMaximumPriceIsGreaterThan1kk_ThrowNotificationAndReturnsEmptyList()
     {
         // Arrange
-        var sellerId = "";
         var name = "test";
         var minimumPrice = 5;
         var maximumPrice = 1_000_001;
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
+        _domainNotificationFacadeMock.Setup(setup =>
+                setup.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"))
             .Verifiable();
-        
+
         // Act
-        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+        var result = await _sut.SearchProductsAsync(name, minimumPrice, maximumPrice);
 
         // Assert
         result.Should()
             .BeEmpty();
-        
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
+
+        _domainNotificationFacadeMock.Verify(
+            verify => verify.PublishEntityDataIsInvalidAsync("Prices should be between 0 and 1.000.000"),
             Times.Once);
     }
-    
+
     [Fact(DisplayName =
         "SearchProductsAsync when minimumPrice is greater than maximumPrice throw notification and return empty list")]
     [Trait("ProductDomainService", "SearchProductsAsync")]
-    public async Task SearchProductsAsync_WhenMinimumPriceIsGreaterThanMaximumPrice_ThrowNotificationAndReturnsEmptyList()
+    public async Task
+        SearchProductsAsync_WhenMinimumPriceIsGreaterThanMaximumPrice_ThrowNotificationAndReturnsEmptyList()
     {
         // Arrange
-        var sellerId = "";
         var name = "test";
         var minimumPrice = 100_001;
         var maximumPrice = 5;
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync("Minimum price cannot be greater than maximum price"))
+        _domainNotificationFacadeMock.Setup(setup =>
+                setup.PublishEntityDataIsInvalidAsync("Minimum price cannot be greater than maximum price"))
             .Verifiable();
-        
+
         // Act
-        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+        var result = await _sut.SearchProductsAsync(name, minimumPrice, maximumPrice);
 
         // Assert
         result.Should()
             .BeEmpty();
-        
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync("Minimum price cannot be greater than maximum price"),
+
+        _domainNotificationFacadeMock.Verify(
+            verify => verify.PublishEntityDataIsInvalidAsync("Minimum price cannot be greater than maximum price"),
             Times.Once);
     }
-    
+
     [Fact(DisplayName =
         "SearchProductsAsync when name lenght is greater than 200 throw notification and return empty list")]
     [Trait("ProductDomainService", "SearchProductsAsync")]
     public async Task SearchProductsAsync_WhenNameLenghtIsGreaterThan200_ThrowNotificationAndReturnsEmptyList()
     {
         // Arrange
-        var sellerId = "";
         var name = _defaultFaker.Random.String(201);
         var minimumPrice = 5;
         var maximumPrice = 100_000;
 
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync("Name can be between 1 and 200 characters"))
+        _domainNotificationFacadeMock.Setup(setup =>
+                setup.PublishEntityDataIsInvalidAsync("Name can be between 1 and 200 characters"))
             .Verifiable();
-        
+
         // Act
-        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+        var result = await _sut.SearchProductsAsync(name, minimumPrice, maximumPrice);
 
         // Assert
         result.Should()
             .BeEmpty();
-        
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync("Name can be between 1 and 200 characters"),
+
+        _domainNotificationFacadeMock.Verify(
+            verify => verify.PublishEntityDataIsInvalidAsync("Name can be between 1 and 200 characters"),
             Times.Once);
     }
-    
+
     [Fact(DisplayName =
         "SearchProductsAsync when parameters is ok return found products")]
     [Trait("ProductDomainService", "SearchProductsAsync")]
     public async Task SearchProductsAsync_WhenParametersIsOk_ReturnFoundProducts()
     {
         // Arrange
-        var sellerId = "";
         var name = _defaultFaker.Random.String(35);
         var minimumPrice = 5;
         var maximumPrice = 1_000_000;
         var products = _productFaker.GetValidList();
-        
-        _productRepositoryMock.Setup(setup => setup.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice, It.IsAny<OrderBy>()))
+
+        _productRepositoryMock.Setup(setup =>
+                setup.SearchProductsAsync(name, minimumPrice, maximumPrice, It.IsAny<OrderBy>()))
             .ReturnsAsync(products);
-        
+
         // Act
-        var result = await _sut.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice);
+        var result = await _sut.SearchProductsAsync(name, minimumPrice, maximumPrice);
 
         // Assert
         result.Should()
             .BeEquivalentTo(products);
-        
-        _productRepositoryMock.Verify(verify => verify.SearchProductsAsync(sellerId, name, minimumPrice, maximumPrice, It.IsAny<OrderBy>()),
+
+        _productRepositoryMock.Verify(
+            verify => verify.SearchProductsAsync(name, minimumPrice, maximumPrice, It.IsAny<OrderBy>()),
             Times.Once);
     }
-    
+
     #endregion
 }
