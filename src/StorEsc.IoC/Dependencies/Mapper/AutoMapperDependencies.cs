@@ -9,7 +9,6 @@ public static class AutoMapperDependencies
     {
         services.AddAutoMapper(typeof(AdministratorProfile));
         services.AddAutoMapper(typeof(CustomerProfile));
-        services.AddAutoMapper(typeof(SellerProfile));
         services.AddAutoMapper(typeof(WalletProfile));
         services.AddAutoMapper(typeof(OrderProfile));
         services.AddAutoMapper(typeof(ProductProfile));
