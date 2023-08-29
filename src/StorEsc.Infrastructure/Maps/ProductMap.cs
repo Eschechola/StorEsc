@@ -12,11 +12,6 @@ public class ProductMap : BaseMap<Product>
         
         base.Configure(builder);
         
-        builder.Property(product => product.SellerId)
-            .IsRequired()
-            .HasColumnType("VARCHAR(36)")
-            .HasColumnName("SellerId");
-        
         builder.Property(product => product.Name)
             .IsRequired()
             .HasColumnType("VARCHAR(200)")
@@ -42,9 +37,5 @@ public class ProductMap : BaseMap<Product>
             .HasDefaultValue(0)
             .HasColumnType("BIT")
             .HasColumnName("Enabled");
-        
-        builder.HasOne(product => product.Seller)
-            .WithMany(seller => seller.Products)
-            .HasForeignKey(product => product.SellerId);
     }
 }

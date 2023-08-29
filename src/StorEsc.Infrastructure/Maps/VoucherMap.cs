@@ -11,11 +11,6 @@ public class VoucherMap : BaseMap<Voucher>
         builder.ToTable("Voucher", "ste");
         
         base.Configure(builder);
-
-        builder.Property(entity => entity.SellerId)
-            .IsRequired()
-            .HasColumnName("SellerId")
-            .HasColumnType("VARCHAR(36)");
         
         builder.Property(voucher => voucher.Code)
             .IsRequired()
@@ -41,9 +36,5 @@ public class VoucherMap : BaseMap<Voucher>
         builder.Property(voucher => voucher.PercentageDiscount)
             .HasColumnName("PercentageDiscount")
             .HasColumnType("DECIMAL(14,9)");
-
-        builder.HasOne(voucher => voucher.Seller)
-            .WithMany(seller => seller.Vouchers)
-            .HasForeignKey(voucher => voucher.SellerId);
     }
 }
