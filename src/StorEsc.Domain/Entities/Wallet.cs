@@ -9,7 +9,6 @@ public class Wallet : Entity, IAggregateRoot
 
     //EF
     public IList<Customer> Customers { get; private set; }
-    public IList<Seller> Sellers { get; private set; }
     public List<Recharge> Recharges { get; private set; }
 
     
