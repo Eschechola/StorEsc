@@ -10,7 +10,6 @@ public static class RepositoriesDependencies
     {
         services.AddScoped<IAdministratorRepository, AdministratorRepository>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();
-        services.AddScoped<ISellerRepository, SellerRepository>();
         services.AddScoped<IWalletRepository, WalletRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IRechargeRepository, RechargeRepository>();

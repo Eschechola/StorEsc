@@ -9,7 +9,6 @@ public static class DomainServicesDependencies
     public static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
         services.AddScoped<ICustomerDomainService, CustomerDomainService>();
-        services.AddScoped<ISellerDomainService, SellerDomainService>();
         services.AddScoped<IWalletDomainService, WalletDomainService>();
         services.AddScoped<IPaymentDomainService, PaymentDomainService>();
         services.AddScoped<IRechargeDomainService, RechargeDomainService>();
