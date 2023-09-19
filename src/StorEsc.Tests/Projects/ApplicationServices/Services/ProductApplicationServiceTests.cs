@@ -12,7 +12,7 @@ using StorEsc.DomainServices.Interfaces;
 using StorEsc.Tests.Fakers.Entities;
 using Xunit;
 
-namespace StorEsc.Tests.Projects.Application.Services;
+namespace StorEsc.Tests.Projects.ApplicationServices.Services;
 
 public class ProductApplicationServiceTests
 {
