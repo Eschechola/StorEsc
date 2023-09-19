@@ -1,19 +1,16 @@
-﻿using AutoMapper;
-using StorEsc.Application.Dtos;
+﻿using StorEsc.Application.Dtos;
+using StorEsc.Application.Extensions;
 using StorEsc.ApplicationServices.Interfaces;
-using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 
 namespace StorEsc.ApplicationServices.Services;
 
 public class RechargeApplicationService : IRechargeApplicationService
 {
-    private readonly IMapper _mapper;
     private readonly IRechargeDomainService _rechargeDomainService;
     
-    public RechargeApplicationService(IMapper mapper, IRechargeDomainService rechargeDomainService)
+    public RechargeApplicationService(IRechargeDomainService rechargeDomainService)
     {
-        _mapper = mapper;
         _rechargeDomainService = rechargeDomainService;
     }
 
@@ -22,7 +19,7 @@ public class RechargeApplicationService : IRechargeApplicationService
         decimal amount,
         CreditCardDto creditCardDto)
     {
-        var creditCard = _mapper.Map<CreditCard>(creditCardDto);
+        var creditCard = creditCardDto.AsEntity();
         return await _rechargeDomainService.RechargeCustomerWalletAsync(customerId, amount, creditCard);
     }
 }
