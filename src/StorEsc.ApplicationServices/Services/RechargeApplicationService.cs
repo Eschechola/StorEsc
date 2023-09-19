@@ -4,7 +4,7 @@ using StorEsc.Application.Interfaces;
 using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 
-namespace StorEsc.Application.Services;
+namespace StorEsc.ApplicationServices.Services;
 
 public class RechargeApplicationService : IRechargeApplicationService
 {
