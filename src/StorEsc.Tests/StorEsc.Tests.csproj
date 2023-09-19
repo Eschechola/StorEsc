@@ -28,12 +28,12 @@
 
     <ItemGroup>
       <Folder Include="Projects\API" />
-      <Folder Include="Projects\ApplicationServices" />
       <Folder Include="Projects\Domain" />
       <Folder Include="Projects\Infrastructure" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\StorEsc.ApplicationServices\StorEsc.ApplicationServices.csproj" />
       <ProjectReference Include="..\StorEsc.DomainServices\StorEsc.DomainServices.csproj" />
     </ItemGroup>
 

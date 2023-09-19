@@ -5,7 +5,7 @@ using StorEsc.API.Token;
 using StorEsc.API.Token.Extensions;
 using StorEsc.API.ViewModels;
 using StorEsc.Application.Dtos;
-using StorEsc.Application.Interfaces;
+using StorEsc.ApplicationServices.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 using StorEsc.Core.Enums;
 

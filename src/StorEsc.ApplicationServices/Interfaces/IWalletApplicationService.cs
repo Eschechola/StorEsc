@@ -1,6 +1,6 @@
 ﻿using StorEsc.Application.Dtos;
 
-namespace StorEsc.Application.Interfaces;
+namespace StorEsc.ApplicationServices.Interfaces;
 
 public interface IWalletApplicationService
 {

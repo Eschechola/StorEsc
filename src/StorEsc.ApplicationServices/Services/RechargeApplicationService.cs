@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using StorEsc.Application.Dtos;
-using StorEsc.Application.Interfaces;
+using StorEsc.ApplicationServices.Interfaces;
 using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 

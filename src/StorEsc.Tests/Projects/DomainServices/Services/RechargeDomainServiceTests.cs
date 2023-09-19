@@ -9,7 +9,7 @@ using StorEsc.Infrastructure.Interfaces.Repositories;
 using StorEsc.Tests.Fakers.Entities;
 using Xunit;
 
-namespace StorEsc.Tests.Projects.DomainServices;
+namespace StorEsc.Tests.Projects.DomainServices.Services;
 
 public class RechargeDomainServiceTests
 {

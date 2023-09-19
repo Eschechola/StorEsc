@@ -1,4 +1,4 @@
-using StorEsc.Application.Interfaces;
+using StorEsc.ApplicationServices.Interfaces;
 using StorEsc.DomainServices.Interfaces;
 
 namespace StorEsc.ApplicationServices.Services;
