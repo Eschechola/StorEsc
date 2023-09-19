@@ -17,14 +17,22 @@ public static class ProductExtensions
             Stock = product.Stock,
             Enabled = product.Enabled
         };
-
-    public static IList<ProductDto> AsDtoList(this IList<Product> products)
-        => products.Select(product => product.AsDto()).ToList();
     
     public static Product AsEntity(this ProductDto productDto)
         => new Product(
+            id: productDto.Id,
+            name: productDto.Name,
+            description: productDto.Description,
+            price: productDto.Price,
+            stock: productDto.Stock,
+            enabled: productDto.Enabled,
+            createdAt: productDto.CreatedAt,
+            updatedAt: productDto.UpdatedAt
             );
 
     public static IList<Product> AsEntityList(this IList<ProductDto> productDtos)
         => productDtos.Select(product => product.AsEntity()).ToList();
+    
+    public static IList<ProductDto> AsDtoList(this IList<Product> products)
+        => products.Select(product => product.AsDto()).ToList();
 }

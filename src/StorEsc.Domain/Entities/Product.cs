@@ -31,6 +31,25 @@ public class Product : Entity, IAggregateRoot
         
         Validate();
     }
+    
+    public Product(
+        Guid id,
+        string name,
+        string description,
+        decimal price,
+        int stock,
+        bool enabled,
+        DateTime createdAt,
+        DateTime updatedAt): base(id, createdAt, updatedAt)
+    {
+        Name = name;
+        Description = description;
+        Price = price;
+        Stock = stock;
+        Enabled = enabled;
+        
+        Validate();
+    }
 
     public void Validate()
         => base.Validate(new ProductValidator(), this);
