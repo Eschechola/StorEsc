@@ -3,7 +3,7 @@ using StorEsc.Application.Dtos;
 using StorEsc.Application.Interfaces;
 using StorEsc.DomainServices.Interfaces;
 
-namespace StorEsc.Application.Services;
+namespace StorEsc.ApplicationServices.Services;
 
 public class WalletApplicationService : IWalletApplicationService
 {

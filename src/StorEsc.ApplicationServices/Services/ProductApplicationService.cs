@@ -1,42 +1,40 @@
 using AutoMapper;
 using StorEsc.Application.Dtos;
+using StorEsc.Application.Extensions;
 using StorEsc.Application.Interfaces;
 using StorEsc.Core.Data.Structs;
 using StorEsc.Core.Enums;
 using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 
-namespace StorEsc.Application.Services;
+namespace StorEsc.ApplicationServices.Services;
 
 public class ProductApplicationService : IProductApplicationService
 {
     private readonly IProductDomainService _productDomainService;
-    private readonly IMapper _mapper;
 
     public ProductApplicationService(
-        IProductDomainService productDomainService,
-        IMapper mapper)
+        IProductDomainService productDomainService)
     {
         _productDomainService = productDomainService;
-        _mapper = mapper;
     }
 
     public async Task<Optional<ProductDto>> CreateProductAsync(string administratorId, ProductDto productDto)
     {
-        var product = _mapper.Map<Product>(productDto);
+        var product = productDto.AsEntity();
         var productCreated = await _productDomainService.CreateProductAsync(administratorId, product);
 
         if (productCreated.IsEmpty)
             return new Optional<ProductDto>();
 
-        return _mapper.Map<ProductDto>(productCreated.Value);
+        return productCreated.Value.AsDto();
     }
 
     public async Task<IList<ProductDto>> GetLatestProductsAsync()
     {
         var products = await _productDomainService.GetLatestProductsAsync();
 
-        return _mapper.Map<IList<ProductDto>>(products);
+        return products.AsDtoList();
     }
 
     public async Task<IList<ProductDto>> SearchProductsAsync(
@@ -51,18 +49,18 @@ public class ProductApplicationService : IProductApplicationService
             maximumPrice,
             orderBy);
 
-        return _mapper.Map<IList<ProductDto>>(products);
+        return products.AsDtoList();
     }
 
     public async Task<Optional<ProductDto>> UpdateProductAsync(string productId, string administratorId, ProductDto productDto)
     {
-        var product = _mapper.Map<Product>(productDto);
+        var product = productDto.AsEntity();
         var productUpdated = await _productDomainService.UpdateProductAsync(productId, administratorId, product);
         
         if(productUpdated.IsEmpty)
             return new Optional<ProductDto>();
 
-        return _mapper.Map<ProductDto>(productUpdated.Value);
+        return productUpdated.Value.AsDto();
     }
 
     public async Task<bool> DisableProductAsync(string productId, string administratorId)
