@@ -31,6 +31,18 @@ public class Wallet : Entity, IAggregateRoot
         Validate();
     }
     
+    public Wallet(
+        Guid id,
+        decimal amount,
+        DateTime createdAt,
+        DateTime updatedAt) 
+        : base(id, createdAt, updatedAt)
+    {
+        Amount = amount;
+        
+        Validate();
+    }
+    
     public void Validate()
         => base.Validate(new WalletValidator(), this);
 
