@@ -43,6 +43,9 @@ public class AdministratorApplicationServiceTests
         var result = await _sut.EnableDefaultAdministratorAsync();
 
         // Assert
+        _administratorDomainServiceMock.Verify(verify => verify.EnableDefaultAdministratorAsync(),
+            Times.Once);
+        
         result.Should()
             .BeTrue();
     }
