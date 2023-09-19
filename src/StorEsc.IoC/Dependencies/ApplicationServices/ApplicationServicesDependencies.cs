@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using StorEsc.Application.Interfaces;
-using StorEsc.Application.Services;
+using StorEsc.ApplicationServices.Interfaces;
+using StorEsc.ApplicationServices.Services;
 
 namespace StorEsc.IoC.Dependencies.ApplicationServices;
 

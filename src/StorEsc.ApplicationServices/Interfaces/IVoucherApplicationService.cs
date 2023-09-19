@@ -1,7 +1,7 @@
 ﻿using StorEsc.Application.Dtos;
 using StorEsc.Core.Data.Structs;
 
-namespace StorEsc.Application.Interfaces;
+namespace StorEsc.ApplicationServices.Interfaces;
 
 public interface IVoucherApplicationService
 {

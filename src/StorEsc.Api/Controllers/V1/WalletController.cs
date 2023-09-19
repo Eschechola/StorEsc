@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StorEsc.API.Token;
 using StorEsc.API.Token.Extensions;
 using StorEsc.API.ViewModels;
-using StorEsc.Application.Interfaces;
+using StorEsc.ApplicationServices.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
 namespace StorEsc.API.Controllers;

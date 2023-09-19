@@ -2,7 +2,7 @@ using StorEsc.Application.Dtos;
 using StorEsc.Core.Data.Structs;
 using StorEsc.Core.Enums;
 
-namespace StorEsc.Application.Interfaces;
+namespace StorEsc.ApplicationServices.Interfaces;
 
 public interface IProductApplicationService
 {

@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StorEsc.Application.Interfaces;
+using StorEsc.ApplicationServices.Interfaces;
 using StorEsc.Core.Communication.Mediator.Notifications;
 
 namespace StorEsc.API.Controllers;

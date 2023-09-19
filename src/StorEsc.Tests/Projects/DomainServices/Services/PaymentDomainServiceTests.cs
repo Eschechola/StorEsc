@@ -10,7 +10,7 @@ using StorEsc.Tests.Fakers.Entities;
 using StorEsc.Tests.Fakers.Infrastructure.ExternalServices;
 using Xunit;
 
-namespace StorEsc.Tests.Projects.DomainServices;
+namespace StorEsc.Tests.Projects.DomainServices.Services;
 
 public class PaymentDomainServiceTests
 {

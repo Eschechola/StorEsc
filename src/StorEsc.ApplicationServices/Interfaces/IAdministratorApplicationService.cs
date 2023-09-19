@@ -1,4 +1,4 @@
-namespace StorEsc.Application.Interfaces;
+namespace StorEsc.ApplicationServices.Interfaces;
 
 public interface IAdministratorApplicationService
 {
