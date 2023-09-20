@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StorEsc.Application.Dtos;
+using StorEsc.Application.Extensions;
 using StorEsc.ApplicationServices.Interfaces;
 using StorEsc.Core.Data.Structs;
 using StorEsc.Domain.Entities;
@@ -9,32 +10,29 @@ namespace StorEsc.ApplicationServices.Services;
 
 public class VoucherApplicationService : IVoucherApplicationService
 {
-    private readonly IMapper _mapper;
     private readonly IVoucherDomainService _voucherDomainService;
 
     public VoucherApplicationService(
-        IVoucherDomainService voucherDomainService,
-        IMapper mapper)
+        IVoucherDomainService voucherDomainService)
     {
         _voucherDomainService = voucherDomainService;
-        _mapper = mapper;
     }
 
     public async Task<IList<VoucherDto>> GetAllVouchersAsync(string administratorId)
     {
         var vouchers = await _voucherDomainService.GetAllVouchersAsync(administratorId);
 
-        return _mapper.Map<IList<VoucherDto>>(vouchers);
+        return vouchers.AsDtoList();
     }
 
-    public async Task<Optional<VoucherDto>> CreateVoucherAsync(string sellerId, VoucherDto voucherDto)
+    public async Task<Optional<VoucherDto>> CreateVoucherAsync(string administratorId, VoucherDto voucherDto)
     {
-        var voucher = _mapper.Map<Voucher>(voucherDto);
-        var voucherCreated = await _voucherDomainService.CreateVoucherAsync(sellerId, voucher);
+        var voucher = voucherDto.AsEntity();
+        var voucherCreated = await _voucherDomainService.CreateVoucherAsync(administratorId, voucher);
         
         if (voucherCreated.IsEmpty)
             return new Optional<VoucherDto>();
 
-        return _mapper.Map<VoucherDto>(voucherCreated.Value);
+        return voucherCreated.Value.AsDto();
     }
 }

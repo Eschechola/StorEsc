@@ -17,12 +17,30 @@ public class Voucher : Entity, IAggregateRoot
     protected Voucher() { }
     
     public Voucher(
-        Guid sellerId,
         string code,
         decimal? valueDiscount,
         decimal? percentageDiscount,
         bool isPercentageDiscount,
         bool enabled)
+    {
+        Code = code;
+        ValueDiscount = valueDiscount;
+        PercentageDiscount = percentageDiscount;
+        IsPercentageDiscount = isPercentageDiscount;
+        Enabled = enabled;
+        
+        Validate();
+    }
+    
+    public Voucher(
+        Guid id,
+        string code,
+        decimal? valueDiscount,
+        decimal? percentageDiscount,
+        bool isPercentageDiscount,
+        bool enabled,
+        DateTime createdAt,
+        DateTime updatedAt) : base(id, createdAt, updatedAt)
     {
         Code = code;
         ValueDiscount = valueDiscount;
