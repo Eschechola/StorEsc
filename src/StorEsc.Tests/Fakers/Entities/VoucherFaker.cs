@@ -9,7 +9,6 @@ public class VoucherFaker: BaseFaker<Voucher>
 
     public override Voucher GetValid()
         => new Voucher(
-            sellerId: Guid.NewGuid(),
             code: _randomizer.String2(3, 80).ToUpper(),
             valueDiscount: _randomizer.Decimal(1, 1_000_000),
             percentageDiscount: _randomizer.Decimal(0, 100),
@@ -19,7 +18,6 @@ public class VoucherFaker: BaseFaker<Voucher>
 
     public override Voucher GetInvalid()
         => new Voucher(
-            sellerId: Guid.Empty,
             code: "",
             valueDiscount: 0,
             percentageDiscount: 0,
