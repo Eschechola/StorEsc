@@ -11,6 +11,22 @@ public class Customer : Account
     protected Customer() { }
     
     public Customer(
+        Guid id,
+        Guid walletId,
+        string firstName,
+        string lastName,
+        string email,
+        string password,
+        DateTime createdAt,
+        DateTime updatedAt) 
+        : base(id, firstName, lastName, email, password, createdAt, updatedAt)
+    {
+        WalletId = walletId;
+        
+        Validate();
+    }
+    
+    public Customer(
         Guid walletId,
         string firstName,
         string lastName,
