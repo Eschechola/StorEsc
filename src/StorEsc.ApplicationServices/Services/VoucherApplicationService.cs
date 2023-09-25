@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using StorEsc.Application.Dtos;
+﻿using StorEsc.Application.Dtos;
 using StorEsc.Application.Extensions;
 using StorEsc.ApplicationServices.Interfaces;
 using StorEsc.Core.Data.Structs;
-using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 
 namespace StorEsc.ApplicationServices.Services;
