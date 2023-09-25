@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using StorEsc.Application.Dtos;
+﻿using StorEsc.Application.Dtos;
+using StorEsc.Application.Extensions;
 using StorEsc.ApplicationServices.Interfaces;
 using StorEsc.Core.Data.Structs;
-using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 
 namespace StorEsc.ApplicationServices.Services;
@@ -11,16 +10,13 @@ public class AuthApplicationService : IAuthApplicationService
 {
     private readonly ICustomerDomainService _customerDomainService;
     private readonly IAdministratorDomainService _administratorDomainService;
-    private readonly IMapper _mapper;
     
     public AuthApplicationService(
         ICustomerDomainService customerDomainService,
-        IAdministratorDomainService administratorDomainService,
-        IMapper mapper)
+        IAdministratorDomainService administratorDomainService)
     {
         _customerDomainService = customerDomainService;
         _administratorDomainService = administratorDomainService;
-        _mapper = mapper;
     }
 
     #region Customer
@@ -32,18 +28,18 @@ public class AuthApplicationService : IAuthApplicationService
         if (customer.IsEmpty)
             return new Optional<CustomerDto>();
 
-        return _mapper.Map<CustomerDto>(customer.Value);
+        return customer.Value.AsDto();
     }
 
     public async Task<Optional<CustomerDto>> RegisterCustomerAsync(CustomerDto customerDto)
     {
-        var customer = _mapper.Map<Customer>(customerDto);
-        var customerRegistred = await _customerDomainService.RegisterCustomerAsync(customer);
+        var customer = customerDto.AsEntity();
+        var customerRegistered = await _customerDomainService.RegisterCustomerAsync(customer);
 
-        if (customerRegistred.IsEmpty)
+        if (customerRegistered.IsEmpty)
             return new Optional<CustomerDto>();
 
-        return _mapper.Map<CustomerDto>(customerRegistred.Value);
+        return customerRegistered.Value.AsDto();
     }
 
     public Task<bool> ResetCustomerPasswordAsync(string email)
@@ -62,7 +58,7 @@ public class AuthApplicationService : IAuthApplicationService
         if (administrator.IsEmpty)
             return new Optional<AdministratorDto>();
 
-        return _mapper.Map<AdministratorDto>(administrator.Value);
+        return administrator.Value.AsDto();
     }
     
     public Task<Optional<AdministratorDto>> RegisterAdministratorAsync(string administratorId, AdministratorDto administratorDto)

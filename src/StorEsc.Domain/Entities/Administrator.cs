@@ -8,6 +8,24 @@ public class Administrator : Account
     protected Administrator() { }
     
     public Administrator(
+        Guid id,
+        string firstName,
+        string lastName,
+        string email,
+        string password,
+        Guid createdBy,
+        DateTime createdAt,
+        DateTime updatedAt,
+        bool isEnabled = false) 
+        : base(id, firstName, lastName, email, password, createdAt, updatedAt)
+    {
+        CreatedBy = createdBy;
+        IsEnabled = isEnabled;
+        
+        Validate();
+    }
+    
+    public Administrator(
         string firstName,
         string lastName,
         string email,

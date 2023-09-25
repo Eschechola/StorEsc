@@ -13,6 +13,23 @@ public abstract class Account : Entity, IAggregateRoot
     protected Account() { }
     
     protected Account(
+        Guid id,
+        string firstName,
+        string lastName,
+        string email,
+        string password,
+        DateTime createdAt,
+        DateTime updatedAt) : base (id, createdAt, updatedAt)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        Password = password;
+        
+        Validate();
+    }
+    
+    protected Account(
         string firstName,
         string lastName,
         string email,
