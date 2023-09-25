@@ -5,7 +5,6 @@ using StorEsc.IoC.Dependencies.Database;
 using StorEsc.IoC.Dependencies.DomainServices;
 using StorEsc.IoC.Dependencies.ExternalServices;
 using StorEsc.IoC.Dependencies.Hashers;
-using StorEsc.IoC.Dependencies.Mapper;
 using StorEsc.IoC.Dependencies.Mediator;
 using StorEsc.IoC.Dependencies.Repositories;
 
@@ -47,8 +46,7 @@ public class Startup
             .AddArgon2Id(_configuration)
             .AddMediatR(typeof(Startup))
             .AddMediator()
-            .AddMapper()
-            .AdDtokenAuthentication(_configuration);
+            .AddtokenAuthentication(_configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
