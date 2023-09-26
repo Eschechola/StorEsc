@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using StorEsc.Core.Communication.Mediator.Interfaces;
+using StorEsc.Domain.Entities;
 using StorEsc.DomainServices.Interfaces;
 using StorEsc.DomainServices.Services;
 using StorEsc.Infrastructure.Interfaces.Repositories;
@@ -171,5 +172,195 @@ public class VoucherDomainServiceTests
             .BeEquivalentTo(voucherCreated);
     }
 
+    #endregion
+
+    #region EnableVoucherAsync
+
+    [Fact(DisplayName = "EnableVoucherAsync when voucher not exists throw notification and returns false")]
+    [Trait("VoucherDomainService", "EnableVoucherAsync")]
+    public async Task EnableVoucherAsync_WhenVoucherNotExists_ThrowNotificationAndReturnsFalse()
+    {
+        // Arrange
+        var voucherId = Guid.NewGuid().ToString();
+
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(false);
+        
+        _domainNotificationFacade.Setup(setup => setup.PublishNotFoundAsync("Voucher"))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.EnableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+
+        _domainNotificationFacade.Verify(verify => verify.PublishNotFoundAsync("Voucher"),
+            Times.Once);
+        
+        result.Should()
+            .BeFalse();
+    }
+    
+    [Fact(DisplayName = "EnableVoucherAsync when voucher already enabled returns true")]
+    [Trait("VoucherDomainService", "EnableVoucherAsync")]
+    public async Task EnableVoucherAsync_WhenVoucherAlreadyEnabled_ReturnsTrue()
+    {
+        // Arrange
+        var voucher = _voucherFaker.GetValid();
+        var voucherId = voucher.Id.ToString();
+        
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(true);
+
+        _voucherRepositoryMock.Setup(setup => setup.GetByIdAsync(voucherId))
+            .ReturnsAsync(voucher);
+
+        // Act
+        var result = await _sut.EnableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+        
+        result.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "EnableVoucherAsync when voucher is disabled enable and returns true")]
+    [Trait("VoucherDomainService", "EnableVoucherAsync")]
+    public async Task EnableVoucherAsync_WhenVoucherIsDisabled_EnableAndReturnsTrue()
+    {
+        // Arrange
+        var voucher = _voucherFaker.GetValid();
+        var voucherId = voucher.Id.ToString();
+        
+        voucher.Disable();
+        
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(true);
+
+        _voucherRepositoryMock.Setup(setup => setup.GetByIdAsync(voucherId))
+            .ReturnsAsync(voucher);
+        
+        _voucherRepositoryMock.Setup(setup => setup.Update(It.IsAny<Voucher>()))
+            .Verifiable();
+        
+        _voucherRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.EnableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.Update(It.IsAny<Voucher>()),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+        
+        result.Should()
+            .BeTrue();
+    }
+
+    #endregion
+    
+    #region DisableVoucherAsync
+    
+    [Fact(DisplayName = "DisableVoucherAsync when voucher not exists throw notification and returns false")]
+    [Trait("VoucherDomainService", "DisableVoucherAsync")]
+    public async Task DisableVoucherAsync_WhenVoucherNotExists_ThrowNotificationAndReturnsFalse()
+    {
+        // Arrange
+        var voucherId = Guid.NewGuid().ToString();
+
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(false);
+        
+        _domainNotificationFacade.Setup(setup => setup.PublishNotFoundAsync("Voucher"))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.DisableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+
+        _domainNotificationFacade.Verify(verify => verify.PublishNotFoundAsync("Voucher"),
+            Times.Once);
+        
+        result.Should()
+            .BeFalse();
+    }
+    
+    [Fact(DisplayName = "DisableVoucherAsync when voucher already disabled returns true")]
+    [Trait("VoucherDomainService", "DisableVoucherAsync")]
+    public async Task DisableVoucherAsync_WhenVoucherAlreadyDisabled_ReturnsTrue()
+    {
+        // Arrange
+        var voucher = _voucherFaker.GetValid();
+        var voucherId = voucher.Id.ToString();
+        
+        voucher.Disable();
+        
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(true);
+
+        _voucherRepositoryMock.Setup(setup => setup.GetByIdAsync(voucherId))
+            .ReturnsAsync(voucher);
+
+        // Act
+        var result = await _sut.DisableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+        
+        result.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "DisableVoucherAsync when voucher is enabled disable and returns true")]
+    [Trait("VoucherDomainService", "DisableVoucherAsync")]
+    public async Task DisableVoucherAsync_WhenVoucherIsEnabled_DisableAndReturnsTrue()
+    {
+        // Arrange
+        var voucher = _voucherFaker.GetValid();
+        var voucherId = voucher.Id.ToString();
+        
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(true);
+
+        _voucherRepositoryMock.Setup(setup => setup.GetByIdAsync(voucherId))
+            .ReturnsAsync(voucher);
+        
+        _voucherRepositoryMock.Setup(setup => setup.Update(It.IsAny<Voucher>()))
+            .Verifiable();
+        
+        _voucherRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.DisableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.Update(It.IsAny<Voucher>()),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+        
+        result.Should()
+            .BeTrue();
+    }
+    
     #endregion
 }
