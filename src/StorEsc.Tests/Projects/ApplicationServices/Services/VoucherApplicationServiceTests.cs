@@ -131,4 +131,96 @@ public class VoucherApplicationServiceTests
     }
 
     #endregion
+
+    #region EnableVoucherAsync
+
+    [Fact(DisplayName = "EnableVoucherAsync when voucher has been enabled returns true")]
+    [Trait("VoucherApplicationService", "EnableVoucherAsync")]
+    public async Task EnableVoucherAsync_WhenVoucherHasBeenEnabled_ReturnsTrue()
+    {
+        // Arrange
+        var voucherId = Guid.NewGuid().ToString();
+
+        _voucherDomainServiceMock.Setup(setup => setup.EnableVoucherAsync(voucherId))
+            .ReturnsAsync(true);
+        
+        // Act
+        var result = await _sut.EnableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherDomainServiceMock.Verify(setup => setup.EnableVoucherAsync(voucherId),
+            Times.Once);
+        
+        result.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "EnableVoucherAsync when voucher not enabled returns false")]
+    [Trait("VoucherApplicationService", "EnableVoucherAsync")]
+    public async Task EnableVoucherAsync_WhenVoucherNotEnabled_ReturnsFalse()
+    {
+        // Arrange
+        var voucherId = Guid.NewGuid().ToString();
+
+        _voucherDomainServiceMock.Setup(setup => setup.EnableVoucherAsync(voucherId))
+            .ReturnsAsync(false);
+        
+        // Act
+        var result = await _sut.EnableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherDomainServiceMock.Verify(setup => setup.EnableVoucherAsync(voucherId),
+            Times.Once);
+        
+        result.Should()
+            .BeFalse();
+    }
+    
+    #endregion
+    
+    #region DisableVoucherAsync
+
+    [Fact(DisplayName = "DisableVoucherAsync when voucher has been disabled returns true")]
+    [Trait("VoucherApplicationService", "DisableVoucherAsync")]
+    public async Task DisableVoucherAsync_WhenVoucherHasBeenDisabled_ReturnsTrue()
+    {
+        // Arrange
+        var voucherId = Guid.NewGuid().ToString();
+
+        _voucherDomainServiceMock.Setup(setup => setup.DisableVoucherAsync(voucherId))
+            .ReturnsAsync(true);
+        
+        // Act
+        var result = await _sut.DisableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherDomainServiceMock.Verify(setup => setup.DisableVoucherAsync(voucherId),
+            Times.Once);
+        
+        result.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "DisableVoucherAsync when voucher not disabled returns false")]
+    [Trait("VoucherApplicationService", "DisableVoucherAsync")]
+    public async Task DisableVoucherAsync_WhenVoucherNotDisabled_ReturnsFalse()
+    {
+        // Arrange
+        var voucherId = Guid.NewGuid().ToString();
+
+        _voucherDomainServiceMock.Setup(setup => setup.DisableVoucherAsync(voucherId))
+            .ReturnsAsync(false);
+        
+        // Act
+        var result = await _sut.DisableVoucherAsync(voucherId);
+
+        // Assert
+        _voucherDomainServiceMock.Verify(setup => setup.DisableVoucherAsync(voucherId),
+            Times.Once);
+        
+        result.Should()
+            .BeFalse();
+    }
+    
+    #endregion
 }
