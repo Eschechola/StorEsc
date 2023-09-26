@@ -19,6 +19,50 @@ public class VoucherDomainService : IVoucherDomainService
         _domainNotificationFacade = domainNotificationFacade;
     }
 
+    public async Task<bool> EnableVoucherAsync(string voucherId)
+    {
+        var exists = await _voucherRepository.ExistsByIdAsync(voucherId);
+
+        if (exists is false)
+        {
+            await _domainNotificationFacade.PublishNotFoundAsync("Voucher");
+            return false;
+        }
+        
+        var voucher = await _voucherRepository.GetByIdAsync(voucherId);
+
+        if (voucher.Enabled)
+            return true;
+        
+        voucher.Enable();
+        _voucherRepository.Update(voucher);
+        await _voucherRepository.UnitOfWork.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DisableVoucherAsync(string voucherId)
+    {
+        var exists = await _voucherRepository.ExistsByIdAsync(voucherId);
+
+        if (exists is false)
+        {
+            await _domainNotificationFacade.PublishNotFoundAsync("Voucher");
+            return false;
+        }
+        
+        var voucher = await _voucherRepository.GetByIdAsync(voucherId);
+
+        if (voucher.Enabled is false)
+            return true;
+        
+        voucher.Disable();
+        _voucherRepository.Update(voucher);
+        await _voucherRepository.UnitOfWork.SaveChangesAsync();
+
+        return true;
+    }
+
     public async Task<Optional<Voucher>> CreateVoucherAsync(Voucher voucher)
     {
         voucher.Validate();
@@ -50,4 +94,6 @@ public class VoucherDomainService : IVoucherDomainService
 
     public async Task<IList<Voucher>> GetAllVouchersAsync()
         =>  await _voucherRepository.GetAllAsync();
+    
+    
 }
