@@ -16,17 +16,17 @@ public class VoucherApplicationService : IVoucherApplicationService
         _voucherDomainService = voucherDomainService;
     }
 
-    public async Task<IList<VoucherDto>> GetAllVouchersAsync(string administratorId)
+    public async Task<IList<VoucherDto>> GetAllVouchersAsync()
     {
-        var vouchers = await _voucherDomainService.GetAllVouchersAsync(administratorId);
+        var vouchers = await _voucherDomainService.GetAllVouchersAsync();
 
         return vouchers.AsDtoList();
     }
 
-    public async Task<Optional<VoucherDto>> CreateVoucherAsync(string administratorId, VoucherDto voucherDto)
+    public async Task<Optional<VoucherDto>> CreateVoucherAsync(VoucherDto voucherDto)
     {
         var voucher = voucherDto.AsEntity();
-        var voucherCreated = await _voucherDomainService.CreateVoucherAsync(administratorId, voucher);
+        var voucherCreated = await _voucherDomainService.CreateVoucherAsync(voucher);
         
         if (voucherCreated.IsEmpty)
             return new Optional<VoucherDto>();

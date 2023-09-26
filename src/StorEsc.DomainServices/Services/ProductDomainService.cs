@@ -10,15 +10,12 @@ namespace StorEsc.DomainServices.Services;
 public class ProductDomainService : IProductDomainService
 {
     private readonly IProductRepository _productRepository;
-    private readonly IAdministratorDomainService _administratorDomainService;
     private readonly IDomainNotificationFacade _domainNotificationFacade;
 
     public ProductDomainService(
         IProductRepository productRepository,
-        IAdministratorDomainService administratorDomainService,
         IDomainNotificationFacade domainNotificationFacade)
     {
-        _administratorDomainService = administratorDomainService;
         _productRepository = productRepository;
         _domainNotificationFacade = domainNotificationFacade;
     }
@@ -51,17 +48,8 @@ public class ProductDomainService : IProductDomainService
         return await _productRepository.SearchProductsAsync(name, minimumPrice, maximumPrice, orderBy);
     }
 
-    public async Task<Optional<Product>> UpdateProductAsync(string productId, string administratorId,
-        Product productUpdated)
+    public async Task<Optional<Product>> UpdateProductAsync(string productId, Product productUpdated)
     {
-        var administratorIsValid = await _administratorDomainService.ValidateAdministratorAsync(administratorId);
-
-        if (administratorIsValid is false)
-        {
-            await _domainNotificationFacade.PublishForbiddenAsync();
-            return new Optional<Product>();
-        }
-        
         var exists = await _productRepository.ExistsByIdAsync(productId);
 
         if (exists is false)
@@ -91,16 +79,8 @@ public class ProductDomainService : IProductDomainService
         return product;
     }
 
-    public async Task<bool> DisableProductAsync(string productId, string administratorId)
+    public async Task<bool> DisableProductAsync(string productId)
     {
-        var administratorIsValid = await _administratorDomainService.ValidateAdministratorAsync(administratorId);
-
-        if (administratorIsValid is false)
-        {
-            await _domainNotificationFacade.PublishForbiddenAsync();
-            return false;
-        }
-
         var exists = await _productRepository.ExistsByIdAsync(productId);
 
         if (exists is false)
@@ -121,16 +101,8 @@ public class ProductDomainService : IProductDomainService
         return true;
     }
 
-    public async Task<bool> EnableProductAsync(string productId, string administratorId)
+    public async Task<bool> EnableProductAsync(string productId)
     {
-        var administratorIsValid = await _administratorDomainService.ValidateAdministratorAsync(administratorId);
-
-        if (administratorIsValid is false)
-        {
-            await _domainNotificationFacade.PublishForbiddenAsync();
-            return false;
-        }
-
         var exists = await _productRepository.ExistsByIdAsync(productId);
 
         if (exists is false)
@@ -154,16 +126,8 @@ public class ProductDomainService : IProductDomainService
     public async Task<IList<Product>> GetLatestProductsAsync()
         => await SearchProductsAsync(orderBy: OrderBy.CreatedAtDescending);
 
-    public async Task<Optional<Product>> CreateProductAsync(string administratorId, Product product)
+    public async Task<Optional<Product>> CreateProductAsync(Product product)
     {
-        var administratorIsValid = await _administratorDomainService.ValidateAdministratorAsync(administratorId);
-
-        if (administratorIsValid is false)
-        {
-            await _domainNotificationFacade.PublishForbiddenAsync();
-            return new Optional<Product>();
-        }
-        
         product.Validate();
 
         if (product.IsInvalid())

@@ -17,10 +17,10 @@ public class ProductApplicationService : IProductApplicationService
         _productDomainService = productDomainService;
     }
 
-    public async Task<Optional<ProductDto>> CreateProductAsync(string administratorId, ProductDto productDto)
+    public async Task<Optional<ProductDto>> CreateProductAsync(ProductDto productDto)
     {
         var product = productDto.AsEntity();
-        var productCreated = await _productDomainService.CreateProductAsync(administratorId, product);
+        var productCreated = await _productDomainService.CreateProductAsync(product);
 
         if (productCreated.IsEmpty)
             return new Optional<ProductDto>();
@@ -50,10 +50,10 @@ public class ProductApplicationService : IProductApplicationService
         return products.AsDtoList();
     }
 
-    public async Task<Optional<ProductDto>> UpdateProductAsync(string productId, string administratorId, ProductDto productDto)
+    public async Task<Optional<ProductDto>> UpdateProductAsync(string productId, ProductDto productDto)
     {
         var product = productDto.AsEntity();
-        var productUpdated = await _productDomainService.UpdateProductAsync(productId, administratorId, product);
+        var productUpdated = await _productDomainService.UpdateProductAsync(productId, product);
         
         if(productUpdated.IsEmpty)
             return new Optional<ProductDto>();
@@ -61,9 +61,9 @@ public class ProductApplicationService : IProductApplicationService
         return productUpdated.Value.AsDto();
     }
 
-    public async Task<bool> DisableProductAsync(string productId, string administratorId)
-        => await _productDomainService.DisableProductAsync(productId, administratorId);
+    public async Task<bool> DisableProductAsync(string productId)
+        => await _productDomainService.DisableProductAsync(productId);
     
-    public async Task<bool> EnableProductAsync(string productId, string administratorId)
-        => await _productDomainService.EnableProductAsync(productId, administratorId);
+    public async Task<bool> EnableProductAsync(string productId)
+        => await _productDomainService.EnableProductAsync(productId);
 }

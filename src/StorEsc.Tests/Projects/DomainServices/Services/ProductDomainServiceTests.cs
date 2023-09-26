@@ -19,7 +19,6 @@ public class ProductDomainServiceTests
     private readonly IProductDomainService _sut;
 
     private readonly Mock<IProductRepository> _productRepositoryMock;
-    private readonly Mock<IAdministratorDomainService> _administratorDomainServiceMock;
     private readonly Mock<IDomainNotificationFacade> _domainNotificationFacadeMock;
 
     private readonly ProductFaker _productFaker;
@@ -37,12 +36,10 @@ public class ProductDomainServiceTests
         _productFaker = new ProductFaker();
 
         _productRepositoryMock = new Mock<IProductRepository>();
-        _administratorDomainServiceMock = new Mock<IAdministratorDomainService>();
         _domainNotificationFacadeMock = new Mock<IDomainNotificationFacade>();
 
         _sut = new ProductDomainService(
             productRepository: _productRepositoryMock.Object,
-            administratorDomainService: _administratorDomainServiceMock.Object,
             domainNotificationFacade: _domainNotificationFacadeMock.Object);
     }
 
@@ -116,57 +113,21 @@ public class ProductDomainServiceTests
 
     #region CreateProductAsync
 
-    [Fact(DisplayName =
-        "CreateProductAsync when administrator is not valid throw notification and returns empty optional")]
-    [Trait("ProductDomainService", "CreateProductAsync")]
-    public async Task CreateProductAsync_WhenAdministratorIsNotValid_ThrowNotificationAndReturnsEmptyOptional()
-    {
-        // Arrange
-        var product = _productFaker.GetInvalid();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(false);
-
-        _domainNotificationFacadeMock.Setup(setup => setup.PublishForbiddenAsync())
-            .Verifiable();
-
-        // Act
-        var result = await _sut.CreateProductAsync(administratorId, product);
-
-        // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
-            Times.Once);
-
-        result.IsEmpty.Should()
-            .BeTrue();
-    }
-
     [Fact(DisplayName = "CreateProductAsync when product is not valid throw notification and returns empty optional")]
     [Trait("ProductDomainService", "CreateProductAsync")]
     public async Task CreateProductAsync_WhenProductIsNotValid_ThrowNotificationAndReturnsEmptyOptional()
     {
         // Arrange
         var product = _productFaker.GetInvalid();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
-
+        
         _domainNotificationFacadeMock.Setup(setup => setup.PublishEntityDataIsInvalidAsync(
                 It.IsAny<string>()))
             .Verifiable();
 
         // Act
-        var result = await _sut.CreateProductAsync(administratorId, product);
+        var result = await _sut.CreateProductAsync(product);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _domainNotificationFacadeMock.Verify(verify => verify.PublishEntityDataIsInvalidAsync(
                 It.IsAny<string>()),
             Times.Once);
@@ -181,10 +142,6 @@ public class ProductDomainServiceTests
     {
         // Arrange
         var product = _productFaker.GetValid();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup => setup.Create(product))
             .Verifiable();
@@ -193,12 +150,9 @@ public class ProductDomainServiceTests
             .Verifiable();
 
         // Act
-        var result = await _sut.CreateProductAsync(administratorId, product);
+        var result = await _sut.CreateProductAsync(product);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _productRepositoryMock.Verify(setup => setup.Create(product),
             Times.Once);
 
@@ -216,35 +170,6 @@ public class ProductDomainServiceTests
 
     #region UpdateProductAsync
 
-    [Fact(DisplayName =
-        "UpdateProductAsync when administrator is not valid throw notification and return empty optional")]
-    [Trait("ProductDomainService", "UpdateProductAsync")]
-    public async Task UpdateProductAsync_WhenAdministratorIsNotValid_ThrowNotificationAndReturnEmptyOptional()
-    {
-        // Arrange
-        var product = _productFaker.GetValid();
-        var productId = product.Id.ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(false);
-
-        // Act
-        var result = await _sut.UpdateProductAsync(productId, administratorId, product);
-
-        // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
-        _domainNotificationFacadeMock.Verify(
-            verify => verify.PublishForbiddenAsync(),
-            Times.Once);
-
-        result.IsEmpty.Should()
-            .BeTrue();
-    }
-
-
     [Fact(DisplayName = "UpdateProductAsync when product not exists throw notification and return empty optional")]
     [Trait("ProductDomainService", "UpdateProductAsync")]
     public async Task UpdateProductAsync_WhenProductNotExists_ThrowNotificationAndReturnEmptyOptional()
@@ -252,22 +177,15 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
-
+        
         _productRepositoryMock.Setup(setup =>
                 setup.ExistsByIdAsync(productId))
             .ReturnsAsync(false);
 
         // Act
-        var result = await _sut.UpdateProductAsync(productId, administratorId, product);
+        var result = await _sut.UpdateProductAsync(productId, product);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _productRepositoryMock.Verify(verify =>
                 verify.ExistsByIdAsync(productId),
             Times.Once);
@@ -287,11 +205,7 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetInvalid();
         var productId = product.Id.ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
-
+        
         _productRepositoryMock.Setup(setup =>
                 setup.ExistsByIdAsync(productId))
             .ReturnsAsync(true);
@@ -301,12 +215,9 @@ public class ProductDomainServiceTests
             .ReturnsAsync(product);
 
         // Act
-        var result = await _sut.UpdateProductAsync(productId, administratorId, product);
+        var result = await _sut.UpdateProductAsync(productId, product);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _productRepositoryMock.Verify(verify =>
                 verify.ExistsByIdAsync(productId),
             Times.Once);
@@ -330,10 +241,6 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup =>
                 setup.ExistsByIdAsync(productId))
@@ -352,12 +259,9 @@ public class ProductDomainServiceTests
             .Verifiable();
 
         // Act
-        var result = await _sut.UpdateProductAsync(productId, administratorId, product);
+        var result = await _sut.UpdateProductAsync(productId, product);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _productRepositoryMock.Verify(verify =>
                 verify.ExistsByIdAsync(productId),
             Times.Once);
@@ -385,52 +289,20 @@ public class ProductDomainServiceTests
 
     #region DisableProductAsync
 
-    [Fact(DisplayName = "DisableProductAsync when administrator is not valid throw notification and return false")]
-    [Trait("ProductDomainService", "DisableProductAsync")]
-    public async Task DisableProductAsync_WhenAdministratorIsNotValid_ThrowNotificationAndReturnFalse()
-    {
-        // Arrange
-        var productId = Guid.NewGuid().ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(false);
-
-        // Act
-        var result = await _sut.DisableProductAsync(productId, administratorId);
-
-        // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
-            Times.Once);
-
-        result.Should()
-            .BeFalse();
-    }
-
     [Fact(DisplayName = "DisableProductAsync when product not exists throw notification and return false")]
     [Trait("ProductDomainService", "DisableProductAsync")]
     public async Task DisableProductAsync_WhenProductNotExists_ThrowNotificationAndReturnFalse()
     {
         // Arrange
         var productId = Guid.NewGuid().ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
             .ReturnsAsync(false);
 
         // Act
-        var result = await _sut.DisableProductAsync(productId, administratorId);
+        var result = await _sut.DisableProductAsync(productId);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _domainNotificationFacadeMock.Verify(verify => verify.PublishNotFoundAsync("Product"),
             Times.Once);
 
@@ -445,10 +317,6 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
             .ReturnsAsync(true);
@@ -460,12 +328,9 @@ public class ProductDomainServiceTests
             .Verifiable();
 
         // Act
-        var result = await _sut.DisableProductAsync(productId, administratorId);
+        var result = await _sut.DisableProductAsync(productId);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _productRepositoryMock.Verify(verify => verify.Update(It.IsAny<Product>()),
             Times.Once);
 
@@ -483,10 +348,6 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
 
         product.Disable();
 
@@ -497,12 +358,12 @@ public class ProductDomainServiceTests
             .ReturnsAsync(product);
 
         // Act
-        var result = await _sut.DisableProductAsync(productId, administratorId);
+        var result = await _sut.DisableProductAsync(productId);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
+        
+        
+        
         result.Should()
             .BeTrue();
     }
@@ -510,31 +371,7 @@ public class ProductDomainServiceTests
     #endregion
 
     #region EnableProductAsync
-
-    [Fact(DisplayName = "EnableProductAsync when administrator is not valid throw notification and return false")]
-    [Trait("ProductDomainService", "DisableProductAsync")]
-    public async Task EnableProductAsync_WhenAdministratorIsNotValid_ThrowNotificationAndReturnFalse()
-    {
-        // Arrange
-        var productId = Guid.NewGuid().ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(false);
-
-        // Act
-        var result = await _sut.EnableProductAsync(productId, administratorId);
-
-        // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
-        _domainNotificationFacadeMock.Verify(verify => verify.PublishForbiddenAsync(),
-            Times.Once);
-
-        result.Should()
-            .BeFalse();
-    }
+    
 
     [Fact(DisplayName = "EnableProductAsync when product not exists throw notification and return false")]
     [Trait("ProductDomainService", "DisableProductAsync")]
@@ -542,21 +379,14 @@ public class ProductDomainServiceTests
     {
         // Arrange
         var productId = Guid.NewGuid().ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
             .ReturnsAsync(false);
 
         // Act
-        var result = await _sut.EnableProductAsync(productId, administratorId);
+        var result = await _sut.EnableProductAsync(productId);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _domainNotificationFacadeMock.Verify(verify => verify.PublishNotFoundAsync("Product"),
             Times.Once);
 
@@ -571,10 +401,6 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
 
         product.Disable();
 
@@ -588,12 +414,9 @@ public class ProductDomainServiceTests
             .Verifiable();
 
         // Act
-        var result = await _sut.EnableProductAsync(productId, administratorId);
+        var result = await _sut.EnableProductAsync(productId);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         _productRepositoryMock.Verify(verify => verify.Update(It.IsAny<Product>()),
             Times.Once);
 
@@ -611,10 +434,6 @@ public class ProductDomainServiceTests
         // Arrange
         var product = _productFaker.GetValid();
         var productId = product.Id.ToString();
-        var administratorId = Guid.NewGuid().ToString();
-
-        _administratorDomainServiceMock.Setup(setup => setup.ValidateAdministratorAsync(administratorId))
-            .ReturnsAsync(true);
 
         _productRepositoryMock.Setup(setup => setup.ExistsByIdAsync(productId))
             .ReturnsAsync(true);
@@ -623,12 +442,9 @@ public class ProductDomainServiceTests
             .ReturnsAsync(product);
 
         // Act
-        var result = await _sut.EnableProductAsync(productId, administratorId);
+        var result = await _sut.EnableProductAsync(productId);
 
         // Assert
-        _administratorDomainServiceMock.Verify(verify => verify.ValidateAdministratorAsync(administratorId),
-            Times.Once);
-
         result.Should()
             .BeTrue();
     }

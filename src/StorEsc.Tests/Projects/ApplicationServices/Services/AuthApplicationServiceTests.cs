@@ -27,7 +27,6 @@ public class AuthApplicationServiceTests
     
     #endregion
 
-
     #region Constructor
 
     public AuthApplicationServiceTests()
@@ -148,8 +147,7 @@ public class AuthApplicationServiceTests
     }
 
     #endregion
-
-
+    
     #region AuthenticateAdministratorAsync
 
     [Fact(DisplayName = "AuthenticateAdministratorAsync when administrator not authenticated returns empty optional")]

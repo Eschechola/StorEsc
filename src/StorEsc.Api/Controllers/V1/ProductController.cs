@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StorEsc.API.Token;
-using StorEsc.API.Token.Extensions;
 using StorEsc.API.ViewModels;
 using StorEsc.Application.Dtos;
 using StorEsc.ApplicationServices.Interfaces;
@@ -79,8 +78,6 @@ public class ProductController : BaseController
         if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
 
-        var administratorId = HttpContext.User.GetId();
-
         var productDto = new ProductDto
         {
             Name = viewModel.Name,
@@ -89,7 +86,7 @@ public class ProductController : BaseController
             Stock = viewModel.Stock
         };
 
-        var productUpdated = await _productApplicationService.UpdateProductAsync(productId, administratorId, productDto);
+        var productUpdated = await _productApplicationService.UpdateProductAsync(productId, productDto);
         
         if (HasNotifications())
             return Result();
@@ -110,8 +107,6 @@ public class ProductController : BaseController
         if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
-        var administratorId = HttpContext.User.GetId();
-        
         var productDto = new ProductDto
         {
             Name = viewModel.Name,
@@ -120,7 +115,7 @@ public class ProductController : BaseController
             Stock = viewModel.Stock
         };
         
-        var productCreated = await _productApplicationService.CreateProductAsync(administratorId, productDto);
+        var productCreated = await _productApplicationService.CreateProductAsync(productDto);
         
         if (HasNotifications())
             return Result();
@@ -138,8 +133,6 @@ public class ProductController : BaseController
     [Route("disable/{productId}")]
     public async Task<IActionResult> DisableProductAsync([FromRoute] string productId)
     {
-        var administratorId = HttpContext.User.GetId();
-
         if (string.IsNullOrEmpty(productId))
         {
             return BadRequest(new ResultViewModel
@@ -150,7 +143,7 @@ public class ProductController : BaseController
             });
         }
 
-        await _productApplicationService.DisableProductAsync(productId, administratorId);
+        await _productApplicationService.DisableProductAsync(productId);
 
         if (HasNotifications())
             return Result();
@@ -168,8 +161,6 @@ public class ProductController : BaseController
     [Route("enable/{productId}")]
     public async Task<IActionResult> EnableProductAsync([FromRoute] string productId)
     {
-        var administratorId = HttpContext.User.GetId();
-
         if (string.IsNullOrEmpty(productId))
         {
             return BadRequest(new ResultViewModel
@@ -180,7 +171,7 @@ public class ProductController : BaseController
             });
         }
 
-        await _productApplicationService.EnableProductAsync(productId, administratorId);
+        await _productApplicationService.EnableProductAsync(productId);
 
         if (HasNotifications())
             return Result();

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StorEsc.API.Token;
-using StorEsc.API.Token.Extensions;
 using StorEsc.API.ViewModels;
 using StorEsc.Application.Dtos;
 using StorEsc.ApplicationServices.Interfaces;
@@ -27,8 +26,7 @@ public class VoucherController : BaseController
     [Authorize(Roles = Roles.Administrator)]
     public async Task<IActionResult> GetVouchersAsync()
     {
-        var administratorId = User.GetId();
-        var vouchers = await _voucherApplicationService.GetAllVouchersAsync(administratorId);
+        var vouchers = await _voucherApplicationService.GetAllVouchersAsync();
         
         if (HasNotifications())
             return Result();
@@ -52,8 +50,6 @@ public class VoucherController : BaseController
         if (ModelState.IsValid is false)
             return UnprocessableEntity(ModelState);
         
-        var sellerId = User.GetId();
-
         var voucherDto = new VoucherDto()
         {
             Code = viewModel.Code,
@@ -62,7 +58,7 @@ public class VoucherController : BaseController
             IsPercentageDiscount = viewModel.IsPercentageDiscount
         };
 
-        var voucherCreated = await _voucherApplicationService.CreateVoucherAsync(sellerId, voucherDto);
+        var voucherCreated = await _voucherApplicationService.CreateVoucherAsync(voucherDto);
         
         if (HasNotifications())
             return Result();

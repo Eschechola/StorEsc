@@ -6,11 +6,11 @@ namespace StorEsc.ApplicationServices.Interfaces;
 
 public interface IProductApplicationService
 {
-    Task<Optional<ProductDto>> CreateProductAsync(string administratorId, ProductDto productDto);
+    Task<Optional<ProductDto>> CreateProductAsync(ProductDto productDto);
     Task<IList<ProductDto>> GetLatestProductsAsync();
-    Task<Optional<ProductDto>> UpdateProductAsync(string productId, string administratorId, ProductDto productDto);
-    Task<bool> DisableProductAsync(string productId, string administratorId);
-    Task<bool> EnableProductAsync(string productId, string administratorId);
+    Task<Optional<ProductDto>> UpdateProductAsync(string productId, ProductDto productDto);
+    Task<bool> DisableProductAsync(string productId);
+    Task<bool> EnableProductAsync(string productId);
     Task<IList<ProductDto>> SearchProductsAsync(
         string name = "",
         decimal minimumPrice = 0,

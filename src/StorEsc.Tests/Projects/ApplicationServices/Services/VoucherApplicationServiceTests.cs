@@ -44,16 +44,14 @@ public class VoucherApplicationServiceTests
     public async Task GetAllVouchersAsync_WhenVouchersNotFoundReturnsEmptyList()
     {
         // Arrange
-        string administratorId = Guid.NewGuid().ToString();
-
-        _voucherDomainServiceMock.Setup(setup => setup.GetAllVouchersAsync(administratorId))
+        _voucherDomainServiceMock.Setup(setup => setup.GetAllVouchersAsync())
             .ReturnsAsync(new List<Voucher>());
 
         // Act
-        var result = await _sut.GetAllVouchersAsync(administratorId);
+        var result = await _sut.GetAllVouchersAsync();
 
         // Assert
-        _voucherDomainServiceMock.Verify(verify => verify.GetAllVouchersAsync(administratorId),
+        _voucherDomainServiceMock.Verify(verify => verify.GetAllVouchersAsync(),
             Times.Once);
         
         result.Should()
@@ -65,17 +63,16 @@ public class VoucherApplicationServiceTests
     public async Task GetAllVouchersAsync_WhenVouchersHasBeenFoundReturnsVoucherList()
     {
         // Arrange
-        string administratorId = Guid.NewGuid().ToString();
         var vouchers = _voucherFaker.GetValidList();
 
-        _voucherDomainServiceMock.Setup(setup => setup.GetAllVouchersAsync(administratorId))
+        _voucherDomainServiceMock.Setup(setup => setup.GetAllVouchersAsync())
             .ReturnsAsync(vouchers);
 
         // Act
-        var result = await _sut.GetAllVouchersAsync(administratorId);
+        var result = await _sut.GetAllVouchersAsync();
 
         // Assert
-        _voucherDomainServiceMock.Verify(verify => verify.GetAllVouchersAsync(administratorId),
+        _voucherDomainServiceMock.Verify(verify => verify.GetAllVouchersAsync(),
             Times.Once);
         
         result.Should()
@@ -93,17 +90,16 @@ public class VoucherApplicationServiceTests
     public async Task CreateVoucherAsync_WhenVoucherNotCreated_ReturnsEmptyOptional()
     {
         // Arrange
-        var administratorId = Guid.NewGuid().ToString();
         var voucherDto = _voucherFaker.GetValid().AsDto();
 
-        _voucherDomainServiceMock.Setup(setup => setup.CreateVoucherAsync(administratorId, It.IsAny<Voucher>()))
+        _voucherDomainServiceMock.Setup(setup => setup.CreateVoucherAsync(It.IsAny<Voucher>()))
             .ReturnsAsync(new Optional<Voucher>());
 
         // Act
-        var result = await _sut.CreateVoucherAsync(administratorId, voucherDto);
+        var result = await _sut.CreateVoucherAsync(voucherDto);
 
         // Assert
-        _voucherDomainServiceMock.Verify(verify => verify.CreateVoucherAsync(administratorId, It.IsAny<Voucher>()),
+        _voucherDomainServiceMock.Verify(verify => verify.CreateVoucherAsync(It.IsAny<Voucher>()),
             Times.Once);
 
         result.IsEmpty.Should()
@@ -115,17 +111,16 @@ public class VoucherApplicationServiceTests
     public async Task CreateVoucherAsync_WhenVoucherHasBeenCreated_ReturnsCreatedVoucher()
     {
         // Arrange
-        var administratorId = Guid.NewGuid().ToString();
         var voucher = _voucherFaker.GetValid();
 
-        _voucherDomainServiceMock.Setup(setup => setup.CreateVoucherAsync(administratorId, It.IsAny<Voucher>()))
+        _voucherDomainServiceMock.Setup(setup => setup.CreateVoucherAsync(It.IsAny<Voucher>()))
             .ReturnsAsync(voucher);
 
         // Act
-        var result = await _sut.CreateVoucherAsync(administratorId, voucher.AsDto());
+        var result = await _sut.CreateVoucherAsync(voucher.AsDto());
 
         // Assert
-        _voucherDomainServiceMock.Verify(verify => verify.CreateVoucherAsync(administratorId, It.IsAny<Voucher>()),
+        _voucherDomainServiceMock.Verify(verify => verify.CreateVoucherAsync(It.IsAny<Voucher>()),
             Times.Once);
 
         result.IsEmpty.Should()

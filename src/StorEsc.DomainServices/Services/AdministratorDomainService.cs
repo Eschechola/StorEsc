@@ -67,16 +67,4 @@ public class AdministratorDomainService : IAdministratorDomainService
         
         return true;
     }
-
-    public async Task<bool> ValidateAdministratorAsync(string administratorId)
-    {
-        var exists = await _administratorRepository.ExistsByIdAsync(administratorId);
-
-        if (exists is false)
-            return false;
-
-        var administrator = await _administratorRepository.GetByIdAsync(administratorId);
-
-        return administrator.IsEnabled;
-    }
 }

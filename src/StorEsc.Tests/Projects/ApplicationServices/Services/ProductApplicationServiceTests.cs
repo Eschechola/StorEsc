@@ -51,17 +51,16 @@ public class ProductApplicationServiceTests
     public async Task CreateProductAsync_WhenProductNotCreated_ReturnsEmptyOptional()
     {
         // Arrange
-        var administratorId = Guid.NewGuid().ToString();
         var productDto = _productFaker.GetValid().AsDto();
 
-        _productDomainServiceMock.Setup(setup => setup.CreateProductAsync(administratorId, It.IsAny<Product>()))
+        _productDomainServiceMock.Setup(setup => setup.CreateProductAsync(It.IsAny<Product>()))
             .ReturnsAsync(new Optional<Product>());
 
         // Act
-        var result = await _sut.CreateProductAsync(administratorId, productDto);
+        var result = await _sut.CreateProductAsync(productDto);
 
         // Assert
-        _productDomainServiceMock.Verify(verify => verify.CreateProductAsync(administratorId, It.IsAny<Product>()),
+        _productDomainServiceMock.Verify(verify => verify.CreateProductAsync(It.IsAny<Product>()),
             Times.Once);
 
         result.IsEmpty.Should()
@@ -73,17 +72,16 @@ public class ProductApplicationServiceTests
     public async Task CreateProductAsync_WhenProductHasBeenCreated_ReturnsCreatedProductDto()
     {
         // Arrange
-        var administratorId = Guid.NewGuid().ToString();
         var productDto = _productFaker.GetValid().AsDto();
 
-        _productDomainServiceMock.Setup(setup => setup.CreateProductAsync(administratorId, It.IsAny<Product>()))
+        _productDomainServiceMock.Setup(setup => setup.CreateProductAsync(It.IsAny<Product>()))
             .ReturnsAsync(new Optional<Product>(productDto.AsEntity()));
 
         // Act
-        var result = await _sut.CreateProductAsync(administratorId, productDto);
+        var result = await _sut.CreateProductAsync(productDto);
 
         // Assert
-        _productDomainServiceMock.Verify(verify => verify.CreateProductAsync(administratorId, It.IsAny<Product>()),
+        _productDomainServiceMock.Verify(verify => verify.CreateProductAsync(It.IsAny<Product>()),
             Times.Once);
 
         result.IsEmpty.Should()
@@ -145,18 +143,17 @@ public class ProductApplicationServiceTests
     public async Task UpdateProductAsync_WhenProductNotCreated_ReturnsEmptyOptional()
     {
         // Arrange
-        var administratorId = Guid.NewGuid().ToString();
         var productDto = _productFaker.GetValid().AsDto();
         var productId = productDto.Id.ToString();
 
-        _productDomainServiceMock.Setup(setup => setup.UpdateProductAsync(productId, administratorId, It.IsAny<Product>()))
+        _productDomainServiceMock.Setup(setup => setup.UpdateProductAsync(productId, It.IsAny<Product>()))
             .ReturnsAsync(new Optional<Product>());
 
         // Act
-        var result = await _sut.UpdateProductAsync(productId, administratorId, productDto);
+        var result = await _sut.UpdateProductAsync(productId, productDto);
 
         // Assert
-        _productDomainServiceMock.Verify(verify => verify.UpdateProductAsync(productId, administratorId, It.IsAny<Product>()),
+        _productDomainServiceMock.Verify(verify => verify.UpdateProductAsync(productId, It.IsAny<Product>()),
             Times.Once);
 
         result.IsEmpty.Should()
@@ -168,18 +165,17 @@ public class ProductApplicationServiceTests
     public async Task UpdateProductAsync_WhenProductHasBeenCreated_ReturnsCreatedProductDto()
     {
         // Arrange
-        var administratorId = Guid.NewGuid().ToString();
         var productDto = _productFaker.GetValid().AsDto();
         var productId = productDto.Id.ToString();
 
-        _productDomainServiceMock.Setup(setup => setup.UpdateProductAsync(productId, administratorId, It.IsAny<Product>()))
+        _productDomainServiceMock.Setup(setup => setup.UpdateProductAsync(productId, It.IsAny<Product>()))
             .ReturnsAsync(new Optional<Product>(productDto.AsEntity()));
 
         // Act
-        var result = await _sut.UpdateProductAsync(productId, administratorId, productDto);
+        var result = await _sut.UpdateProductAsync(productId, productDto);
 
         // Assert
-        _productDomainServiceMock.Verify(verify => verify.UpdateProductAsync(productId, administratorId, It.IsAny<Product>()),
+        _productDomainServiceMock.Verify(verify => verify.UpdateProductAsync(productId, It.IsAny<Product>()),
             Times.Once);
 
         result.IsEmpty.Should()
@@ -199,16 +195,15 @@ public class ProductApplicationServiceTests
     {
         // Arrange 
         var productId = Guid.NewGuid().ToString();
-        var administratorId = Guid.NewGuid().ToString();
 
-        _productDomainServiceMock.Setup(setup => setup.DisableProductAsync(productId, administratorId))
+        _productDomainServiceMock.Setup(setup => setup.DisableProductAsync(productId))
             .ReturnsAsync(false);
         
         // Act
-        var result = await _sut.DisableProductAsync(productId, administratorId);
+        var result = await _sut.DisableProductAsync(productId);
 
         // Assert
-        _productDomainServiceMock.Verify(verify => verify.DisableProductAsync(productId, administratorId),
+        _productDomainServiceMock.Verify(verify => verify.DisableProductAsync(productId),
             Times.Once);
         
         result.Should()
@@ -221,16 +216,15 @@ public class ProductApplicationServiceTests
     {
         // Arrange 
         var productId = Guid.NewGuid().ToString();
-        var administratorId = Guid.NewGuid().ToString();
 
-        _productDomainServiceMock.Setup(setup => setup.DisableProductAsync(productId, administratorId))
+        _productDomainServiceMock.Setup(setup => setup.DisableProductAsync(productId))
             .ReturnsAsync(true);
         
         // Act
-        var result = await _sut.DisableProductAsync(productId, administratorId);
+        var result = await _sut.DisableProductAsync(productId);
 
         // Assert
-        _productDomainServiceMock.Verify(verify => verify.DisableProductAsync(productId, administratorId),
+        _productDomainServiceMock.Verify(verify => verify.DisableProductAsync(productId),
             Times.Once);
         
         result.Should()
@@ -247,16 +241,15 @@ public class ProductApplicationServiceTests
     {
         // Arrange 
         var productId = Guid.NewGuid().ToString();
-        var administratorId = Guid.NewGuid().ToString();
 
-        _productDomainServiceMock.Setup(setup => setup.EnableProductAsync(productId, administratorId))
+        _productDomainServiceMock.Setup(setup => setup.EnableProductAsync(productId))
             .ReturnsAsync(false);
         
         // Act
-        var result = await _sut.EnableProductAsync(productId, administratorId);
+        var result = await _sut.EnableProductAsync(productId);
 
         // Assert
-        _productDomainServiceMock.Verify(verify => verify.EnableProductAsync(productId, administratorId),
+        _productDomainServiceMock.Verify(verify => verify.EnableProductAsync(productId),
             Times.Once);
         
         result.Should()
@@ -269,16 +262,15 @@ public class ProductApplicationServiceTests
     {
         // Arrange 
         var productId = Guid.NewGuid().ToString();
-        var administratorId = Guid.NewGuid().ToString();
 
-        _productDomainServiceMock.Setup(setup => setup.EnableProductAsync(productId, administratorId))
+        _productDomainServiceMock.Setup(setup => setup.EnableProductAsync(productId))
             .ReturnsAsync(true);
         
         // Act
-        var result = await _sut.EnableProductAsync(productId, administratorId);
+        var result = await _sut.EnableProductAsync(productId);
 
         // Assert
-        _productDomainServiceMock.Verify(verify => verify.EnableProductAsync(productId, administratorId),
+        _productDomainServiceMock.Verify(verify => verify.EnableProductAsync(productId),
             Times.Once);
         
         result.Should()
