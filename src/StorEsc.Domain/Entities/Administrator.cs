@@ -42,4 +42,7 @@ public class Administrator : Account
 
     public void Enable()
         => IsEnabled = true;
+
+    public void Disable()
+        => IsEnabled = false;
 }

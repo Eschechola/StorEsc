@@ -140,6 +140,48 @@ public class AdministratorDomainServiceTests
             .BeTrue();
     }
     
+    [Fact(DisplayName = "AuthenticateAdministratorAsync when administrator is disabled throw forbidden notification and returns empty optional")]
+    [Trait("AdministratorDomainService", "AuthenticateAdministratorAsync")]
+    public async Task AuthenticateAdministratorAsync_WhenAdministratorIsDisabled_ThrowForbiddenNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var administrator = _administratorFaker.GetValid();
+        
+        var email = administrator.Email;
+        var password = _internetFaker.Password();
+        
+        administrator.Disable();
+
+        _administratorRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(email))
+            .ReturnsAsync(true);
+        
+        _administratorRepositoryMock.Setup(setup => setup.GetByEmailAsync(email))
+            .ReturnsAsync(administrator);
+        
+        
+        _domainNotificationMock.Setup(setup => setup.PublishForbiddenAsync())
+            .Verifiable();
+
+        // Act
+        var result = await _sut.AuthenticateAdministratorAsync(email, password);
+
+        // Assert
+        _administratorRepositoryMock.Verify(setup => setup.ExistsByEmailAsync(email),
+            Times.Once);
+
+        _administratorRepositoryMock.Verify(setup => setup.GetByEmailAsync(email),
+            Times.Once);
+
+        _domainNotificationMock.Verify(setup => setup.PublishForbiddenAsync(),
+            Times.Once);
+        
+        result.Should()
+            .NotBeNull();
+
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
+    
     [Fact(DisplayName = "AuthenticateAdministratorAsync when email exists and password is correct returns administrator authenticated")]
     [Trait("AdministratorDomainService", "AuthenticateAdministratorAsync")]
     public async Task AuthenticateAdministratorAsync_WhenEmailExistsAndPasswordIsCorrect_ReturnsAdministratorAuthenticated()
@@ -148,7 +190,6 @@ public class AdministratorDomainServiceTests
         var administrator = _administratorFaker.GetValid();
         var email = administrator.Email;
         var password = administrator.Password;
-        var hashedPassword = administrator.Password;
         
         _administratorRepositoryMock.Setup(setup => setup.ExistsByEmailAsync(email))
             .ReturnsAsync(true);
@@ -157,7 +198,7 @@ public class AdministratorDomainServiceTests
             .ReturnsAsync(administrator);
 
         _argon2IdHasherMock.Setup(setup => setup.Hash(password))
-            .Returns(hashedPassword);
+            .Returns(password);
 
         // Act
         var result = await _sut.AuthenticateAdministratorAsync(email, password);

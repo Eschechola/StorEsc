@@ -38,6 +38,12 @@ public class AdministratorDomainService : IAdministratorDomainService
         }
 
         var administrator = await _administratorRepository.GetByEmailAsync(email);
+
+        if (administrator.IsEnabled is false)
+        {
+            await _domainNotification.PublishForbiddenAsync();
+            return new Optional<Administrator>();
+        }
         
         var hashedPassword = _argon2IdHasher.Hash(password);
 
