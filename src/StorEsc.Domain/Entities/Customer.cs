@@ -18,10 +18,14 @@ public class Customer : Account
         string email,
         string password,
         DateTime createdAt,
-        DateTime updatedAt) 
+        DateTime updatedAt,
+        Wallet wallet,
+        IList<Order> orders) 
         : base(id, firstName, lastName, email, password, createdAt, updatedAt)
     {
         WalletId = walletId;
+        Wallet = wallet;
+        Orders = orders;
         
         Validate();
     }

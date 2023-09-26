@@ -15,7 +15,9 @@ public static class CustomerExtensions
             Password = customer.Password,
             FirstName = customer.FirstName,
             LastName = customer.LastName,
-            WalletId = customer.WalletId
+            WalletId = customer.WalletId,
+            Wallet = customer?.Wallet?.AsDto(),
+            Orders = customer?.Orders?.AsDtoList()
         };
     
     public static Customer AsEntity(this CustomerDto customerDto)
@@ -27,7 +29,9 @@ public static class CustomerExtensions
             email: customerDto.Email,
             password: customerDto.Password,
             createdAt: customerDto.CreatedAt,
-            updatedAt: customerDto.UpdatedAt
+            updatedAt: customerDto.UpdatedAt,
+            wallet: customerDto?.Wallet?.AsEntity(),
+            orders: customerDto?.Orders?.AsEntityList()
         );
 
     public static IList<Customer> AsEntityList(this IList<CustomerDto> customerDtos)

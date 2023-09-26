@@ -9,7 +9,7 @@ public class Wallet : Entity, IAggregateRoot
 
     //EF
     public IList<Customer> Customers { get; private set; }
-    public List<Recharge> Recharges { get; private set; }
+    public IList<Recharge> Recharges { get; private set; }
 
     
     protected Wallet() { }
@@ -35,10 +35,14 @@ public class Wallet : Entity, IAggregateRoot
         Guid id,
         decimal amount,
         DateTime createdAt,
-        DateTime updatedAt) 
+        DateTime updatedAt,
+        IList<Customer> customers,
+        IList<Recharge> recharges) 
         : base(id, createdAt, updatedAt)
     {
         Amount = amount;
+        Customers = customers;
+        Recharges = recharges;
         
         Validate();
     }

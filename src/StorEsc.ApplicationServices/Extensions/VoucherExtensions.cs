@@ -27,7 +27,8 @@ public static class VoucherExtensions
             isPercentageDiscount: voucherDto.IsPercentageDiscount,
             enabled: voucherDto.Enabled,
             createdAt: voucherDto.CreatedAt,
-            updatedAt: voucherDto.UpdatedAt
+            updatedAt: voucherDto.UpdatedAt,
+            orders: null
         );
 
     public static IList<Voucher> AsEntityList(this IList<VoucherDto> voucherDtos)

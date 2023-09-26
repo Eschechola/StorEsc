@@ -27,8 +27,8 @@ public static class ProductExtensions
             stock: productDto.Stock,
             enabled: productDto.Enabled,
             createdAt: productDto.CreatedAt,
-            updatedAt: productDto.UpdatedAt
-            );
+            updatedAt: productDto.UpdatedAt,
+            orderItems: null);
 
     public static IList<Product> AsEntityList(this IList<ProductDto> productDtos)
         => productDtos.Select(product => product.AsEntity()).ToList();

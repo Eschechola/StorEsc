@@ -12,7 +12,7 @@ public class Voucher : Entity, IAggregateRoot
     public bool Enabled { get; private set; }
     
     //EF
-    public List<Order> Orders { get; private set; }
+    public IList<Order> Orders { get; private set; }
 
     protected Voucher() { }
     
@@ -40,13 +40,15 @@ public class Voucher : Entity, IAggregateRoot
         bool isPercentageDiscount,
         bool enabled,
         DateTime createdAt,
-        DateTime updatedAt) : base(id, createdAt, updatedAt)
+        DateTime updatedAt,
+        IList<Order> orders) : base(id, createdAt, updatedAt)
     {
         Code = code;
         ValueDiscount = valueDiscount;
         PercentageDiscount = percentageDiscount;
         IsPercentageDiscount = isPercentageDiscount;
         Enabled = enabled;
+        Orders = orders;
         
         Validate();
     }

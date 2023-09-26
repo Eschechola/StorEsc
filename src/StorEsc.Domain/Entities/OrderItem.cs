@@ -13,13 +13,26 @@ public class OrderItem : Entity
     protected OrderItem() { }
     
     public OrderItem(
+        Guid id,
         int itemCount,
+        DateTime createdAt,
+        DateTime updatedAt,
         Product product,
-        Order order)
+        Order order) : base(id, createdAt, updatedAt)
     {
         ItemCount = itemCount;
         Product = product;
         Order = order;
+    }
+    
+    public OrderItem(
+        Guid orderId,
+        Guid productId,
+        int itemCount)
+    {
+        OrderId = orderId;
+        ProductId = productId;
+        ItemCount = itemCount;
     }
 
     public decimal CalculateItemValue()

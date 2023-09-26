@@ -12,7 +12,7 @@ public class Product : Entity, IAggregateRoot
     public bool Enabled { get; private set; }
     
     //EF
-    public List<OrderItem> OrderItens { get; private set; }
+    public IList<OrderItem> OrderItens { get; private set; }
 
     protected Product() { }
     
@@ -40,13 +40,15 @@ public class Product : Entity, IAggregateRoot
         int stock,
         bool enabled,
         DateTime createdAt,
-        DateTime updatedAt): base(id, createdAt, updatedAt)
+        DateTime updatedAt,
+        IList<OrderItem> orderItems): base(id, createdAt, updatedAt)
     {
         Name = name;
         Description = description;
         Price = price;
         Stock = stock;
         Enabled = enabled;
+        OrderItens = orderItems;
         
         Validate();
     }

@@ -16,6 +16,23 @@ public class Recharge : Entity, IAggregateRoot
     protected Recharge() { }
     
     public Recharge(
+        Guid id,
+        Guid walletId,
+        Guid paymentId,
+        decimal amount,
+        DateTime createdAt,
+        DateTime updatedAt,
+        Wallet wallet,
+        Payment payment) : base(id, createdAt, updatedAt)
+    {
+        WalletId = walletId;
+        PaymentId = paymentId;
+        Amount = amount;
+        Wallet = wallet;
+        Payment = payment;
+    }
+    
+    public Recharge(
         Guid walletId,
         Guid paymentId,
         decimal amount)

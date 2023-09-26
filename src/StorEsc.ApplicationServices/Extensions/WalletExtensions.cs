@@ -19,7 +19,9 @@ public static class WalletExtensions
             id: walletDto.Id,
             amount: walletDto.Amount,
             updatedAt: walletDto.UpdatedAt,
-            createdAt: walletDto.CreatedAt
+            createdAt: walletDto.CreatedAt,
+            customers: null,
+            recharges: null
         );
 
     public static IList<Wallet> AsEntityList(this IList<WalletDto> walletDtos)

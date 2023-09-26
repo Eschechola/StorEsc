@@ -18,13 +18,31 @@ public class Order : Entity, IAggregateRoot
     protected Order() { }
     
     public Order(
+        Guid id,
         Guid customerId,
         bool isPaid,
-        List<OrderItem> orderItens = null)
+        DateTime createdAt,
+        DateTime updatedAt,
+        Customer customer,
+        Voucher voucher,
+        IList<OrderItem> orderItens) : base(id, createdAt, updatedAt)
     {
         CustomerId = customerId;
         IsPaid = isPaid;
+        Customer = customer;
+        Voucher = voucher;
         OrderItens = orderItens;
+        TotalValue = CalculateOrderPrice();
+        
+        Validate();
+    }
+    
+    public Order(
+        Guid customerId,
+        bool isPaid)
+    {
+        CustomerId = customerId;
+        IsPaid = isPaid;
         TotalValue = CalculateOrderPrice();
         
         Validate();

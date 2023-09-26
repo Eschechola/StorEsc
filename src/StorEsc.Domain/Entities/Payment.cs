@@ -10,10 +10,27 @@ public class Payment : Entity
     // EF
     public IList<Recharge> Recharges { get; private set; }
 
+    public Payment(
+        Guid id,
+        string hash,
+        bool isPaid,
+        DateTime createdAt,
+        DateTime updatedAt,
+        IList<Recharge> recharges) : base(id, createdAt, updatedAt)
+    {
+        Hash = hash;
+        IsPaid = isPaid;
+        Recharges = recharges;
+        
+        Validate();
+    }
+    
     public Payment(bool isPaid)
     {
         IsPaid = isPaid;
         Hash = string.Empty;
+        
+        Validate();
     }
     
     public Payment(
