@@ -5,6 +5,8 @@ namespace StorEsc.ApplicationServices.Interfaces;
 
 public interface IVoucherApplicationService
 {
+    Task<bool> EnableVoucherAsync(string voucherId);
+    Task<bool> DisableVoucherAsync(string voucherId);
     Task<IList<VoucherDto>> GetAllVouchersAsync();
     Task<Optional<VoucherDto>> CreateVoucherAsync(VoucherDto voucherDto);
 }

@@ -16,6 +16,12 @@ public class VoucherApplicationService : IVoucherApplicationService
         _voucherDomainService = voucherDomainService;
     }
 
+    public async Task<bool> EnableVoucherAsync(string voucherId)
+        => await _voucherDomainService.EnableVoucherAsync(voucherId);
+
+    public async Task<bool> DisableVoucherAsync(string voucherId)
+        => await _voucherDomainService.DisableVoucherAsync(voucherId);
+
     public async Task<IList<VoucherDto>> GetAllVouchersAsync()
     {
         var vouchers = await _voucherDomainService.GetAllVouchersAsync();
