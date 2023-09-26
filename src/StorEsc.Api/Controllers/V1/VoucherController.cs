@@ -70,4 +70,40 @@ public class VoucherController : BaseController
             Data = voucherCreated.Value
         });
     }
+
+    [HttpPatch]
+    [Authorize(Roles = Roles.Administrator)]
+    [Route("enable/{voucherId}")]
+    public async Task<IActionResult> EnableVoucherAsync(string voucherId)
+    {
+        await _voucherApplicationService.EnableVoucherAsync(voucherId);
+        
+        if (HasNotifications())
+            return Result();
+        
+        return Ok(new ResultViewModel
+        {
+            Message = "Voucher enabled with success!",
+            Success = true,
+            Data = null
+        });
+    }
+    
+    [HttpPatch]
+    [Authorize(Roles = Roles.Administrator)]
+    [Route("disable/{voucherId}")]
+    public async Task<IActionResult> DisableVoucherAsync(string voucherId)
+    {
+        await _voucherApplicationService.DisableVoucherAsync(voucherId);
+        
+        if (HasNotifications())
+            return Result();
+        
+        return Ok(new ResultViewModel
+        {
+            Message = "Voucher disabled with success!",
+            Success = true,
+            Data = null
+        });
+    }
 }
