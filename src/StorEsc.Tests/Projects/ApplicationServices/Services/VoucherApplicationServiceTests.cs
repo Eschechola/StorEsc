@@ -223,4 +223,57 @@ public class VoucherApplicationServiceTests
     }
     
     #endregion
+
+    #region UpdateVoucherAsync
+
+    [Fact(DisplayName = "UpdateVoucherAsync when voucher not updated returns empty optional")]
+    [Trait("VoucherApplicationService", "UpdateVoucherAsync")]
+    public async Task UpdateVoucherAsync_WhenVoucherNotUpdated_ReturnsEmptyOptional()
+    {
+        // Arrange
+        var voucherDto = _voucherFaker.GetValid().AsDto();
+        var voucherId = voucherDto.Id.ToString();
+
+        _voucherDomainServiceMock.Setup(setup => setup.UpdateVoucherAsync(voucherId, It.IsAny<Voucher>()))
+            .ReturnsAsync(new Optional<Voucher>());
+
+        // Act
+        var result = await _sut.UpdateVoucherAsync(voucherId, voucherDto);
+
+        // Assert
+        _voucherDomainServiceMock.Verify(verify => verify.UpdateVoucherAsync(voucherId, It.IsAny<Voucher>()),
+            Times.Once);
+
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
+    
+    
+    [Fact(DisplayName = "UpdateVoucherAsync when voucher has been updated returns voucher")]
+    [Trait("VoucherApplicationService", "UpdateVoucherAsync")]
+    public async Task UpdateVoucherAsync_WhenVoucherHasBeenUpdated_ReturnsVoucher()
+    {
+        // Arrange
+        var voucherDto = _voucherFaker.GetValid().AsDto();
+        var voucherId = voucherDto.Id.ToString();
+
+        _voucherDomainServiceMock.Setup(setup => setup.UpdateVoucherAsync(voucherId, It.IsAny<Voucher>()))
+            .ReturnsAsync(new Optional<Voucher>(voucherDto.AsEntity()));
+
+        // Act
+        var result = await _sut.UpdateVoucherAsync(voucherId, voucherDto);
+
+        // Assert
+        _voucherDomainServiceMock.Verify(verify => verify.UpdateVoucherAsync(voucherId, It.IsAny<Voucher>()),
+            Times.Once);
+
+        result.IsEmpty.Should()
+            .BeFalse();
+
+        result.Value.Should()
+            .BeEquivalentTo(voucherDto);
+    }
+    
+    
+    #endregion
 }

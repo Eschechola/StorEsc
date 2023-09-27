@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Bogus;
+using FluentAssertions;
 using Moq;
 using StorEsc.Core.Communication.Mediator.Interfaces;
 using StorEsc.Domain.Entities;
@@ -20,6 +21,7 @@ public class VoucherDomainServiceTests
     private readonly Mock<IDomainNotificationFacade> _domainNotificationFacade;
 
     private readonly VoucherFaker _voucherFaker;
+    private readonly Randomizer _randomizerFaker;
     
     #endregion
 
@@ -31,6 +33,7 @@ public class VoucherDomainServiceTests
         _domainNotificationFacade = new Mock<IDomainNotificationFacade>();
 
         _voucherFaker = new VoucherFaker();
+        _randomizerFaker = new Randomizer();
         
         _sut = new VoucherDomainService(
             voucherRepository: _voucherRepositoryMock.Object,
@@ -134,8 +137,6 @@ public class VoucherDomainServiceTests
         var voucher = _voucherFaker.GetValid();
         var voucherCreated = voucher;
         
-        voucherCreated.CodeToUpper();
-        voucherCreated.SetDiscounts();
         voucherCreated.Disable();
 
         _domainNotificationFacade.Setup(setup => setup.PublishAlreadyExistsAsync("Voucher"))
@@ -362,5 +363,192 @@ public class VoucherDomainServiceTests
             .BeTrue();
     }
     
+    #endregion
+
+    #region UpdateVoucherAsync
+
+    [Fact(DisplayName = "UpdateVoucherAsync when voucher not exists throw notification and returns empty optional")]
+    [Trait("VoucherDomainService", "UpdateVoucherAsync")]
+    public async Task UpdateVoucherAsync_WhenVoucherNotExists_ThrowNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var voucherId = Guid.NewGuid().ToString();
+        var voucher = _voucherFaker.GetValid();
+
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(false);
+        
+        _domainNotificationFacade.Setup(setup => setup.PublishNotFoundAsync("Voucher"))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.UpdateVoucherAsync(voucherId, voucher);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+
+        _domainNotificationFacade.Verify(verify => verify.PublishNotFoundAsync("Voucher"),
+            Times.Once);
+        
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "UpdateVoucherAsync when new voucher code already exists throw notification and returns empty optional")]
+    [Trait("VoucherDomainService", "UpdateVoucherAsync")]
+    public async Task UpdateVoucherAsync_WhenNewVoucherCodeAlreadyExists_ThrowNotificationAndReturnsEmptyOptional()
+    {
+        // Arrange
+        var voucher = _voucherFaker.GetValid();
+        var newVoucher = _voucherFaker.GetValid();
+        var voucherId = voucher.Id.ToString();
+        var newCode = _randomizerFaker.String2(20);
+            
+        newVoucher.SetCode(newCode);
+
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(true);
+        
+        _voucherRepositoryMock.Setup(setup => setup.GetByIdAsync(voucherId))
+            .ReturnsAsync(voucher);
+
+        _voucherRepositoryMock.Setup(setup => setup.ExistsAsync(
+            query => query.Code.ToLower().Equals(newVoucher.Code.ToLower())))
+            .ReturnsAsync(true);
+        
+        _domainNotificationFacade.Setup(setup => setup.PublishAlreadyExistsAsync("Voucher"))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.UpdateVoucherAsync(voucherId, newVoucher);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+        
+        _voucherRepositoryMock.Verify(verify => verify.GetByIdAsync(voucherId),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.ExistsAsync(
+            query => query.Code.ToLower().Equals(newVoucher.Code.ToLower())),
+            Times.Once);
+
+        _domainNotificationFacade.Verify(verify => verify.PublishAlreadyExistsAsync("Voucher"),
+            Times.Once);
+        
+        result.IsEmpty.Should()
+            .BeTrue();
+    }
+    
+    [Fact(DisplayName = "UpdateVoucherAsync when voucher code is different update and returns voucher updated")]
+    [Trait("VoucherDomainService", "UpdateVoucherAsync")]
+    public async Task UpdateVoucherAsync_WhenVoucherCodeIsDifferent_UpdateAndReturnsVoucherUpdated()
+    {
+        // Arrange
+        var oldVoucher = _voucherFaker.GetValid();
+        var newVoucher = _voucherFaker.GetValid();
+        var voucherId = oldVoucher.Id.ToString();
+        
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(true);
+        
+        _voucherRepositoryMock.Setup(setup => setup.GetByIdAsync(voucherId))
+            .ReturnsAsync(oldVoucher);
+
+        _voucherRepositoryMock.Setup(setup => setup.Update(newVoucher))
+            .Verifiable();
+        
+        _voucherRepositoryMock.Setup(setup => setup.ExistsAsync(
+                query => query.Code.ToLower().Equals(newVoucher.Code.ToLower())))
+            .ReturnsAsync(false);
+        
+        _voucherRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.UpdateVoucherAsync(voucherId, newVoucher);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.GetByIdAsync(voucherId),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.ExistsAsync(
+                query => query.Code.ToLower().Equals(newVoucher.Code.ToLower())),
+            Times.Once);
+        
+        _voucherRepositoryMock.Verify(verify => verify.Update(It.IsAny<Voucher>()),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+        
+        result.IsEmpty.Should()
+            .BeFalse();
+        
+        result.Value.Should()
+            .NotBeNull();
+
+        result.Value.Should()
+            .BeEquivalentTo(newVoucher);
+    }
+    
+    
+    [Fact(DisplayName = "UpdateVoucherAsync when voucher has been updated returns voucher updated")]
+    [Trait("VoucherDomainService", "UpdateVoucherAsync")]
+    public async Task UpdateVoucherAsync_WhenVoucherHasBeenUpdated_ReturnsVoucherUpdated()
+    {
+        // Arrange
+        var oldVoucher = _voucherFaker.GetValid();
+        var newVoucher = oldVoucher;
+        var voucherId = oldVoucher.Id.ToString();
+        var newCode = _randomizerFaker.String2(10);
+        var newValueDiscount = _randomizerFaker.Decimal(0, 1_000_000);
+        var newPercentageDiscount = _randomizerFaker.Decimal(0, 100);
+        
+        newVoucher.SetCode(newCode);
+        newVoucher.SetDiscounts(true, newValueDiscount, newPercentageDiscount);
+
+        _voucherRepositoryMock.Setup(setup => setup.ExistsByIdAsync(voucherId))
+            .ReturnsAsync(true);
+        
+        _voucherRepositoryMock.Setup(setup => setup.GetByIdAsync(voucherId))
+            .ReturnsAsync(oldVoucher);
+
+        _voucherRepositoryMock.Setup(setup => setup.Update(newVoucher))
+            .Verifiable();
+        
+        _voucherRepositoryMock.Setup(setup => setup.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .Verifiable();
+
+        // Act
+        var result = await _sut.UpdateVoucherAsync(voucherId, newVoucher);
+
+        // Assert
+        _voucherRepositoryMock.Verify(verify => verify.ExistsByIdAsync(voucherId),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.GetByIdAsync(voucherId),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.Update(newVoucher),
+            Times.Once);
+
+        _voucherRepositoryMock.Verify(verify => verify.UnitOfWork.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+        
+        result.IsEmpty.Should()
+            .BeFalse();
+        
+        result.Value.Should()
+            .NotBeNull();
+
+        result.Value.Should()
+            .BeEquivalentTo(newVoucher);
+    }
+
     #endregion
 }
