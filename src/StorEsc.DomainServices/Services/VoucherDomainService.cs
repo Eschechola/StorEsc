@@ -19,6 +19,35 @@ public class VoucherDomainService : IVoucherDomainService
         _domainNotificationFacade = domainNotificationFacade;
     }
 
+    public async Task<Optional<Voucher>> UpdateVoucherAsync(string voucherId, Voucher voucherUpdated)
+    {
+        var existsById = await _voucherRepository.ExistsByIdAsync(voucherId);
+
+        if (existsById is false)
+        {
+            await _domainNotificationFacade.PublishNotFoundAsync("Voucher");
+            return new Optional<Voucher>();
+        }
+
+        var voucher = await _voucherRepository.GetByIdAsync(voucherId);
+        
+        if (await NewVoucherCodeExists(voucher, voucherUpdated))
+        {
+            await _domainNotificationFacade.PublishAlreadyExistsAsync("Voucher");
+            return new Optional<Voucher>();
+        }
+        
+        voucher.SetCode(voucherUpdated.Code);
+        voucher.SetDiscounts(voucherUpdated.IsPercentageDiscount, 
+            voucherUpdated.ValueDiscount, 
+            voucherUpdated.PercentageDiscount);
+        
+        _voucherRepository.Update(voucher);
+        await _voucherRepository.UnitOfWork.SaveChangesAsync();
+
+        return voucher;
+    }
+
     public async Task<bool> EnableVoucherAsync(string voucherId)
     {
         var exists = await _voucherRepository.ExistsByIdAsync(voucherId);
@@ -82,10 +111,8 @@ public class VoucherDomainService : IVoucherDomainService
             return new Optional<Voucher>();
         }
         
-        voucher.CodeToUpper();
-        voucher.SetDiscounts();
         voucher.Disable();
-
+        
         _voucherRepository.Create(voucher);
         await _voucherRepository.UnitOfWork.SaveChangesAsync();
 
@@ -94,6 +121,15 @@ public class VoucherDomainService : IVoucherDomainService
 
     public async Task<IList<Voucher>> GetAllVouchersAsync()
         =>  await _voucherRepository.GetAllAsync();
-    
-    
+
+    private async Task<bool> NewVoucherCodeExists(Voucher voucher, Voucher voucherUpdated)
+    {
+        if (voucher.Code.ToLower().Equals(voucherUpdated.Code.ToLower()))
+            return false;
+
+        var newVoucherCodeExists = await _voucherRepository.ExistsAsync(entity 
+            => entity.Code.ToLower().Equals(voucherUpdated.Code.ToLower()));
+
+        return newVoucherCodeExists;
+    }
 }
