@@ -15,7 +15,7 @@ public class VoucherApplicationService : IVoucherApplicationService
     {
         _voucherDomainService = voucherDomainService;
     }
-
+    
     public async Task<bool> EnableVoucherAsync(string voucherId)
         => await _voucherDomainService.EnableVoucherAsync(voucherId);
 
@@ -38,5 +38,16 @@ public class VoucherApplicationService : IVoucherApplicationService
             return new Optional<VoucherDto>();
 
         return voucherCreated.Value.AsDto();
+    }
+    
+    public async Task<Optional<VoucherDto>> UpdateVoucherAsync(string voucherId, VoucherDto voucherDto)
+    {
+        var voucher = voucherDto.AsEntity();
+        var voucherUpdated = await _voucherDomainService.UpdateVoucherAsync(voucherId, voucher);
+        
+        if (voucherUpdated.IsEmpty)
+            return new Optional<VoucherDto>();
+
+        return voucherUpdated.Value.AsDto();
     }
 }

@@ -9,4 +9,5 @@ public interface IVoucherApplicationService
     Task<bool> DisableVoucherAsync(string voucherId);
     Task<IList<VoucherDto>> GetAllVouchersAsync();
     Task<Optional<VoucherDto>> CreateVoucherAsync(VoucherDto voucherDto);
+    Task<Optional<VoucherDto>> UpdateVoucherAsync(string voucherId, VoucherDto voucherDto);
 }
