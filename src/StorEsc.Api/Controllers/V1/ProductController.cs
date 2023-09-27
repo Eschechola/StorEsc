@@ -70,7 +70,7 @@ public class ProductController : BaseController
         return NoContent();
     }
 
-    [HttpPatch]
+    [HttpPut]
     [Authorize(Roles = Roles.Administrator)]
     [Route("update/{productId}")]
     public async Task<IActionResult> UpdateProductAsync([FromRoute] string productId, [FromBody] UpdateProductViewModel viewModel)
