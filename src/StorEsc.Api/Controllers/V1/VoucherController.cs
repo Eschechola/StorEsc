@@ -70,11 +70,40 @@ public class VoucherController : BaseController
             Data = voucherCreated.Value
         });
     }
+    
+    [HttpPut]
+    [Route("update/{voucherId}")]
+    [Authorize(Roles = Roles.Administrator)]
+    public async Task<IActionResult> UpdateVoucherAsync([FromRoute] string voucherId, [FromBody] UpdateVoucherViewModel viewModel)
+    {
+        if (ModelState.IsValid is false)
+            return UnprocessableEntity(ModelState);
+        
+        var voucherDto = new VoucherDto()
+        {
+            Code = viewModel.Code,
+            ValueDiscount = viewModel.ValueDiscount,
+            PercentageDiscount = viewModel.PercentageDiscount,
+            IsPercentageDiscount = viewModel.IsPercentageDiscount
+        };
+
+        var voucherUpdated = await _voucherApplicationService.UpdateVoucherAsync(voucherId, voucherDto);
+        
+        if (HasNotifications())
+            return Result();
+
+        return Ok(new ResultViewModel
+        {
+            Message = "Voucher updated with success!",
+            Success = true,
+            Data = voucherUpdated.Value
+        });
+    }
 
     [HttpPatch]
     [Authorize(Roles = Roles.Administrator)]
     [Route("enable/{voucherId}")]
-    public async Task<IActionResult> EnableVoucherAsync(string voucherId)
+    public async Task<IActionResult> EnableVoucherAsync([FromRoute] string voucherId)
     {
         await _voucherApplicationService.EnableVoucherAsync(voucherId);
         
@@ -92,7 +121,7 @@ public class VoucherController : BaseController
     [HttpPatch]
     [Authorize(Roles = Roles.Administrator)]
     [Route("disable/{voucherId}")]
-    public async Task<IActionResult> DisableVoucherAsync(string voucherId)
+    public async Task<IActionResult> DisableVoucherAsync([FromRoute] string voucherId)
     {
         await _voucherApplicationService.DisableVoucherAsync(voucherId);
         
