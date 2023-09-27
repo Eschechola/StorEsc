@@ -30,6 +30,8 @@ public class Voucher : Entity, IAggregateRoot
         Enabled = enabled;
         
         Validate();
+        SetDiscounts();
+        CodeToUpper();
     }
     
     public Voucher(
@@ -51,6 +53,8 @@ public class Voucher : Entity, IAggregateRoot
         Orders = orders;
         
         Validate();
+        SetDiscounts();
+        CodeToUpper();
     }
     
     public void Validate()
@@ -61,11 +65,26 @@ public class Voucher : Entity, IAggregateRoot
 
     public void Disable()
         => Enabled = false;
+    
+    public void SetCode(string code)
+        => Code = code;
+    
+    public void SetDiscounts(
+        bool isPercentageDiscount,
+        decimal? valueDiscount = null,
+        decimal? percentageDiscount = null)
+    {
+        IsPercentageDiscount = isPercentageDiscount;
+        ValueDiscount = valueDiscount;
+        PercentageDiscount = percentageDiscount;
+        
+        SetDiscounts();
+    }
 
-    public void CodeToUpper()
+    private void CodeToUpper()
         => Code = Code.ToUpper();
-
-    public void SetDiscounts()
+    
+    private void SetDiscounts()
     {
         ValueDiscount = IsPercentageDiscount ? null : ValueDiscount;
         PercentageDiscount = IsPercentageDiscount ? PercentageDiscount : null;
