@@ -2,6 +2,7 @@
 
 public record ProductDto : BaseDto
 {
+    public Guid CategoryId { get; set; }
     public string Name { get; init; }
     public string Description { get; init; }
     public decimal Price { get; init; }

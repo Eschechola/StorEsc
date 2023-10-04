@@ -9,6 +9,7 @@ public static class ProductExtensions
         => new ProductDto
         {
             Id = product.Id,
+            CategoryId = product.CategoryId,
             CreatedAt = product.CreatedAt,
             UpdatedAt = product.UpdatedAt,
             Name = product.Name,
@@ -17,10 +18,11 @@ public static class ProductExtensions
             Stock = product.Stock,
             Enabled = product.Enabled
         };
-    
+
     public static Product AsEntity(this ProductDto productDto)
         => new Product(
             id: productDto.Id,
+            categoryId: productDto.CategoryId,
             name: productDto.Name,
             description: productDto.Description,
             price: productDto.Price,
@@ -28,7 +30,8 @@ public static class ProductExtensions
             enabled: productDto.Enabled,
             createdAt: productDto.CreatedAt,
             updatedAt: productDto.UpdatedAt,
-            orderItems: null);
+            orderItems: null,
+            category: null);
 
     public static IList<Product> AsEntityList(this IList<ProductDto> productDtos)
         => productDtos.Select(product => product.AsEntity()).ToList();
