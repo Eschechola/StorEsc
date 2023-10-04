@@ -5,6 +5,7 @@ namespace StorEsc.Domain.Entities;
 
 public class Product : Entity, IAggregateRoot
 {
+    public Guid CategoryId { get; private set; }
     public string Name { get; private set; }
     public string Description { get; private set; }
     public decimal Price { get; private set; }
@@ -13,16 +14,19 @@ public class Product : Entity, IAggregateRoot
     
     //EF
     public IList<OrderItem> OrderItens { get; private set; }
+    public Category Category { get; private set; }
 
     protected Product() { }
     
     public Product(
+        Guid categoryId,
         string name,
         string description,
         decimal price,
         int stock,
         bool enabled)
     {
+        CategoryId = categoryId;
         Name = name;
         Description = description;
         Price = price;
@@ -34,6 +38,7 @@ public class Product : Entity, IAggregateRoot
     
     public Product(
         Guid id,
+        Guid categoryId,
         string name,
         string description,
         decimal price,
@@ -41,14 +46,17 @@ public class Product : Entity, IAggregateRoot
         bool enabled,
         DateTime createdAt,
         DateTime updatedAt,
-        IList<OrderItem> orderItems): base(id, createdAt, updatedAt)
+        IList<OrderItem> orderItems,
+        Category category): base(id, createdAt, updatedAt)
     {
+        CategoryId = categoryId;
         Name = name;
         Description = description;
         Price = price;
         Stock = stock;
         Enabled = enabled;
         OrderItens = orderItems;
+        Category = category;
         
         Validate();
     }
