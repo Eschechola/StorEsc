@@ -12,6 +12,10 @@ public class ProductMap : BaseMap<Product>
         
         base.Configure(builder);
         
+        builder.Property(product => product.CategoryId)
+            .IsRequired()
+            .HasColumnType("VARCHAR(36)");
+        
         builder.Property(product => product.Name)
             .IsRequired()
             .HasColumnType("VARCHAR(200)")

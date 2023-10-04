@@ -29,6 +29,7 @@ public class StorEscContext : DbContext, IUnitOfWork
     public DbSet<Wallet> Recharges { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Administrator> Administrators { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     #endregion
     
@@ -37,6 +38,7 @@ public class StorEscContext : DbContext, IUnitOfWork
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfiguration(new CustomerMap());
+        builder.ApplyConfiguration(new CategoryMap());
         builder.ApplyConfiguration(new OrderMap());
         builder.ApplyConfiguration(new OrderItemMap());
         builder.ApplyConfiguration(new ProductMap());
