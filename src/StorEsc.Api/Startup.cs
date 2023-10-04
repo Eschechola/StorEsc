@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using StorEsc.API.IoC;
+using StorEsc.API.Middlewares;
 using StorEsc.IoC.Dependencies.ApplicationServices;
 using StorEsc.IoC.Dependencies.Database;
 using StorEsc.IoC.Dependencies.DomainServices;
@@ -35,7 +36,8 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-
+        services.Configure<RequestLocalizationOptions>(options => options.SetDefaultCulture("en-US"));
+        
         services
             .AddScoped((_) => _configuration)
             .AddDatabaseContext(_configuration)
@@ -66,6 +68,8 @@ public class Startup
         app.UseRouting();
 
         app.UseAuthorization();
+        
+        app.UseCustomExceptionHandler();
         
         app.UseEndpoints(endpoints =>
         {
