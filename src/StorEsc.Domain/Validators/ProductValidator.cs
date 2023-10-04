@@ -1,5 +1,4 @@
 using FluentValidation;
-using StorEsc.Core.Messages;
 using StorEsc.Domain.Entities;
 
 namespace StorEsc.Domain.Validators;
@@ -8,50 +7,26 @@ public class ProductValidator : AbstractValidator<Product>
 {
     public ProductValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(property => property.Name)
             .NotNull()
-            .WithMessage(ValidatorMessages.NotNull("Name"))
-            
             .NotEmpty()
-            .WithMessage(ValidatorMessages.NotEmpty("Name"))
-            
             .MinimumLength(3)
-            .WithMessage(ValidatorMessages.MinimumLength("Name", 3))
-            
-            .MaximumLength(200)
-            .WithMessage(ValidatorMessages.MaximumLength("Name", 200));
+            .MaximumLength(200);
         
-        RuleFor(x => x.Description)
+        RuleFor(property => property.Description)
             .NotNull()
-            .WithMessage(ValidatorMessages.NotNull("Description"))
-            
             .NotEmpty()
-            .WithMessage(ValidatorMessages.NotEmpty("Description"))
-
             .MinimumLength(100)
-            .WithMessage(ValidatorMessages.MinimumLength("Description", 100))
-            
-            .MaximumLength(2000)
-            .WithMessage(ValidatorMessages.MaximumLength("Description", 2000));
+            .MaximumLength(2000);
 
-        RuleFor(x => x.Price)
+        RuleFor(property => property.Price)
             .NotNull()
-            .WithMessage(ValidatorMessages.NotNull("Price"))
-            
             .NotEmpty()
-            .WithMessage(ValidatorMessages.NotEmpty("Price"))
-
-            .GreaterThanOrEqualTo(5)
-            .WithMessage(ValidatorMessages.GreaterThanOrEqualTo("Price", 5));
+            .GreaterThanOrEqualTo(5);
         
-        RuleFor(x=>x.Stock)
+        RuleFor(property=>property.Stock)
             .NotNull()
-            .WithMessage(ValidatorMessages.NotNull("Stock"))
-            
             .NotEmpty()
-            .WithMessage(ValidatorMessages.NotEmpty("Stock"))
-            
-            .GreaterThanOrEqualTo(0)
-            .WithMessage(ValidatorMessages.GreaterThanOrEqualTo("Stock", 0));
+            .GreaterThanOrEqualTo(0);
     }
 }
